@@ -52,7 +52,7 @@ const New_form = () => {
                         onChange={(e) => setInputData({ ...inputData, businessDetails: { ...inputData.businessDetails, category: e.target.value } })}
                         className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     >
-                        <option selected disabled >Select category</option>
+                        <option value='' selected disabled >Select category</option>
                         <option value="Clothes">Clothes</option>
                         <option value="Salon">Salon</option>
                         <option value="Grocery">Grocery</option>
@@ -70,7 +70,7 @@ const New_form = () => {
                         onChange={(e) => setInputData({ ...inputData, businessDetails: { ...inputData?.businessDetails, businessSize: e.target.value } })}
                         className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     >
-                        <option selected disabled >Select size</option>
+                        <option value='' selected disabled >Select size</option>
                         <option value={LARGE}>Large</option>
                         <option value={MEDIUM}>Medium</option>
                         <option value={SMALL}>Small</option>
@@ -110,7 +110,7 @@ const New_form = () => {
                             value={inputData?.ownerDetails?.country_code}
                             onChange={(e) => setInputData({ ...inputData, ownerDetails: { ...inputData?.ownerDetails, country_code: e.target.value } })}
                             className="col-span-1 w-full bg-white rounded rounded-r-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-[2px] text-center leading-8 transition-colors duration-200 ease-in-out" >
-                            <option className='w-10' selected disabled>+ code</option>
+                            <option className='w-10' value='' disabled>+ code</option>
                             {Object.keys(Countries.countries).map((key, i) => (
                                 <option className='w-10' key={i} value={Countries.countries[key].phone}> {key + ' ' + '+' + Countries.countries[key].phone}</option>
                             ))}
@@ -130,7 +130,7 @@ const New_form = () => {
                         onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, country: e.target.value } })}
                         className="block col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     >
-                        <option selected disabled>Select Country</option>
+                        <option value='' disabled>Select Country</option>
                         {Object.values(Countries.countries).map((country, i) => (
                             <option key={i} value={country.name}>{country.name}</option>
                         ))}

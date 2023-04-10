@@ -14,10 +14,21 @@ const userApi = apiSlice.injectEndpoints({
                 }
             }),
             invalidatesTags: ["user"]
+        }),
+        getEmployeeByQue: builder.query({
+            query: (url_query) => ({
+                url: `/user?${url_query}`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: `${localStorage.getItem('token')}`,
+                }
+            }),
+            providesTags: ["user"]
         })
     })
 })
 
 export const {
-    useRegisterMutation
+    useRegisterMutation,
+    useGetEmployeeByQueQuery,
 } = userApi;

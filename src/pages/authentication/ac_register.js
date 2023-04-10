@@ -6,16 +6,34 @@ import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER 
 import { useRegisterMutation } from '@/app/features/users/userApi';
 import { errorToast, successToast } from '@/utils/neededFun';
 import { MdOutlineManageAccounts } from 'react-icons/md';
+import Countries from 'countries-list';
 
 const Register = () => {
     const [preview, setPreview] = useState({});
     const [imgFile, setImgFile] = useState(null);
     const [createSuccess, setCreateSuccess] = useState(null);
+    const [addressInfo, setAddressInfo] = useState({});
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [userRegister, { isLoading }] = useRegisterMutation();
-
     const handleSignUp = async (data) => {
+        if (!addressInfo.country) {
+            return setAddressInfo({ ...addressInfo, countryErr: "Country field is required!" })
+        } else {
+            const info = addressInfo;
+            delete info.countryErr;
+            setAddressInfo(info);
+        }
+        if (!data.role) {
+            return setAddressInfo({ ...addressInfo, roleErr: "Employee role is required!" })
+        } else {
+            setAddressInfo({ ...addressInfo, roleErr: "" })
+        }
+        const address = {
+            country: addressInfo.country,
+            district: data.district
+        }
+        data.address = address;
         // delete data.userImage;
         // const formData = new FormData();
         // formData.append('image', imgFile);
@@ -26,28 +44,33 @@ const Register = () => {
             //         headers: multipartHeaders
             //     })
             // if (result.data.file) {
-
             userRegister(data).then(res => {
                 if (res.data?.success) {
                     successToast(res.data?.message);
                     setCreateSuccess(res.data.data);
                     reset();
                 } else {
+                    // console.log(res);
                     if (res.error) {
-                        return errorToast(res.error?.data.dev_error);
+                        if (res.error.error) {
+                            return  errorToast(res.error.error);
+                        }
+                        if (res?.error?.data?.dev_error) {
+                          return  errorToast(res.error?.data.dev_error);
+                        }
+                      return  errorToast(res?.error);
                     }
-                    errorToast(res?.dev_error);
+                    errorToast(res?.data.message);
                 }
             })
         } catch (error) {
             errorToast(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
         }
     };
-    const clipboardCopy = ()=> {
+    const clipboardCopy = () => {
         navigator.clipboard.writeText(`Your accounts Id: ${createSuccess?.userId} and Password: ${createSuccess?.password}`);
         successToast("copy to clipboard!")
     }
-    // console.log(createSuccess);
     return (
         <div className='min-h-[80vh] flex items-center justify-center py-4 px-2'>
             {createSuccess ?
@@ -124,29 +147,42 @@ const Register = () => {
                             {errors.phone?.type === 'minLength' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.phone?.message}</p>}
                         </div>
                         <div className="w-full mb-2">
-                            <label htmlFor='district' className="font-semibold text-sm">Employee district</label>
-                            <input
-                                {...register("district", {
-                                    required: "District field is required!"
-                                })}
-                                placeholder="Employee district" id='district' type="text"
-                                className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
-                            />
+                            <label className="font-semibold text-sm">Employee district</label>
+                            <div className='grid grid-cols-5'>
+                                <select
+                                    onChange={(e) => setAddressInfo({ ...addressInfo, country: e.target.value })}
+                                    className="col-span-2 w-full rounded-r-none text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
+                                >
+                                    <option value={''} selected disabled>Select Country</option>
+                                    {Object.values(Countries.countries).map((country, i) => (
+                                        <option key={i} value={country.name}>{country.name}</option>
+                                    ))}
+                                </select>
+                                <input
+                                    {...register("district", {
+                                        required: "District field is required!"
+                                    })}
+                                    placeholder="Employee district" id='district' type="text"
+                                    className="col-span-3 placeholder:text-gray-900 rounded-l-none w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
+                                />
+                            </div>
                             {errors.district?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.district?.message}</p>}
+                            {addressInfo.countryErr && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{addressInfo.countryErr}</p>}
                         </div>
                         <div className="w-full mb-2">
                             <label htmlFor='role' className="font-semibold text-sm">Employee role</label>
                             <select
-                                {...register("role", { required: "Employee role is required!" })}
-                                defaultValue={DATA_ENTRY_OPERATOR} name='role' className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
+                                {...register("role")}
+                                name='role' className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
                             >
+                                <option value={''}>Select role</option>
                                 <option value={ADMIN}>Admin</option>
-                                <option value={MARKETER}>Manager</option>
+                                <option value={MARKETER}>Marketer</option>
                                 <option value={TELE_MARKETER}>Telemarketer</option>
                                 <option value={DATA_ENTRY_OPERATOR}>Data entire operator</option>
                                 <option value={ON_FIELD_MARKETER}>Field Marketer</option>
                             </select>
-                            {errors.role?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.role?.message}</p>}
+                            {addressInfo.roleErr && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{addressInfo.roleErr}</p>}
                         </div>
                         <div className="w-full mb-2">
                             <label htmlFor='password' className="font-semibold text-sm">Password</label>
@@ -171,8 +207,8 @@ const Register = () => {
                             {isLoading ? <SmallSpinner /> : "Register"}
                         </button>
                     </form>
-                </div>}
-        </div>
+                </div >}
+        </div >
     );
 };
 
