@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { ImPencil2 } from 'react-icons/im';
 import Link from 'next/link';
+import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
+import { LargeSpinner } from '@/components/Spinner';
 
 const Entires_data = () => {
     const [entireData, setEntireData] = useState([]);
@@ -14,9 +16,28 @@ const Entires_data = () => {
         return () => fetchData();
     }, [])
 
-    return (
-        <div className='min-h-[80vh]'>
-            <div className=' grid grid-cols-1 md:grid-cols-2 lggg:grid-cols-3 gap-4 lg:max-w-5xl lggg:max-w-6xl xl:max-w-7xl mx-4 smm:mx-16 md:mx-4 lg:mx-auto mt-5'>
+    const { data, isLoading, isError, error } = useGetAllDataQuery("limit=2");
+    console.log(data, isLoading, isError, error);
+
+    let content;
+    if (isLoading) {
+        content = <LargeSpinner />;
+    };
+    if (isError) {
+        if (error.error) {
+            content = <div className='text-center mt-10 md:mt-52'>
+                <p className="text-2xl text-red-500">{error.error}</p>
+            </div>
+        } else {
+            content = <div className='text-center mt-10 md:mt-52'>
+                <p className="text-2xl text-red-500">{error.data.message}</p>
+            </div>
+        }
+    } else if (!isLoading && data.success) {
+        if (data?.data?.length === 0) {
+            content = <h3 className='text-2xl text-green-500 text-center mt-[20%]'>Empty services !</h3>
+        } else {
+            content = <div className=' grid grid-cols-1 md:grid-cols-2 lggg:grid-cols-3 gap-4 lg:max-w-5xl lggg:max-w-6xl xl:max-w-7xl mx-4 smm:mx-16 md:mx-4 lg:mx-auto mt-5'>
                 {entireData.map((data, i) => <div key={i} className='w-full  px-4 py-2 smm:py-4  md:py-2 lg:py- bg-white rounded drop-shadow'>
                     <button className='text-xs bg-slate-50 p-1 rounded-full active:text-green-400 absolute top-2 right-4'><BsThreeDotsVertical className='font-bold' /></button>
                     <h2 className="text-gray-900 font-medium text-[0.625rem] uppercase">Data No - {++i}</h2>
@@ -35,6 +56,11 @@ const Entires_data = () => {
                     </Link>
                 </div>)}
             </div>
+        };
+    };
+    return (
+        <div className='min-h-[80vh]'>
+            {content}
         </div>
     );
 };

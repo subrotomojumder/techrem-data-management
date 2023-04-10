@@ -19,6 +19,8 @@ const Login = () => {
     // const from = location.state?.from?.pathname || '/';
 
     const handleLogin = async (data) => {
+        return console.log(data);
+       
         // const results = await dispatch(loginUser(data));
         // if (!results.error) {
         //     const findEmail = await dispatch(getUser(results.payload.email));

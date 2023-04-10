@@ -1,24 +1,21 @@
 import React, { useEffect } from 'react';
-import { FaFacebook, FaGoogle, FaInstagram } from "react-icons/fa";
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { SmallSpinner } from '@/components/Spinner';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
+import { useRegisterMutation } from '@/app/features/users/userApi';
+import { errorToast, successToast } from '@/utils/neededFun';
+import { MdOutlineManageAccounts } from 'react-icons/md';
 
 const Register = () => {
     const [preview, setPreview] = useState({});
     const [imgFile, setImgFile] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
-    // const dispatch = useDispatch();
-    // const { user, isLoading, isError, error } = useSelector((state) => state.auth);
-    // const [postUser, { isSuccess, isError: isPostError, error: postError }] = useRegisterMutation();
-    // const { dbUser, isLoading: isDbLoading, isError: isDbError, error: dbError } = useSelector((state) => state.dbAuth);
-    const { register, handleSubmit, control, formState: { errors } } = useForm();
-    const term = useWatch({ control, name: "term" });
+    const [createSuccess, setCreateSuccess] = useState(null);
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const [userRegister, { isLoading }] = useRegisterMutation();
+
     const handleSignUp = async (data) => {
-        console.log(data);
         // delete data.userImage;
         // const formData = new FormData();
         // formData.append('image', imgFile);
@@ -29,26 +26,47 @@ const Register = () => {
             //         headers: multipartHeaders
             //     })
             // if (result.data.file) {
-            // const results = await dispatch(createUser(data));
-            // if (!results.error) {
-            //             const res = await postUser({ name: data.name, email: data.email, password: data.password, userImage: result.data.file, role: USER });
-            //             if (res.data.success) {
-            //                 localStorage.setItem("tech_token", res.data.jwtToken);
-            //                 toast.success(res.data?.message);
-            //             } else {
-            //                 toast.error(res?.message);
-            //             }
-            //         } else {
-            //             toast.error(results.error.message);
-            //         }
-            //     }
+
+            userRegister(data).then(res => {
+                if (res.data?.success) {
+                    successToast(res.data?.message);
+                    setCreateSuccess(res.data.data);
+                    reset();
+                } else {
+                    if (res.error) {
+                        return errorToast(res.error?.data.dev_error);
+                    }
+                    errorToast(res?.dev_error);
+                }
+            })
         } catch (error) {
-            toast.error(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
+            errorToast(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
         }
     };
+    const clipboardCopy = ()=> {
+        navigator.clipboard.writeText(`Your accounts Id: ${createSuccess?.userId} and Password: ${createSuccess?.password}`);
+        successToast("copy to clipboard!")
+    }
+    // console.log(createSuccess);
     return (
-            <div className='flex items-center justify-center py-4 px-2'>
-                <div className='relative shadow-2xl border rounded-lg w-full max-w-lg mx-auto px-10 pt-12 pb-8'>
+        <div className='min-h-[80vh] flex items-center justify-center py-4 px-2'>
+            {createSuccess ?
+                <div class="p-4  md:w-1/2 lg:w-1/3">
+                    <div class="h-full bg-gray-100 bg-opacity-75 drop-shadow-md border px-4 pt-6 pb-10 rounded-lg overflow-hidden text-center relative">
+                        <button onClick={() => setCreateSuccess(null)} className='absolute top-2 right-2 px-[10px] pb-1 bg-red-500 rounded-full  text-white text-xl'>x</button>
+                        <h2 class="tracking-widest text-sm title-font underline font-medium text-gray-400 mb-2">ACCOUNTS</h2>
+                        <p className='text-4xl w-fit mx-auto text-indigo-500'><MdOutlineManageAccounts /></p>
+                        <h1 class="title-font text-base  text-gray-900">Name-{createSuccess?.name}</h1>
+                        <h1 class="title-font text-base  text-gray-900 mb-2">Email-{createSuccess?.email}</h1>
+                        <h1 class="title-font text-base font-medium text-green-500 mb-1">Id: {createSuccess?.userId}</h1>
+                        <h1 class="title-font text-base font-medium text-gray-900 mb-1">Password: {createSuccess?.password}</h1>
+                        <button
+                            onClick={clipboardCopy}
+                            className='border shadow-sm mt-6 px-2 py-1 rounded-md font-medium text-zinc-500 hover:text-zinc-600 active:border-gray-400'
+                        >Copy to clip board!</button>
+                    </div>
+                </div>
+                : <div className='relative shadow-2xl border rounded-lg w-full max-w-lg mx-auto px-10 pt-12 pb-8'>
                     <h2 className='font-bold text-2xl mdd:text-3xl text-blue-600 mb-4'>Register account</h2>
                     <form onSubmit={handleSubmit(handleSignUp)}>
                         <div className='absolute right-11 top-7'>
@@ -114,20 +132,19 @@ const Register = () => {
                                 placeholder="Employee district" id='district' type="text"
                                 className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
                             />
-                            {errors.phone?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.phone?.message}</p>}
-                            {errors.phone?.type === 'minLength' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.phone?.message}</p>}
+                            {errors.district?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.district?.message}</p>}
                         </div>
                         <div className="w-full mb-2">
                             <label htmlFor='role' className="font-semibold text-sm">Employee role</label>
                             <select
                                 {...register("role", { required: "Employee role is required!" })}
-                                defaultValue='data-entire' name='role' className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
+                                defaultValue={DATA_ENTRY_OPERATOR} name='role' className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
                             >
-                                <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
-                                <option value="telemarketer">Telemarketer</option>
-                                <option value="data-entire">Data entire</option>
-                                <option value="field-marketer">Field Marketer</option>
+                                <option value={ADMIN}>Admin</option>
+                                <option value={MARKETER}>Manager</option>
+                                <option value={TELE_MARKETER}>Telemarketer</option>
+                                <option value={DATA_ENTRY_OPERATOR}>Data entire operator</option>
+                                <option value={ON_FIELD_MARKETER}>Field Marketer</option>
                             </select>
                             {errors.role?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.role?.message}</p>}
                         </div>
@@ -151,11 +168,11 @@ const Register = () => {
                             type='submit'
                             className={`w-full py-2 rounded-md mt-1 bg-blue-700 hover:bg-blue-800 active:outline outline-green-600 font-semibold text-white`}
                         >
-                            {/* {isLoading ? <SmallSpinner /> : "Register"} */}Register
+                            {isLoading ? <SmallSpinner /> : "Register"}
                         </button>
                     </form>
-                </div>
-            </div>
+                </div>}
+        </div>
     );
 };
 

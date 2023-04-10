@@ -1,7 +1,11 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
+import { useSelector } from 'react-redux'
 
 export default function Home() {
+ const state = useSelector((state)=> state);
+ console.log(state);
+//  console.log(user, isLoading, isError, error);
   return (
     <>
       <Head>
