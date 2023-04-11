@@ -53,12 +53,12 @@ const Register = () => {
                     // console.log(res);
                     if (res.error) {
                         if (res.error.error) {
-                            return  errorToast(res.error.error);
+                            return errorToast(res.error.error);
                         }
                         if (res?.error?.data?.dev_error) {
-                          return  errorToast(res.error?.data.dev_error);
+                            return errorToast(res.error?.data.dev_error);
                         }
-                      return  errorToast(res?.error);
+                        return errorToast(res?.error);
                     }
                     errorToast(res?.data.message);
                 }
@@ -201,10 +201,10 @@ const Register = () => {
                             {errors.password?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.password?.message}</p>}
                         </div>
                         <button
-                            type='submit'
-                            className={`w-full py-2 rounded-md mt-1 bg-blue-700 hover:bg-blue-800 active:outline outline-green-600 font-semibold text-white`}
+                            type='submit' disabled={isLoading}
+                            className={`w-full py-2 rounded-md mt-1 disabled:bg-blue-500 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 active:outline outline-green-600 font-semibold text-white flex justify-center items-center`}
                         >
-                            {isLoading ? <SmallSpinner /> : "Register"}
+                            {isLoading ? <SmallSpinner /> : "REGISTER"}
                         </button>
                     </form>
                 </div >}
