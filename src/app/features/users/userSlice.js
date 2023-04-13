@@ -12,20 +12,17 @@ const initialState = {
 };
 export const getUser = createAsyncThunk(
     "users/getUser",
-    async (userId) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV}/user/userid/${userId}`, {
+    async (data) => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV}/user/login`, {
+            method: "POST",
+            body: JSON.stringify(data),
             headers: {
                 'content-type': 'application/json',
-                authorization: `${localStorage.getItem('token')}`,
+                authorization: localStorage.getItem("tech_token"),
             }
         });
         const results = await res.json();
-        // console.log(results)
-        if (results?.success) {
-            return results;
-        } else {
-            return results;
-        }
+        return results;
     }
 );
 const userSlice = createSlice({
@@ -34,6 +31,9 @@ const userSlice = createSlice({
     reducers: {
         userLogoutSet: (state) => {
             state.user = { email: "", role: "" };
+        },
+        autoUserSet: (state, {payload}) => {
+            state.user = payload;
         },
     },
     extraReducers: (builder) => {
@@ -47,12 +47,15 @@ const userSlice = createSlice({
             state.isLoading = false;
             if (action.payload.success) {
                 state.user = action.payload.data;
+                state.isError = false;
+                state.error = "";
             }
             else {
                 state.user = { email: "", role: "" };
+                state.isError = true;
+                state.error = action.payload.message;
             }
-            state.isError = false;
-            state.error = "";
+
         });
         builder.addCase(getUser.rejected, (state, action) => {
             state.isLoading = false;
@@ -63,5 +66,5 @@ const userSlice = createSlice({
     }
 })
 
-export const { userLogoutSet } = userSlice.actions;
+export const { userLogoutSet, autoUserSet } = userSlice.actions;
 export default userSlice.reducer;

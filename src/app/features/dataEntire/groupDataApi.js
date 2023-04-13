@@ -1,32 +1,33 @@
 import { apiSlice } from '../api/apiSlice'
 
-const dataEntireApi = apiSlice.injectEndpoints({
+
+const dataDataApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        postData: builder.mutation({
+        postGroupData: builder.mutation({
             query: (data) => ({
                 method: "POST",
-                url: "/data_entry",
+                url: "/group_data_entry",
                 body: data,
                 headers: {
                     'content-type': 'application/json',
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["data"]
+            invalidatesTags: ["groups"]
         }),
-        getAllData: builder.query({
+        getAllGroupData: builder.query({
             query: (query) => ({
-                url: `/data_entry?${query}`,
+                url: `/group_data_entry?${query}`,
                 headers: {
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            providesTags: ["data"]
+            providesTags: ["groups"]
         }),
     })
 })
 
 export const {
-    useGetAllDataQuery,
-    usePostDataMutation
-} = dataEntireApi;
+    usePostGroupDataMutation,
+    useGetAllGroupDataQuery
+} = dataDataApi;

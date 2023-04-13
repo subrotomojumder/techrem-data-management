@@ -21,7 +21,7 @@ function LoginForm({ setUser }) {
         if (username && password) {
             setUser({username, password})
             setTimeout(()=> {
-                router.replace(from)
+                // router.replace(from)
             }, 1000)
         } else {
             alert("field empty")

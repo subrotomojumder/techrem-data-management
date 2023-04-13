@@ -52,15 +52,18 @@ const Register = () => {
                 } else {
                     // console.log(res);
                     if (res.error) {
-                        if (res.error.error) {
+                        if (res.error?.message) {
+                            return errorToast(res.error.message);
+                        }
+                        if (res.error?.error) {
                             return errorToast(res.error.error);
                         }
                         if (res?.error?.data?.dev_error) {
                             return errorToast(res.error?.data.dev_error);
                         }
-                        return errorToast(res?.error);
+                    }else if (res.data?.message) {
+                        errorToast(res?.data.message);                        
                     }
-                    errorToast(res?.data.message);
                 }
             })
         } catch (error) {
@@ -202,7 +205,7 @@ const Register = () => {
                         </div>
                         <button
                             type='submit' disabled={isLoading}
-                            className={`w-full py-2 rounded-md mt-1 disabled:bg-blue-500 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 active:outline outline-green-600 font-semibold text-white flex justify-center items-center`}
+                            className={`w-full py-2 rounded-md mt-1 disabled:bg-blue-500 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 active:outline outline-green-600  disabled:outline-none font-semibold text-white flex justify-center items-center`}
                         >
                             {isLoading ? <SmallSpinner /> : "REGISTER"}
                         </button>

@@ -10,7 +10,7 @@ const userApi = apiSlice.injectEndpoints({
                 body: user,
                 headers: {
                     'content-type': 'application/json',
-                    authorization: `${localStorage.getItem('token')}`,
+                    authorization: localStorage.getItem("tech_token"),
                 }
             }),
             invalidatesTags: ["user"]
@@ -20,7 +20,7 @@ const userApi = apiSlice.injectEndpoints({
                 url: `/user?${url_query}`,
                 headers: {
                     'content-type': 'application/json',
-                    authorization: `${localStorage.getItem('token')}`,
+                    authorization: localStorage.getItem("tech_token"),
                 }
             }),
             providesTags: ["user"]

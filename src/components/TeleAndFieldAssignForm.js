@@ -8,16 +8,18 @@ import { BsSearch } from 'react-icons/bs';
 const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
     const [selectedData, setSelectedData] = useState([]);
     const [autoSelect, setAutoSelect] = useState(0);
-    const { data, isLoading, isError, error } = useGetAllDataQuery(`role=${""}`);
+    const { data, isLoading, isError, error } = useGetAllDataQuery(``);
     useEffect(() => {
-        if (data?.success) {
-            for (let i = 0; i < autoSelect; i++) {
-                const newId = data.data[i]._id;
-                if (!selectedData.includes(newId)) {
-                    setSelectedData(current => [...current, newId])
+        setTimeout(() => {
+            if (data?.success) {
+                for (let i = 0; i < autoSelect; i++) {
+                    const newId = data.data[i]._id;
+                    if (!selectedData.includes(newId)) {
+                        setSelectedData(current => [...current, newId])
+                    }
                 }
             }
-        }
+        }, 500)
     }, [autoSelect]);
     const handleChecked = (entireId) => {
         if (selectedData.includes(entireId)) {
@@ -26,9 +28,9 @@ const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
             setSelectedData(current => [...current, entireId])
         }
     }
-    // console.log(selectedData);
+    console.log(selectedData);
     if (!employee?.role) {
-        return <EmptyLoader otherText={`Please select ${userQuery?.role}!`}></EmptyLoader>
+        return <EmptyLoader otherText={`Please select ${userQuery?.role} name!`}></EmptyLoader>
     }
     if (isLoading) {
         return <EmptyLoader isLoading={isLoading}></EmptyLoader>
@@ -48,11 +50,12 @@ const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
         <section className="text-gray-600 body-font border border-gray-400 h-full">
             <div className='col-span-full bg-slate-200 py-1 flex justify-between h-fit'>
                 <input
-                    value={autoSelect} 
+                    value={autoSelect}
                     onChange={(e) => setAutoSelect(e.target.value < 0 ? 0 : e.target.value < data?.data?.length ? e.target.value : data?.data?.length)}
                     name='quantity' type="number" id='qty' placeholder='QTY'
                     className="max-w-[80px] text-center placeholder:text-gray-800 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-sm font-medium outline-none text-gray-700 pl-2 pr-1 ml-1 leading-8 transition-colors duration-200 ease-in-out"
                 />
+                <p className='font-semibold text-lg  mt-1'>{selectedData?.length}</p>
                 <div className='flex justify-end items-center gap-1'>
                     <label className="relative block rounded-md">
                         <span className="sr-only">Search</span>

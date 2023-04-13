@@ -14,7 +14,7 @@ function PrivateRoute({ children }) {
   console.log(14, user);
 
   useEffect(() => {
-    const token = localStorage.getItem('tok');
+    const token = localStorage.getItem("tech_token");
     if (token) {
       setIsAuthenticated(true);
       setIsLoading(false);
