@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { EmptyLoader, SmallSpinner } from './Spinner';
 import Countries from 'countries-list';
 import { usePostMarketerTaskMutation } from '@/app/features/dataEntire/assignTaskApi';
 import { useForm } from 'react-hook-form';
 
 const MarketerAssignForm = ({ employee }) => {
+    const [taskData, setTaskData] = useState({});
     const [postMarketerTask, { isLoading, isError, error }] = usePostMarketerTaskMutation();
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -12,18 +13,40 @@ const MarketerAssignForm = ({ employee }) => {
         return <EmptyLoader otherText={`Please select marketer name!`}></EmptyLoader>
     }
     const submit = (data) => {
-        console.log("object");
+        let marketer_create = {
+            marketer: {
+                name: "abir",
+                id: "642f5032e1283f52566eb214"
+            },
+            executor: {
+                id: "642f5127504a2502965b36fb",
+                name: "sampod",
+                role: "admin"
+            },
+            assign_date: {
+                start: "2023-12-05", 
+                end: "2023-12-09"
+            },
+            area: {
+                country: "bangladsh",
+                district: "noakhali",
+            }
+        }
+        
+        postMarketerTask(marketer_create).then(res=> {
+            console.log(res);
+        })
 
     }
     return (
         <section className="text-gray-600 body-font border border-gray-400 h-full pt-4 pb-6 px-9">
             <h2 className='text-xl font-[400] text-blue-500 underline mb-3'>Work statements</h2>
-            <from onSubmit={handleSubmit(submit)} className='col-span-2 grid grid-cols-1 gap-x-3 h-fit'>
+            <form onSubmit={handleSubmit(submit)} className='col-span-2 grid grid-cols-1 gap-x-3 h-fit'>
                 <div className="relative my-1 w-full">
                     <label className="leading-7 font-[500] text-gray-600">Write Work Aria *</label>
                     <div className='flex justify-center'>
                         <select
-
+                                onChange={(e)=> se}
                             className="w-full bg-white rounded rounded-r-none placeholder:text-gray-900 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-500 py-2 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
                         >
                             <option value='' disabled>Select Country</option>
@@ -50,6 +73,7 @@ const MarketerAssignForm = ({ employee }) => {
                     <div className='w-full'>
                         <label className="leading-7 font-[500] text-gray-600">Start Date *</label>
                         <input
+                            {...register("country")}
                             type="date" placeholder='Country Name...'
                             className="w-full bg-white rounded placeholder:text-gray-900 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-500 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
                         />
@@ -84,12 +108,12 @@ const MarketerAssignForm = ({ employee }) => {
                     />
                 </div>
                 <button
-                    type='submit'
+                    type='submit' disabled={isLoading}
                     className={`w-36 mx-auto py-2 rounded-md mt-6 disabled:bg-blue-500 disabled:cursor-not-allowed disabled:outline-0 bg-blue-700 hover:bg-blue-800 active:outline outline-green-600  disabled:outline-none font-semibold text-white flex justify-center items-center`}
                 >
-                    {"isLoading" ? <SmallSpinner /> : "Assign"}
+                    {isLoading ? <SmallSpinner /> : "Assign"}
                 </button>
-            </from>
+            </form>
         </section>
     );
 };

@@ -10,11 +10,11 @@ const Private = (Component) => {
       router.push(url);
     }
     // Check if user is authenticated, e.g. by checking a token in local storage
-    const { user } = props;
+    const user = {};
     useEffect(() => {
       if (user.username) {
         setToken(true)
-      }else{
+      } else {
         setToken(false)
       }
       setLogin(false)

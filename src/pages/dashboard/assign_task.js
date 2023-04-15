@@ -43,21 +43,6 @@ const AssignTask = () => {
                         </select>
                     </div>
                     <div className="relative my-2 w-full">
-                        <label className="leading-7 font-[600] text-gray-700">Assign Address *</label>
-                        <select
-                            // onChange={(e) => {
-                            //     setEmployee({});
-                            //     setUserQuery({ ...userQuery, role: e.target.value });
-                            // }}
-                            name='busiCategory' className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                            <option selected disabled >Select task type</option>
-                            <option value={DATA_ENTRY_OPERATOR}>Assign Address</option>
-                            <option value={MARKETER}>Marketer</option>
-                            <option value={TELE_MARKETER}>Telemarketer</option>
-                            <option value={ON_FIELD_MARKETER}>Field Marketer</option>
-                        </select>
-                    </div>
-                    <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Choose worker *</label>
                         {userLoading ?
                             <input
