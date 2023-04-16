@@ -22,7 +22,7 @@ const dataEntireApi = apiSlice.injectEndpoints({
                 }
             }),
             providesTags: ["data"]
-        }),
+        })
     })
 })
 

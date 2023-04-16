@@ -1,15 +1,15 @@
 import { useGetEmployeeByQueQuery } from '@/app/features/users/userApi';
-import MarketerAssignForm from '@/components/MarketerAssignForm';
-import { EmptyLoader } from '@/components/Spinner';
+import MarketerAndEntireAssignForm from '@/components/MarketerAndEntireAssignForm';
 import TeleAndFieldAssignForm from '@/components/TeleAndFieldAssignForm';
+import { EmptyLoader } from '@/components/Spinner';
 import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
-
 const AssignTask = () => {
-    const [userQuery, setUserQuery] = useState({ role: '' });
+    const [userQuery, setUserQuery] = useState({ role: "", country: "", district: "", village: "" });
     const [employee, setEmployee] = useState({});
-    const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}`);
+    const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}&country=${userQuery.country}&district=${userQuery.district}&village=${userQuery.village}`);
+    // console.log(userData);
     useEffect(() => {
         if (isError) {
             if (error.data.message) {
@@ -18,6 +18,7 @@ const AssignTask = () => {
             console.log(error);
         }
     }, [isError]);
+    // console.log(userQuery);
     // console.log(userData,userLoading, isError, error);
     // console.log("query: ", userQuery.role, "employee: ", employee.role);
     return (
@@ -32,7 +33,7 @@ const AssignTask = () => {
                         <select
                             onChange={(e) => {
                                 setEmployee({});
-                                setUserQuery({ ...userQuery, role: e.target.value });
+                                setUserQuery({ role: e.target.value, country: "", district: "", village: "" });
                             }}
                             name='busiCategory' className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
                             <option selected disabled >Select task type</option>
@@ -41,6 +42,46 @@ const AssignTask = () => {
                             <option value={TELE_MARKETER}>Telemarketer</option>
                             <option value={ON_FIELD_MARKETER}>Field Marketer</option>
                         </select>
+                    </div>
+                    <div className="relative my-2 w-full">
+                        <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
+                        <div className='grid grid-cols-10 justify-center'>
+                            <select
+                                onChange={(e) => {
+                                    setEmployee({});
+                                    setUserQuery({ ...userQuery, country: e.target.value, district: "", village: "" });
+                                }}
+                                name='busiCategory' className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
+                                <option selected value={""} >Select Country</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="India">India</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Afghanistan">Afghanistan</option>
+                            </select>
+                            <select
+                                onChange={(e) => {
+                                    setEmployee({});
+                                    setUserQuery({ ...userQuery, district: e.target.value, village: "" });
+                                }}
+                                name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
+                                <option selected value={""} >District</option>
+                                <option value="noakhali">Noakhali</option>
+                                <option value="Borishal">Borishal</option>
+                                <option value="Asam">Asam</option>
+                                <option value="Dhaka">Dhaka</option>
+                            </select>
+                            <select
+                                onChange={(e) => {
+                                    setEmployee({});
+                                    setUserQuery({ ...userQuery, village: e.target.value });
+                                }}
+                                name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
+                                <option selected value={""} >Village</option>
+                                <option value="charbata">Charbata</option>
+                                <option value="Hazipur">Hazipur</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Choose worker *</label>
@@ -61,19 +102,6 @@ const AssignTask = () => {
                         }
                     </div>
                     <div className="relative my-2 w-full">
-                        <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
-                        <div className='flex justify-center'>
-                            <input
-                                value={employee?.address?.country || "Select worker"} type="text" disabled
-                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
-                            />
-                            <input
-                                value={employee?.address?.district || "Select worker"} type="text" disabled
-                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
-                            />
-                        </div>
-                    </div>
-                    <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Other Address *</label>
                         <input
                             value={`Village - ${employee?.address?.village ? employee?.address?.village : "invalid"} Postcode - ${employee?.address?.postcode ? employee?.address?.postcode : "invalid"}`} type="text" disabled
@@ -83,9 +111,10 @@ const AssignTask = () => {
                 </div>
                 <main className='col-span-3 lg:pl-4'>
                     {userQuery.role === "" && <EmptyLoader otherText={"Select Employee type!"} />}
-                    {(userQuery.role === MARKETER) && <MarketerAssignForm employee={employee} />}
-                    {(userQuery.role === ON_FIELD_MARKETER) && <TeleAndFieldAssignForm employee={employee} userQuery={userQuery} />}
-                    {(userQuery.role === TELE_MARKETER) && <TeleAndFieldAssignForm employee={employee} userQuery={userQuery} />}
+                    {(userQuery.role === DATA_ENTRY_OPERATOR) && (employee.role === DATA_ENTRY_OPERATOR ) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === DATA_ENTRY_OPERATOR) && <EmptyLoader otherText={`Please select entire operator name!`} />}
+                    {(userQuery.role === MARKETER) && (employee.role === MARKETER ) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === MARKETER) && <EmptyLoader otherText={`Please select marketer name!`} />}
+                    {(userQuery.role === TELE_MARKETER) && (employee.role === TELE_MARKETER ) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === TELE_MARKETER) && <EmptyLoader otherText={`Please select telemarketer name!`} />}
+                    {(userQuery.role === ON_FIELD_MARKETER) && (employee.role === ON_FIELD_MARKETER) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === ON_FIELD_MARKETER) && <EmptyLoader otherText={`Please select field marketer name!`} />}
                 </main>
             </div>
         </div>

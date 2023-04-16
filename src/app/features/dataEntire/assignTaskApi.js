@@ -12,20 +12,50 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["field_marketer"]
+            invalidatesTags: ["marketer"]
         }),
-        // getAllData: builder.query({
-        //     query: (query) => ({
-        //         url: `/data_entry?${query}`,
-        //         headers: {
-        //             authorization: localStorage.getItem("tech_token"),
-        //         }
-        //     }),
-        //     providesTags: ["field_marketer""]
-        // }),
+        postEntireTask: builder.mutation({
+            query: (data) => ({
+                method: "POST",
+                url: "/divide_work/dataEntry_divide",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["entires"]
+        }),
+        postTelemarketerTask: builder.mutation({
+            query: (data) => ({
+                method: "POST",
+                url: "/divide_work/tele_divide",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["tele", "data"]
+        }),
+        postFieldMarketerTask: builder.mutation({
+            query: (data) => ({
+                method: "POST",
+                url: "/divide_work/onField_divide",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["field", "data"]
+        }),
     })
 })
 
 export const {
-    usePostMarketerTaskMutation
+    usePostEntireTaskMutation,
+    usePostMarketerTaskMutation,
+    usePostTelemarketerTaskMutation,
+    usePostFieldMarketerTaskMutation
 } = assignTaskApi;

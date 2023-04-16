@@ -1,14 +1,20 @@
 import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
 import React, { useEffect, useState } from 'react';
-import { EmptyLoader } from './Spinner';
-import { errorToast } from '@/utils/neededFun';
+import { EmptyLoader, SmallSpinner } from './Spinner';
+import { errorToast, successToast } from '@/utils/neededFun';
 import { format } from 'date-fns'
 import { BsSearch } from 'react-icons/bs';
+import { ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
+import { useSelector } from 'react-redux';
+import { usePostTelemarketerTaskMutation } from '@/app/features/dataEntire/assignTaskApi';
 
-const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
+const TeleAndFieldAssignForm = ({ employee }) => {
     const [selectedData, setSelectedData] = useState([]);
     const [autoSelect, setAutoSelect] = useState(0);
-    const { data, isLoading, isError, error } = useGetAllDataQuery(``);
+    const [inputData, setInputData] = useState({ start: '', end: '' });
+    const { data, isLoading, isError, error } = useGetAllDataQuery(`${employee.role === TELE_MARKETER ?"tele_marketer": "fild_marketer"}_data=true`);
+    const { user, isLoading: userLoading } = useSelector((state) => state.auth);
+    const [postTelemarketerTask, { isLoading: teleMarLoading }] = usePostTelemarketerTaskMutation();
     useEffect(() => {
         setTimeout(() => {
             if (data?.success) {
@@ -27,10 +33,65 @@ const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
         } else {
             setSelectedData(current => [...current, entireId])
         }
-    }
-    console.log(selectedData);
-    if (!employee?.role) {
-        return <EmptyLoader otherText={`Please select ${userQuery?.role} name!`}></EmptyLoader>
+    };
+    
+    const submit = () => {
+        if (selectedData.length < 1) {
+            return errorToast("Please select assign task names!")
+        }
+        if (!inputData.start) {
+            return errorToast("Task assign start date is required!")
+        } else if (!inputData.end) {
+            return errorToast("Task assign end date is required!")
+        }
+        if (new Date(inputData.end).getTime() - new Date(inputData.start).getTime() < 1) {
+            return errorToast("Task submission date must be after the start date!")
+        }
+        let task_data = {
+            [`${employee.role === TELE_MARKETER ? "teleMarketer" : "onfieldMarketer"}`]: {
+                name: employee.name,
+                account_id: employee._id
+            },
+            executor: {
+                account_id: user._id,
+                name: user.name,
+                role: user.role
+            },
+            dataIds: selectedData,
+            assign_date: {
+                start: inputData.start,
+                end: inputData.end
+            }
+        }
+        if (employee.role === TELE_MARKETER) {
+            postTelemarketerTask(task_data).then(res => {
+                // console.log(res);
+                if (res.error) errorToast("Some thing went wrong!");
+                if (res.data?.success) {
+                    successToast("Successfully submited task!");
+                    setInputData({});
+                    setSelectedData([]);
+                    setAutoSelect(0);
+                }
+                if (res.data?.success === false) errorToast(res.data.message);
+            }).catch(e => console.log(e));
+        }
+        if (employee.role === ON_FIELD_MARKETER) {
+            postTelemarketerTask(task_data).then(res => {
+                // console.log(res);
+                if (res.error) errorToast("Some thing went wrong!");
+                if (res.data?.success) {
+                    successToast("Successfully submited task!");
+                    setInputData({});
+                    setSelectedData([]);
+                    setAutoSelect(0);
+                }
+                if (res.data?.success === false) errorToast(res.data.message);
+            }).catch(e => console.log(e));
+        }
+    };
+    if (userLoading) {
+        return <EmptyLoader isLoading={userLoading} />
     }
     if (isLoading) {
         return <EmptyLoader isLoading={isLoading}></EmptyLoader>
@@ -47,10 +108,10 @@ const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
         return errorToast(data.message);
     }
     return (
-        <section className="text-gray-600 body-font border border-gray-400 h-full">
+        <section className="text-gray-600 body-font border border-gray-400 h-full relative">
             <div className='col-span-full bg-slate-200 py-1 flex justify-between h-fit'>
                 <input
-                    value={autoSelect}
+                    value={autoSelect} min={0}
                     onChange={(e) => setAutoSelect(e.target.value < 0 ? 0 : e.target.value < data?.data?.length ? e.target.value : data?.data?.length)}
                     name='quantity' type="number" id='qty' placeholder='QTY'
                     className="max-w-[80px] text-center placeholder:text-gray-800 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-sm font-medium outline-none text-gray-700 pl-2 pr-1 ml-1 leading-8 transition-colors duration-200 ease-in-out"
@@ -73,6 +134,28 @@ const TeleAndFieldAssignForm = ({ employee, userQuery }) => {
                     />
                     <p className='text-[13px] font-medium border px-1 rounded text-center'><span className='text-green-500 drop-shadow-md text-sm'>{data?.data?.length}</span><br />Available</p>
                 </div>
+            </div>
+            <div className='sticky  top-12 md:top-14 right-0 flex justify-between items-center bg-green-400 py-1'>
+                <div className='relative'>
+                    <label htmlFor="start" className='whitespace-pre font-semibold text-blue-500 cursor-pointer text-sm absolute left-1 top-2'>Start:</label>
+                    <input
+                        onChange={(e) => setInputData({ ...inputData, start: e.target.value })} min={format(new Date(), 'yyyy-MM-dd')}
+                        type="date" id='start' className="w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-600  pr-1 pl-10 leading-8 transition-colors duration-200 ease-in-out"
+                    />
+                </div>
+                <div className='relative'>
+                    <label htmlFor="end" className='whitespace-pre font-semibold text-green-500 cursor-pointer text-sm absolute left-1 top-2'>End:</label>
+                    <input
+                        onChange={(e) => setInputData({ ...inputData, end: e.target.value })} min={inputData?.start || format(new Date(), 'yyyy-MM-dd')}
+                        type="date" id='end' className="w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-600  pr-1 pl-9 leading-8 transition-colors duration-200 ease-in-out"
+                    />
+                </div>
+                <button
+                    onClick={submit} disabled={teleMarLoading}
+                    className={`w-20 mx-auto py-2 rounded-md mr-1 disabled:bg-blue-500 disabled:cursor-not-allowed disabled:outline-0 bg-blue-700 hover:bg-blue-800 active:outline outline-green-600  disabled:outline-none font-semibold text-white flex justify-center items-center`}
+                >
+                    {teleMarLoading ? <SmallSpinner /> : "Assign"}
+                </button>
             </div>
             <table className="table-auto w-full text-left whitespace-no-wrap">
                 <thead>
