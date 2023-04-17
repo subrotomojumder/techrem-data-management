@@ -1,13 +1,17 @@
+import { useGetEmployeeByQueQuery } from '@/app/features/users/userApi';
+import SingleUser from '@/components/SingleUser';
 import { LargeSpinner } from '@/components/Spinner';
 import React from 'react';
 import { BsSearch } from 'react-icons/bs';
 
 const EmployeeList = () => {
-    const { data, isLoading, isError, error } = { data: { success: true } };
+    const [queryData, setQueryData] = useState({ role: "user", keyword: "" });
+    const { data, isLoading, isError, error } = useGetEmployeeByQueQuery("");
+    const queryBtnCss = 'bg-white border border-orange-400 text-orange-400 font-medium hover:bg-orange-400 hover:text-white hover:border-white focus:bg-orange-400 focus:text-white focus:border-white active:bg-orange-500 px-2 mx-1 rounded-md whitespace-pre';
 
     let content;
     if (isLoading) {
-        content = <LargeSpinner />;
+        content = <LargeSpinner></LargeSpinner>
     };
     if (isError) {
         if (error.error) {
@@ -19,90 +23,46 @@ const EmployeeList = () => {
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
-    } else if (!isLoading && data?.success) {
-        if (data?.data?.length === 0) {
-            content = <h3 className='text-2xl text-green-500 text-center mt-[20%]'>Empty services !</h3>
-        } else {
-            content = <section className="text-gray-600 body-font">
-                <h1 className='text-2xl font-semibold text-center border-b shadow-xs mt-3'>All Account list</h1>
-                <div className='flex justify-end items-center gap-1'>
-                    <label className="relative block rounded-md">
-                        <span className="sr-only">Search</span>
-                        <span className="absolute top-[14px] right-0 flex items-center pr-2">
-                            <BsSearch className='active:text-green-300 text-sm' />
-                        </span>
-                        <input
-                            className="w-full text-md placeholder:italic bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-1 pr-6 mt-1 leading-8 transition-colors duration-200 ease-in-out"
-                            placeholder="Search for anything..." type="text" name="search" autoComplete="off"
-                        />
-                    </label>
-                    <input
-                        type="date"
-                        className="text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
-                    />
-                    <p className='text-[13px] font-medium border px-1 rounded text-center'><span className='text-green-500 drop-shadow-md text-sm'>{data?.data?.length}</span><br />Available</p>
-                </div>
-                <div className=" px-5 py-5 mx-auto">
-                    <div className="w-full mx-auto overflow-auto">
-                        {/* <table className="table-auto w-full text-left whitespace-no-wrap">
-                            <thead>
-                                <tr>
-                                    <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Logo</th>
-                                    <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Name</th>
-                                    <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Location</th>
-                                    <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Executor</th>
-                                    <th className="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="px-4 py-3">Start</td>
-                                    <td className="px-4 py-3">5 Mb/s</td>
-                                    <td className="px-4 py-3">15 GB</td>
-                                    <td className="px-4 py-3 text-lg text-gray-900">Free</td>
-                                    <td className="w-10 text-center">
-                                        <input name="plan" type="radio" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3">Pro</td>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3">25 Mb/s</td>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3">25 GB</td>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3 text-lg text-gray-900">$24</td>
-                                    <td className="border-t-2 border-gray-200 w-10 text-center">
-                                        <input name="plan" type="radio" />
-                                    </td>
-                                </tr>
-                                <tr className='max-w-[100px]'>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3">Business</td>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3">36 Mb/s</td>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3">40 GB</td>
-                                    <td className="border-t-2 border-gray-200 px-4 py-3 text-lg text-gray-900">$50</td>
-                                    <td className="border-t-2 border-gray-200 w-10 text-center">
-                                        <input name="plan" type="radio" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="border-t-2 border-b-2 border-gray-200 px-4 py-3">Exclusive</td>
-                                    <td className="border-t-2 border-b-2 border-gray-200 px-4 py-3">48 Mb/s</td>
-                                    <td className="border-t-2 border-b-2 border-gray-200 px-4 py-3">120 GB</td>
-                                    <td className="border-t-2 border-b-2 border-gray-200 px-4 py-3 text-lg text-gray-900">$72</td>
-                                    <td className="border-t-2 border-b-2 border-gray-200 w-10 text-center">
-                                        <input name="plan" type="radio" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table> */}
-                    </div>
-                </div>
-            </section>
-        };
+    };
+    // if (!isLoading && data.data.length === 0) {
+    //     content = <div className='text-center mt-10 md:mt-52'>
+    //         <p className="text-2xl text-red-500">User collection empty!</p>
+    //     </div>
+    // };
+    if (!isLoading && data?.success) {
+        content = <div className='grid sm:grid-cols-1 smm:grid-cols-2 mdd:grid-cols-3 lg:grid-cols-4 gap-3'>
+            {data?.data.map((user) => <SingleUser user={user} key={user._id} />)}
+        </div>
     };
     return (
-        <div className="text-gray-600 body-font max-w-6xl xxl:max-w-7xl min-h-[95vh] mx-auto">
-            {content}
-        </div>
-    );
+        <div
+            className='w-full'
+            style={{ background: `linear-gradient(90deg, rgba(226, 145, 186, 0.5), rgba(226, 145, 186, 0.3)), url(https://png.pngtree.com/thumb_back/fh260/back_our/20190621/ourmid/pngtree-investment-financial-management-financial-background-image_194572.jpg)`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}
+        >
+            <div className='bg-zinc-300 shadow-lg w-full py-2 ml-auto flex justify-end'>
+                <label className="relative block rounded-md">
+                    <span className="sr-only">Search</span>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-2">
+                        <BsSearch className='active:text-green-300' />
+                    </span>
+                    <input
+                        onChange={(e) => setQueryData({ ...queryData, keyword: e.target.value })}
+                        className="placeholder:italic placeholder:text-slate-400 bg-white w-full border border-slate-300 rounded-md py-1 pr-9 pl-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                        placeholder="email or name..." type="text" name="search"
+                    />
+                </label>
+                <div className='mx-2 flex justify-between'>
+                    <input type="date" name="" className='placeholder:italic placeholder:text-slate-400 bg-white w-full border border-slate-300 rounded-md py-1 px-2 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                    <input onClick={(e) => setQueryData({ ...queryData, role: "admin" })} type='button' value='Admin' className={`${queryBtnCss}`} />
+                    <input onClick={(e) => setQueryData({ ...queryData, role: "user" })} type='button' value='Customer' className={queryBtnCss} />
+                    <input onClick={(e) => setQueryData({ ...queryData, role: "manager" })} type='button' value='Manger' className={queryBtnCss} />
+                    <input onClick={(e) => setQueryData({ ...queryData, role: "staff" })} type='button' value='Staff' className={queryBtnCss} />
+                </div>
+            </div>
+            <main className="px-2 md:px-4 lg:px-6 pt-2 pb-8 ">
+                {content}
+            </main>
+        </div >)
 };
 
 export default EmployeeList;

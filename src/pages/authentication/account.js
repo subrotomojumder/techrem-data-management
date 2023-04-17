@@ -1,6 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const Account = () => {
+    const {user, isLoading, isError, error} = useSelector((state)=> state.auth);
+    console.log(user);
     return (
         <div className='max-w-[1100px] xl:max-w-[1500px] mx-auto min-h-screen'>
             <form

@@ -124,41 +124,63 @@ const New_form = () => {
                     </div>
                 </div>
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
-                    <label className="leading-7 font-[600] text-gray-700 col-span-3">Country *</label>
-                    <select
-                        value={inputData?.address?.country}
-                        onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, country: e.target.value } })}
-                        className="block col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                        <option value='' disabled>Select Country</option>
-                        {Object.values(Countries.countries).map((country, i) => (
-                            <option key={i} value={country.name}>{country.name}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
-                    <label htmlFor='district' className="leading-7 font-[600] text-gray-700 col-span-3">District *</label>
-                    <input
-                        value={inputData?.address?.district}
-                        onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, district: e.target.value } })}
-                        type="text" id='district' placeholder='Local district'
-                        className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    />
-                </div>
-                <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
-                    <label htmlFor='district' className="leading-7 font-[600] text-gray-700 col-span-3">Village </label>
-                    <div className='col-span-4 grid grid-cols-4'>
+                    <p className="leading-7 font-[600] text-gray-700 col-span-3">Address *</p>
+                    <div className="col-span-4 ">
+                        <label className="leading-7 text-gray-700 text-xs">Country *</label>
+                        <select
+                            value={inputData?.address?.country}
+                            onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, country: e.target.value } })}
+                            className="block w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-2 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                        >
+                            <option value='' disabled>Select Country</option>
+                            {Object.values(Countries.countries).map((country, i) => (
+                                <option key={i} value={country.name}>{country.name}</option>
+                            ))}
+                        </select>
+                        <div className='w-full grid grid-cols-6 gap-2 justify-between items-center'>
+                            <div className="w-full col-span-3">
+                                <label htmlFor='city' className="leading-7 text-gray-700 text-xs">City / Suburb </label>
+                                <input
+                                    value={inputData?.address?.city}
+                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, city: e.target.value } })}
+                                    type="text" id='city' placeholder='Local city suburb'
+                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                            </div>
+                            <div className="w-full col-span-3">
+                                <label htmlFor='district' className="leading-7 text-gray-700 text-xs">State / District </label>
+                                <input
+                                    value={inputData?.address?.state}
+                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, state: e.target.value } })}
+                                    type="text" id='district' placeholder='Local district state'
+                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                            </div>
+                            <div className="w-full col-span-4">
+                                <label htmlFor='village' className="leading-7 text-gray-700 text-xs">Village </label>
+                                <input
+                                    value={inputData?.address?.village}
+                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, village: e.target.value } })}
+                                    type="text" id='village' placeholder='Local village'
+                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                            </div>
+                            <div className="w-full col-span-2">
+                                <label htmlFor='post' className="leading-7 text-gray-700 text-xs">Post code </label>
+                                <input
+                                    value={inputData?.address?.postCode}
+                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, postCode: e.target.value } })}
+                                    type="text" id='post' placeholder='Post-code'
+                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                            </div>
+                        </div>
+                        <label htmlFor='street' className="leading-7 text-gray-700  text-xs">Street Address</label>
                         <input
-                            value={inputData?.address?.village}
-                            onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, village: e.target.value } })}
-                            type="text" id='district' placeholder='Local village'
-                            className="col-span-3 w-full bg-white rounded rounded-r-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                        />
-                        <input
-                            value={inputData?.address?.postCode}
-                            onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, postCode: e.target.value } })}
-                            type="text" id='post-code' placeholder='Post code'
-                            className="col-span-1 w-full bg-white rounded rounded-l-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-2 leading-8 transition-colors duration-200 ease-in-out"
+                            value={inputData?.address?.street}
+                            onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, street: e.target.value } })}
+                            type="text" id='street' placeholder='Street Address'
+                            className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
                         />
                     </div>
                 </div>

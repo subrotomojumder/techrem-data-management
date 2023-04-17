@@ -24,7 +24,7 @@ const userApi = apiSlice.injectEndpoints({
                 }
             }),
             providesTags: ["user"]
-        })
+        }),
     })
 })
 
