@@ -22,7 +22,7 @@ const AssignTask = () => {
     // console.log(userData,userLoading, isError, error);
     // console.log("query: ", userQuery.role, "employee: ", employee.role);
     return (
-        <div className='max-w-lg md:max-w-2xl lg:max-w-7xl mx-auto px-6 md:px-8 lg:px-10 py-2 md:py-2 lg:py-4 md:my-2'>
+        <div className='max-w-lg md:max-w-2xl lg:max-w-7xl min-h-screen mx-auto px-6 md:px-8 lg:px-10 py-2 md:py-2 lg:py-4 md:my-2'>
             <h2 className="text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase">Assign task</h2>
             <p className="leading-relaxed mb-2 text-gray-600 w-80 md:w-full">Help us with your valuable information so that we can benefit you.</p>
             <div className='grid grid-cols-1 lg:grid-cols-5  lg:divide-x-2 gap-3 h-full relative'>

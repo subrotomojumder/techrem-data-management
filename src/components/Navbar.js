@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, Fragment } from 'react';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import tech_rem_logo from '../assets/images/tech-logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogoutSet } from '@/app/features/users/userSlice';
 import { useRouter } from 'next/router';
+import { Menu, Transition } from '@headlessui/react';
 
 const Navbar = () => {
     const [dropdown, setDropdown] = useState(false);
@@ -28,7 +29,7 @@ const Navbar = () => {
     const signOut = () => {
         dispatch(userLogoutSet());
         localStorage.removeItem("tech_token");
-        setTimeout(()=> router.replace('/'), 1000);
+        setTimeout(() => router.replace('/'), 1000);
     }
     return (
         <div className='w-full bg-indigo-100 shadow-md sticky top-0 left-0 z-20'>
@@ -46,10 +47,92 @@ const Navbar = () => {
                         <ul className={`bg-white mdd:bg-indigo-100 border mdd:border-0 absolute top-14 left-0 mdd:static flex flex-col mdd:flex-row items-center space-x-0 md:space-x-1 font-semibold`}>
                             <Link href={`/`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Home</li></Link>
                             <Link href={`/dashboard/new_form`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>New-Form</li></Link>
-                            <Link href={`/dashboard/entires_data`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Entire-Data</li></Link>
-                            <Link href={`/dashboard/group_entire`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Group-Entire</li></Link>
-                            <Link href={`/about`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>About</li></Link>
-                            <Link href={`/authentication/ac_register`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>AC-Register</li></Link>
+                            <Link href={`/dashboard/entires_data_list`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Data-List</li></Link>
+                            <Menu as="div" className="relative inline-block text-left">
+                                <div>
+                                    <Menu.Button className="hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre">
+                                        Group
+                                    </Menu.Button>
+                                </div>
+                                <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-100"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95"
+                                >
+                                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="px-1 py-1 ">
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link href={`/dashboard/group_entire`}
+                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        Create group data
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link href={`/dashboard/group_data_list`}
+                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        Group data list
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                        </div>
+                                    </Menu.Items>
+                                </Transition>
+                            </Menu>
+
+                            {/* .................for account inquary................ */}
+
+                            <Menu as="div" className="relative inline-block text-left">
+                                <div>
+                                    <Menu.Button className="hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre">
+                                       AC-Register
+                                    </Menu.Button>
+                                </div>
+                                <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-100"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95"
+                                >
+                                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="px-1 py-1 ">
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link href={`/authentication/ac_register`}
+                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        Create Account
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link href={`/dashboard/employee_list`}
+                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        Employee-List
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                        </div>
+                                    </Menu.Items>
+                                </Transition>
+                            </Menu>
                             <Link href={`/dashboard/assign_task`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Assign-Work</li></Link>
                         </ul>
                     </div>
@@ -65,9 +148,10 @@ const Navbar = () => {
                                 : <img className='h-10 md:h-12 w-10 md:w-12 rounded-full cursor-pointer' src={user?.userImage} alt='' />}
                             {dropdown && <div className="absolute right-8 bg-pink-300 top-[54px] rounded-md px-3 py-3 w-28 text-center">
                                 <ul>
-                                    <Link href={`/myaccount`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75">Account</li></Link>
-                                    <Link href={`/my-orders`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75">Orders</li></Link>
-                                    <li onClick={signOut} className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75">Logout</li>
+                                    <Link href={`/authentication/account`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Account</li></Link>
+                                    <Link href={`/dashboard/tasks_list`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Tasks-List</li></Link>
+                                    <Link href={`/dashboard/tasks_submission`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Submission</li></Link>
+                                    <li onClick={signOut} className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Logout</li>
                                 </ul>
                             </div>}
                         </div>}
