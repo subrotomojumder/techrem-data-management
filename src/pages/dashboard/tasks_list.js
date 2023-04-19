@@ -67,7 +67,7 @@ const TasksList = () => {
                                 
                             </td>
                             <td className="px-4 py-3">{entire.businessDetails?.businessName}</td>
-                            <td className="px-4 py-3">{entire.address?.country}, {entire.address?.district}</td>
+                            <td className="px-4 py-3">{entire.address?.country}, {entire.address?.state}</td>
                             <td className="px-4 py-3 text-base text-gray-900">{format(new Date(entire.date), 'yyyy-MM-dd')}</td>
                         </tr>)}
                     </tbody>
@@ -98,7 +98,7 @@ export default TasksList;
 //                 <p className="leading-7 text-gray-700 col-span-3">Business Name :</p>
 //                 <p className='col-span-4 font-[600]'>{data.busiName}</p>
 //                 <p className="leading-7 -mt-4 text-gray-700 col-span-3">Location <span className='ml-12'>:</span></p>
-//                 <p className='col-span-4 -mt-4 font-[600]'>{data.district}, {data.country}</p>
+//                 <p className='col-span-4 -mt-4 font-[600]'>{data.state}, {data.country}</p>
 //             </div>
 //         </div>
 //     </Link>

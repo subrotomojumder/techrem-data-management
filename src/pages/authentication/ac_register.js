@@ -31,7 +31,7 @@ const Register = () => {
         }
         const address = {
             country: addressInfo.country,
-            district: data.district
+            state: data.state
         }
         data.address = address;
         // delete data.userImage;
@@ -150,7 +150,7 @@ const Register = () => {
                             {errors.phone?.type === 'minLength' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.phone?.message}</p>}
                         </div>
                         <div className="w-full mb-2">
-                            <label className="font-semibold text-sm">Employee district</label>
+                            <label className="font-semibold text-sm">Employee state</label>
                             <div className='grid grid-cols-5'>
                                 <select
                                     onChange={(e) => setAddressInfo({ ...addressInfo, country: e.target.value })}
@@ -162,14 +162,14 @@ const Register = () => {
                                     ))}
                                 </select>
                                 <input
-                                    {...register("district", {
-                                        required: "District field is required!"
+                                    {...register("state", {
+                                        required: "state field is required!"
                                     })}
-                                    placeholder="Employee district" id='district' type="text"
+                                    placeholder="Employee state" id='state' type="text"
                                     className="col-span-3 placeholder:text-gray-900 rounded-l-none w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
                                 />
                             </div>
-                            {errors.district?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.district?.message}</p>}
+                            {errors.state?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.state?.message}</p>}
                             {addressInfo.countryErr && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{addressInfo.countryErr}</p>}
                         </div>
                         <div className="w-full mb-2">

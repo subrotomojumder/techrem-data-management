@@ -40,7 +40,7 @@ const Tasks_submission = () => {
                             <p className="leading-7 text-gray-700 col-span-3">Business Name :</p>
                             <p className='col-span-4 font-[600]'>{entire?.businessDetails?.businessName}</p>
                             <p className="leading-7 -mt-4 text-gray-700 col-span-3">Location <span className='ml-12'>:</span></p>
-                            <p className='col-span-4 -mt-4 font-[600]'>{data.district}, {data.country}</p>
+                            <p className='col-span-4 -mt-4 font-[600]'>{data.state}, {data.country}</p>
                         </div>
                     </div>
                 </Link>

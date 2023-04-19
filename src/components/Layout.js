@@ -16,19 +16,25 @@ export default function Layout({ children }) {
         // const { user, isLoading, isError, error } = useSelector((state) => state.auth);
         // console.log({ user, isLoading, isError, error });
         useEffect(() => {
-            if(localStorage.getItem("tech_token")){
-                fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV}/user/jwt`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ authorization: localStorage.getItem("tech_token") })
-                }).then(res => res.json()).then(results => {
-                    if (results.success) {
-                        localStorage.setItem("tech_token", results.jwtToken);
-                        dispatch(autoUserSet(results.data));
-                    }
-                })
+            if (localStorage.getItem("tech_token")) {
+                try {
+                    fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV}/user/jwt`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ authorization: localStorage.getItem("tech_token") })
+                    }).then(res => res.json()).then(results => {
+                        if (results.success) {
+                            localStorage.setItem("tech_token", results.jwtToken);
+                            dispatch(autoUserSet(results.data));
+                        } else {
+                            router.push("/")
+                        }
+                    })
+                } catch (error) {
+                    router.push("/")
+                }
             }
         }, []);
         return children;

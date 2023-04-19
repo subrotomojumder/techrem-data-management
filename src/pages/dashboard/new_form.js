@@ -1,43 +1,78 @@
 import React, { useEffect, useState } from 'react';
 import Countries from 'countries-list';
 import { LARGE, MEDIUM, SMALL } from '@/utils/constant';
-import { SmallSpinner } from '@/components/Spinner';
+import { EmptyLoader, SmallSpinner } from '@/components/Spinner';
 import { usePostDataMutation } from '@/app/features/dataEntire/dataEntireApi';
 import { errorToast, successToast } from '@/utils/neededFun';
+import { useSelector } from 'react-redux';
+import AddressAddForm from '@/components/Forms/AddressAddForm';
+import { usePostAddressMutation } from '@/app/features/address/addressApi';
 
 const New_form = () => {
+    const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
     const [inputData, setInputData] = useState({});
+    const [count, setCount] = useState({ website: 1, branch: 1 });
+    const [website, setWebsite] = useState({});
+    const [branch, setBranch] = useState({});
+    const [errors, setErrors] = useState({});
     const [postData, { isLoading }] = usePostDataMutation();
+    const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
     useEffect(() => {
-        setInputData(JSON.parse(localStorage.getItem("entire")))
+        setInputData(JSON.parse(localStorage.getItem("entire") || {}))
     }, [])
     useEffect(() => {
         setTimeout(() => {
             localStorage.setItem("entire", JSON.stringify(inputData));
         }, 500);
     }, [inputData]);
-    const clearForm = () => {
-        setInputData({});
-        localStorage.removeItem("entire");
-    }
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        // console.log(inputData);
-        postData(inputData)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!inputData?.businessDetails?.category) {
+            setErrors(c => ({ ...c, category: "Category field is required!" }));
+        } else setErrors(c => ({ ...c, category: "" }));
+        if (!inputData?.businessDetails?.businessName) {
+            setErrors(c => ({ ...c, businessName: "Business name is required!" }));
+        } else setErrors(c => ({ ...c, businessName: "" }));
+        if (!inputData?.ownerDetails?.email) {
+            setErrors(c => ({ ...c, email: "Owner name is required!" }));
+        } else setErrors(c => ({ ...c, email: "" }));
+        if (!inputData?.ownerDetails?.country_code) {
+            setErrors(c => ({ ...c, code: "Country code is required!" }));
+        } else setErrors(c => ({ ...c, code: "" }));
+        if (!inputData?.ownerDetails?.phone) {
+            setErrors(c => ({ ...c, phone: "Phone number is required!" }));
+        } else setErrors(c => ({ ...c, phone: "" }));
+        if (!addressValue.city) {
+            setErrors(c => ({ ...c, address: "All addresses are required!" }));
+        } else setErrors(c => ({ ...c, address: "" }));
+        if (!inputData?.businessDetails?.category || !inputData?.businessDetails?.businessName || !inputData?.ownerDetails?.email || !inputData?.ownerDetails?.country_code || !inputData?.ownerDetails?.phone || !addressValue.city) {
+            return;
+        }
+        const entireData = {
+            ...inputData,
+            address: { ...inputData.address, country: addressValue?.country, state: addressValue?.state, city: addressValue?.city },
+            have_website: { website_urls: Object.values(website), isWebsite: inputData?.have_website?.isWebsite },
+            have_branchs: { isBranch: inputData?.have_branchs?.isBranch, branch_detalis: Object.values(branch) }
+        }
+        // return console.log(entireData);
+        const addressRes = await postAddress(addressValue);
+        if (!addressRes?.data.success) {
+            // console.log(addressRes);
+           return errorToast("Address Error");
+        }
+        postData(entireData)
             .then(res => {
-                // console.log(res);
+                console.log(res);
                 if (res.error) {
-                    if (res.error.data.dev_error) {
-                        errorToast(res.error.data.dev_error)
-                    }
+                    errorToast("Something went wrong!")
                 } else if (res.data.success) {
-                    e.target.reset();
                     successToast("Data Entire Successful!");
-                    clearForm();
-                } else {
-                    errorToast(res.data.massage);
+                    localStorage.removeItem("entire");
+                    setInputData({});
+                    setAddressValue({ country: "", state: "", city: "" });
+                    e.target.reset();
                 }
-            })
+            });
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -48,7 +83,7 @@ const New_form = () => {
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label className="leading-7 font-[600] text-gray-700 col-span-3">Business Category *</label>
                     <select
-                        value={inputData?.businessDetails?.category}
+                        value={inputData?.businessDetails?.category || ""}
                         onChange={(e) => setInputData({ ...inputData, businessDetails: { ...inputData.businessDetails, category: e.target.value } })}
                         className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     >
@@ -62,11 +97,12 @@ const New_form = () => {
                         <option value="Agency">Agency</option>
                         <option value="Add New">Add New</option>
                     </select>
+                    {errors.category && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.category}</p>}
                 </div>
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label className="leading-7 font-[600] text-gray-700 col-span-3">Business Size *</label>
                     <select
-                        value={inputData?.businessDetails?.businessSize}
+                        value={inputData?.businessDetails?.businessSize || ""}
                         onChange={(e) => setInputData({ ...inputData, businessDetails: { ...inputData?.businessDetails, businessSize: e.target.value } })}
                         className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     >
@@ -79,16 +115,17 @@ const New_form = () => {
                 <div className="relative mb-4 mt-0 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='business-name' className="leading-7 font-[600] text-gray-700 col-span-3">Business Name *</label>
                     <input
-                        value={inputData?.businessDetails?.businessName}
+                        value={inputData?.businessDetails?.businessName || ""}
                         onChange={(e) => setInputData({ ...inputData, businessDetails: { ...inputData?.businessDetails, businessName: e.target.value } })}
                         type="text" id='business-name' placeholder='Business name'
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
+                    {errors.businessName && <p role="alert" className='pl-4px text-red-600 animate-pulse text-sm absolute -bottom-5 right-1'>{errors.businessName}</p>}
                 </div>
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='name' className="leading-7 font-[600] text-gray-700 col-span-3">Business owner *</label>
                     <input
-                        value={inputData?.ownerDetails?.name}
+                        value={inputData?.ownerDetails?.name || ""}
                         onChange={(e) => setInputData({ ...inputData, ownerDetails: { ...inputData?.ownerDetails, name: e.target.value } })}
                         type="text" id='name' placeholder='Enter owner name'
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -97,99 +134,68 @@ const New_form = () => {
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='email' className="leading-7 font-[600] text-gray-700 col-span-3">Owner email *</label>
                     <input
-                        value={inputData?.ownerDetails?.email}
+                        value={inputData?.ownerDetails?.email || ""}
                         onChange={(e) => setInputData({ ...inputData, ownerDetails: { ...inputData?.ownerDetails, email: e.target.value } })}
                         type="email" id='email' placeholder='Enter owner email'
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
+                    {errors.email && <p role="alert" className='col-span-full pl-4px text-red-600 animate-pulse text-sm text-right absolute -bottom-5 right-1'>{errors.email}</p>}
                 </div>
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='ph-number' className="leading-7 font-[600] text-gray-700 col-span-3">Owner phone *</label>
                     <div className='col-span-4 grid grid-cols-4'>
                         <select
-                            value={inputData?.ownerDetails?.country_code}
+                            value={inputData?.ownerDetails?.country_code || ""}
                             onChange={(e) => setInputData({ ...inputData, ownerDetails: { ...inputData?.ownerDetails, country_code: e.target.value } })}
                             className="col-span-1 w-full bg-white rounded rounded-r-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-[2px] text-center leading-8 transition-colors duration-200 ease-in-out" >
-                            <option className='w-10' value='' disabled>+ code</option>
+                            <option className='w-10' value='' selected disabled>+ code</option>
                             {Object.keys(Countries.countries).map((key, i) => (
                                 <option className='w-10' key={i} value={Countries.countries[key].phone}> {key + ' ' + '+' + Countries.countries[key].phone}</option>
                             ))}
                         </select>
                         <input
-                            value={inputData?.ownerDetails?.phone}
+                            value={inputData?.ownerDetails?.phone || ""}
                             onChange={(e) => setInputData({ ...inputData, ownerDetails: { ...inputData?.ownerDetails, phone: e.target.value } })}
                             type="text" id='ph-number' placeholder='Enter phone number'
                             className="col-span-3 w-full bg-white rounded rounded-l-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         />
                     </div>
+                    {errors.code && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right absolute -bottom-5 right-1'>{errors.code}</p>}
+                    {!errors.code && errors.phone && <p role="alert" className='col-span-7 pl-4px text-red-600 animate-pulse text-sm text-right  absolute -bottom-5 right-1'>{errors.phone}</p>}
                 </div>
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <p className="leading-7 font-[600] text-gray-700 col-span-3">Address *</p>
-                    <div className="col-span-4 ">
-                        <label className="leading-7 text-gray-700 text-xs">Country *</label>
-                        <select
-                            value={inputData?.address?.country}
-                            onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, country: e.target.value } })}
-                            className="block w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-2 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
-                        >
-                            <option value='' disabled>Select Country</option>
-                            {Object.values(Countries.countries).map((country, i) => (
-                                <option key={i} value={country.name}>{country.name}</option>
-                            ))}
-                        </select>
+                    <div className="col-span-4 relative">
+                        <AddressAddForm addressValue={addressValue} setAddressValue={setAddressValue} classes={{ label: "text-xs" }} />
                         <div className='w-full grid grid-cols-6 gap-2 justify-between items-center'>
-                            <div className="w-full col-span-3">
-                                <label htmlFor='city' className="leading-7 text-gray-700 text-xs">City / Suburb </label>
-                                <input
-                                    value={inputData?.address?.city}
-                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, city: e.target.value } })}
-                                    type="text" id='city' placeholder='Local city suburb'
-                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
-                                />
-                            </div>
-                            <div className="w-full col-span-3">
-                                <label htmlFor='district' className="leading-7 text-gray-700 text-xs">State / District </label>
-                                <input
-                                    value={inputData?.address?.state}
-                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, state: e.target.value } })}
-                                    type="text" id='district' placeholder='Local district state'
-                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
-                                />
-                            </div>
                             <div className="w-full col-span-4">
-                                <label htmlFor='village' className="leading-7 text-gray-700 text-xs">Village </label>
+                                <label htmlFor='street' className="leading-7 text-gray-700  text-xs">Street Address</label>
                                 <input
-                                    value={inputData?.address?.village}
-                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, village: e.target.value } })}
-                                    type="text" id='village' placeholder='Local village'
-                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                                    value={inputData?.address?.street_address || ""}
+                                    onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, street_address: e.target.value } })}
+                                    type="text" id='street' placeholder='Street Address'
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
                                 />
                             </div>
                             <div className="w-full col-span-2">
                                 <label htmlFor='post' className="leading-7 text-gray-700 text-xs">Post code </label>
                                 <input
-                                    value={inputData?.address?.postCode}
+                                    value={inputData?.address?.postCode || ""}
                                     onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, postCode: e.target.value } })}
                                     type="text" id='post' placeholder='Post-code'
-                                    className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
+                                    className=" w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3  mb-[6px] leading-8 transition-colors duration-200 ease-in-out"
                                 />
                             </div>
                         </div>
-                        <label htmlFor='street' className="leading-7 text-gray-700  text-xs">Street Address</label>
-                        <input
-                            value={inputData?.address?.street}
-                            onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, street: e.target.value } })}
-                            type="text" id='street' placeholder='Street Address'
-                            className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1  mb-[2px] leading-8 transition-colors duration-200 ease-in-out"
-                        />
+                        {errors.address && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.address}</p>}
                     </div>
                 </div>
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='location' className="leading-7 font-[600] text-gray-700 col-span-3">Business google map location*</label>
                     <input
-                        value={inputData?.address?.location_link}
+                        value={inputData?.address?.location_link || ""}
                         onChange={(e) => setInputData({ ...inputData, address: { ...inputData?.address, location_link: e.target.value } })}
-                        type="text" id='location' placeholder='Enter google map link'
+                        type="url" id='location' placeholder='Enter google map link'
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                 </div>
@@ -200,23 +206,30 @@ const New_form = () => {
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-[2px] px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                 </div>
-                <div className={`${!inputData?.have_website?.isWebsite ? 'h-7' : 'h-36 md:h-20'} overflow-y-hidden duration-300`}>
-                    <div>
-                        <input
-                            checked={inputData?.have_website?.isWebsite}
-                            onClick={(e) => setInputData({ ...inputData, have_website: { ...inputData?.have_website, isWebsite: inputData?.have_website?.isWebsite ? false : true } })}
-                            type="checkbox" id="website"
-                        />
-                        <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="website">Already have an website?</label>
-                    </div>
+                <div className={`${!inputData?.have_website?.isWebsite ? 'h-7' : 'h-fit'} overflow-y-hidden duration-300`}>
                     <div className="relative mb-2 grid grid-cols-1 md:grid-cols-7 gap-x-3">
-                        <label htmlFor='web-link' className="leading-7 font-[600] text-gray-700 col-span-3"></label>
-                        <input
-                            checked={inputData?.have_website?.website_urls}
-                            onChange={(e) => setInputData({ ...inputData, have_website: { ...inputData?.have_website, website_urls: e.target.value } })}
-                            type="text" id='web-link' placeholder='Enter website link'
-                            className="col-span-4 placeholder:text-gray-800 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                        />
+                        <div className='col-span-3'>
+                            <input
+                                checked={inputData?.have_website?.isWebsite}
+                                onClick={(e) => {
+                                    setInputData({ ...inputData, have_website: { ...inputData?.have_website, isWebsite: inputData?.have_website?.isWebsite ? false : true } });
+                                    setCount(c => ({ ...c, website: 1 }))
+                                }}
+                                type="checkbox" id="website"
+                            />
+                            <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="website">Already have an website?</label>
+                        </div>
+                        <div className='col-span-4 mt-8'>
+                            {[...Array(count.website)].map((site, i) => <div className='mb-1' key={i}>
+                                <h4 className='text-xs text-gray-400 '>Website Link - {++i}</h4>
+                                <input
+                                    onChange={(e) => setWebsite(c => ({ ...c, [`site${i}`]: e.target.value }))}
+                                    type="url" placeholder='Website url link'
+                                    className="placeholder:text-gray-900 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                            </div>)}
+                            <div className='flex justify-end'> <p onClick={() => setCount((c) => ({ ...c, website: c.website + 1 }))} className="text-white bg-red-400 border-0 h-7  whitespace-pre text-sm py-[4px] px-4 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">+ New website</p></div>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -226,25 +239,66 @@ const New_form = () => {
                         type="checkbox" id="pc" />
                     <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="pc">Have a business computers?</label>
                 </div>
-                <div className={` ${!inputData?.have_branchs?.isBranch ? 'h-7' : 'h-36 md:h-20'} overflow-y-hidden duration-300`}>
-                    <div>
-                        <input
-                            checked={inputData?.have_branchs?.isBranch}
-                            onClick={(e) => setInputData({ ...inputData, have_branchs: { ...inputData?.have_branchs, isBranch: inputData?.have_branchs?.isBranch ? false : true } })}
-                            type="checkbox" name="haveBranch" id="branch" />
-                        <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="branch">Are there any branch institutions?</label>
-                    </div>
+                <div className={`${!inputData?.have_branchs?.isBranch ? 'h-7' : 'h-fit'} overflow-y-hidden duration-300`}>
                     <div className="relative mb-2 grid grid-cols-1 md:grid-cols-7 gap-x-3">
-                        <label htmlFor='brQty' className="leading-7 font-[600] text-gray-700 col-span-3"></label>
-                        <input
-                            value={inputData?.have_branchs?.branch_quantity}
-                            onChange={(e) => setInputData({ ...inputData, have_branchs: { ...inputData?.have_branchs, branch_quantity: e.target.value } })}
-                            type="number" id='brQty' placeholder='Enter branch number'
-                            className="col-span-4 placeholder:text-gray-800 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                        />
+                        <div className='col-span-3'>
+                            <input
+                                checked={inputData?.have_branchs?.isBranch}
+                                onClick={(e) => {
+                                    setInputData({ ...inputData, have_branchs: { ...inputData?.have_branchs, isBranch: inputData?.have_branchs?.isBranch ? false : true } });
+                                    setCount(c => ({ ...c, branch: 1 }))
+                                }}
+                                type="checkbox" id="branch"
+                            />
+                            <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="branch">Are there any branch institutions?</label>
+                        </div>
+                        <div className='col-span-4 mt-8'>
+                            {[...Array(count.branch)].map((site, i) => <div className='mb-2' key={i}>
+                                <h4 className='text-sm text-gray-700 font-semibold'>Branch - {++i}</h4>
+                                <input
+                                    onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], name: e.target.value } }))}
+                                    type="text" placeholder='Branch name'
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                                <div className='w-full grid grid-cols-6 gap-2 justify-between items-center'>
+                                    <div className='w-full col-span-3'>
+                                        <label className="leading-7 text-gray-700 text-xs">Country *</label>
+                                        <select
+                                            // value={inputData?.address?.country}
+                                            onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], country: e.target.value } }))}
+                                            className="block w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-2 px-3 -mt-1 leading-8 transition-colors duration-200 ease-in-out"
+                                        >
+                                            <option value='' disabled>Select Country</option>
+                                            {Object.values(Countries.countries).map((country, i) => (
+                                                <option key={i} value={country.name}>{country.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="w-full col-span-3">
+                                        <label htmlFor='branchState' className="leading-7 text-gray-700 text-xs">State / Province </label>
+                                        <input
+                                            // value={inputData?.address?.state}
+                                            onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], state: e.target.value } }))}
+                                            type="text" id='branchState' placeholder='Local state state'
+                                            className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1 leading-8 transition-colors duration-200 ease-in-out"
+                                        />
+                                    </div>
+                                    <div className="w-full col-span-6 -mt-1">
+                                        <label htmlFor='address' className="leading-7 text-gray-700  text-xs">Street Address</label>
+                                        <input
+                                            // value={inputData?.address?.street_address}
+                                            onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], address: e.target.value } }))}
+                                            type="text" id='address' placeholder='Street Address'
+                                            className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1 leading-8 transition-colors duration-200 ease-in-out"
+                                        />
+                                    </div>
+                                </div>
+                            </div>)}
+                            <div className='flex justify-end'> <p onClick={() => setCount((c) => ({ ...c, branch: c.branch + 1 }))} className="text-white bg-red-400 border-0 h-7  whitespace-pre text-sm py-[4px] px-4 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">+ New website</p></div>
+                        </div>
                     </div>
                 </div>
-                <div className={`${!inputData.other_business?.isOther_business ? 'h-7' : 'h-24 md:h-20'} overflow-y-hidden duration-300`}>
+                <div className={`${!inputData?.other_business?.isOther_business ? 'h-7' : 'h-24 md:h-20'} overflow-y-hidden duration-300`}>
                     <div>
                         <input
                             checked={inputData.other_business?.isOther_business}
@@ -255,7 +309,7 @@ const New_form = () => {
                     <div className="relative mb-2 mt-1 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                         <label htmlFor='other-busi-name' className="leading-7 font-[600] text-gray-700 col-span-3"></label>
                         <input
-                            value={inputData?.other_business?.other_business_quantity}
+                            value={inputData?.other_business?.other_business_quantity || ""}
                             onChange={(e) => setInputData({ ...inputData, other_business: { ...inputData?.other_business, other_business_quantity: e.target.value } })}
                             type="number" id='brQty' placeholder='Enter branch number'
                             className="col-span-4 placeholder:text-gray-800 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -265,13 +319,18 @@ const New_form = () => {
                 <div className="relative mb-4 mt-2 md:mt-4">
                     <label htmlFor='information' className="leading-7 font-[600] text-gray-700">Write another information</label>
                     <textarea
-                        value={inputData?.other_information}
+                        value={inputData?.other_information || ""}
                         onChange={(e) => setInputData({ ...inputData, other_information: e.target.value })}
                         type="text" id='information' placeholder='Text.......'
                         className="w-full bg-white rounded-sm min-h-[150px] border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-md outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                 </div>
-                <button type='reset' onClick={clearForm} className="text-white bg-red-400 border-0  h-10 w-[90px] py-2 px-6 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">Clear</button>
+                <button type='reset'
+                    onClick={() => {
+                        localStorage.removeItem("entire");
+                        setInputData({});
+                    }}
+                    className="text-white bg-red-400 border-0  h-10 w-[90px] py-2 px-6 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">Clear</button>
                 <button disabled={isLoading} type='submit' className="text-white bg-indigo-500 border-0 h-10 w-[90px] py-2 px-6 focus:outline-none hover:bg-indigo-600 active:bg-indigo-700 font-semibold disabled:bg-indigo-400 rounded align-middle"> {isLoading ? <SmallSpinner /> : "Submit"}</button>
                 <p className="text-xs text-gray-500 mt-3">Chicharrones blog helvetica normcore iceland tousled brook viral artisan.</p>
             </div>

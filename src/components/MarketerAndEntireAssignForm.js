@@ -69,7 +69,7 @@ const MarketerAndEntireAssignForm = ({ employee }) => {
                         <select
                             value={taskAria.country}
                             onChange={(e) => {
-                                setTaskAria({ ...taskAria, country: e.target.value, district: "", village: "" });
+                                setTaskAria({ ...taskAria, country: e.target.value, state: "", village: "" });
                             }}
                             name='busiCategory' className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
                             <option selected value={""} >Select Country</option>
@@ -81,12 +81,12 @@ const MarketerAndEntireAssignForm = ({ employee }) => {
                             <option value="Afghanistan">Afghanistan</option>
                         </select>
                         <select
-                            value={taskAria.district}
+                            value={taskAria.state}
                             onChange={(e) => {
-                                setTaskAria({ ...taskAria, district: e.target.value, village: "" });
+                                setTaskAria({ ...taskAria, state: e.target.value, village: "" });
                             }}
                             name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                            <option selected value={""} >District</option>
+                            <option selected value={""} >state</option>
                             <option value="noakhali">Noakhali</option>
                             <option value="Borishal">Borishal</option>
                             <option value="Asam">Asam</option>

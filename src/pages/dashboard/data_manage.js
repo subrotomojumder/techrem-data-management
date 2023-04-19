@@ -109,17 +109,17 @@ const SingleData = () => {
                     </select>
                 </div>
                 <div className="relative mb-2 mt-2 grid grid-cols-1 md:grid-cols-7 gap-3">
-                    <label htmlFor='district' className="leading-7 font-[600] text-gray-700 col-span-3">District </label>
+                    <label htmlFor='state' className="leading-7 font-[600] text-gray-700 col-span-3">state </label>
                     <input
-                        disabled={edit} value={inputData?.district} onChange={handleInput} name='district' type="text" id='district' placeholder='Local district'
+                        disabled={edit} value={inputData?.state} onChange={handleInput} name='state' type="text" id='state' placeholder='Local state'
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                 </div>
                 <div className="relative mb-2 mt-2 grid grid-cols-1 md:grid-cols-7 gap-3">
-                    <label htmlFor='district' className="leading-7 font-[600] text-gray-700 col-span-3">Village </label>
+                    <label htmlFor='state' className="leading-7 font-[600] text-gray-700 col-span-3">Village </label>
                     <div className='col-span-4 grid grid-cols-4'>
                         <input
-                            disabled={edit} value={inputData?.village} onChange={handleInput} name='village' type="text" id='district' placeholder='Local village'
+                            disabled={edit} value={inputData?.village} onChange={handleInput} name='village' type="text" id='state' placeholder='Local village'
                             className="col-span-3 w-full bg-white rounded rounded-r-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         />
                         <input

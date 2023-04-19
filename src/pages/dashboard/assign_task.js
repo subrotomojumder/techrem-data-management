@@ -6,9 +6,9 @@ import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from 
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
 const AssignTask = () => {
-    const [userQuery, setUserQuery] = useState({ role: "", country: "", district: "", village: "" });
+    const [userQuery, setUserQuery] = useState({ role: "", country: "", state: "", village: "" });
     const [employee, setEmployee] = useState({});
-    const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}&country=${userQuery.country}&district=${userQuery.district}&village=${userQuery.village}`);
+    const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}&country=${userQuery.country}&state=${userQuery.state}&village=${userQuery.village}`);
     // console.log(userData);
     useEffect(() => {
         if (isError) {
@@ -33,7 +33,7 @@ const AssignTask = () => {
                         <select
                             onChange={(e) => {
                                 setEmployee({});
-                                setUserQuery({ role: e.target.value, country: "", district: "", village: "" });
+                                setUserQuery({ role: e.target.value, country: "", state: "", village: "" });
                             }}
                             name='busiCategory' className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
                             <option selected disabled >Select task type</option>
@@ -49,7 +49,7 @@ const AssignTask = () => {
                             <select
                                 onChange={(e) => {
                                     setEmployee({});
-                                    setUserQuery({ ...userQuery, country: e.target.value, district: "", village: "" });
+                                    setUserQuery({ ...userQuery, country: e.target.value, state: "", village: "" });
                                 }}
                                 name='busiCategory' className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
                                 <option selected value={""} >Select Country</option>
@@ -62,10 +62,10 @@ const AssignTask = () => {
                             <select
                                 onChange={(e) => {
                                     setEmployee({});
-                                    setUserQuery({ ...userQuery, district: e.target.value, village: "" });
+                                    setUserQuery({ ...userQuery, state: e.target.value, village: "" });
                                 }}
                                 name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                                <option selected value={""} >District</option>
+                                <option selected value={""} >state</option>
                                 <option value="noakhali">Noakhali</option>
                                 <option value="Borishal">Borishal</option>
                                 <option value="Asam">Asam</option>
