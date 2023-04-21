@@ -145,7 +145,7 @@ const Navbar = () => {
                         : <div onClick={() => setDropdown(!dropdown)} onMouseLeave={() => setDropdown(false)}>
                             {!user.userImage ?
                                 <button className='text-5xl mt-1 -mb-0.5 text-blue-500 cursor-pointer '><RiAccountCircleFill /></button>
-                                : <img className='h-10 md:h-12 w-10 md:w-12 rounded-full cursor-pointer' src={user?.userImage} alt='' />}
+                                : <img title={user.email} className='h-10 md:h-12 w-10 md:w-12 rounded-full cursor-pointer' src={user?.userImage} alt='' />}
                             {dropdown && <div className="absolute right-8 bg-pink-300 top-[54px] rounded-md px-3 py-3 w-28 text-center">
                                 <ul>
                                     <Link href={`/authentication/account`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Account</li></Link>

@@ -7,6 +7,7 @@ import { errorToast, successToast } from '@/utils/neededFun';
 import { useSelector } from 'react-redux';
 import AddressAddForm from '@/components/Forms/AddressAddForm';
 import { usePostAddressMutation } from '@/app/features/address/addressApi';
+import { TagsInput } from "react-tag-input-component";
 
 const New_form = () => {
     const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
@@ -16,6 +17,7 @@ const New_form = () => {
     const [branch, setBranch] = useState({});
     const [errors, setErrors] = useState({});
     const [postData, { isLoading }] = usePostDataMutation();
+    const [service, setService] = useState([]);
     const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
     useEffect(() => {
         setInputData(JSON.parse(localStorage.getItem("entire") || {}))
@@ -50,29 +52,30 @@ const New_form = () => {
         }
         const entireData = {
             ...inputData,
+            tag: service,
             address: { ...inputData.address, country: addressValue?.country, state: addressValue?.state, city: addressValue?.city },
             have_website: { website_urls: Object.values(website), isWebsite: inputData?.have_website?.isWebsite },
             have_branchs: { isBranch: inputData?.have_branchs?.isBranch, branch_detalis: Object.values(branch) }
         }
-        // return console.log(entireData);
         const addressRes = await postAddress(addressValue);
         if (!addressRes?.data.success) {
-            // console.log(addressRes);
-           return errorToast("Address Error");
+            console.log(addressRes);
+            return errorToast("Address Error");
+        } else {
+            postData(entireData)
+                .then(res => {
+                    console.log(res);
+                    if (res.error) {
+                        errorToast("Something went wrong!")
+                    } else if (res.data.success) {
+                        successToast("Data Entire Successful!");
+                        localStorage.removeItem("entire");
+                        setInputData({});
+                        setAddressValue({ country: "", state: "", city: "" });
+                        e.target.reset();
+                    }
+                });
         }
-        postData(entireData)
-            .then(res => {
-                console.log(res);
-                if (res.error) {
-                    errorToast("Something went wrong!")
-                } else if (res.data.success) {
-                    successToast("Data Entire Successful!");
-                    localStorage.removeItem("entire");
-                    setInputData({});
-                    setAddressValue({ country: "", state: "", city: "" });
-                    e.target.reset();
-                }
-            });
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -313,6 +316,24 @@ const New_form = () => {
                             onChange={(e) => setInputData({ ...inputData, other_business: { ...inputData?.other_business, other_business_quantity: e.target.value } })}
                             type="number" id='brQty' placeholder='Enter branch number'
                             className="col-span-4 placeholder:text-gray-800 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        />
+                    </div>
+                </div>
+                <div className={`relative mb-2 w-full`}>
+                    <input
+                        onClick={(e) => {
+                            setInputData({ ...inputData, products: inputData?.products ? false : true });
+                        }}
+                        type="checkbox" id="tags"
+                    />
+                    <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="branch">Services They Offer</label>
+                    <div className={inputData?.products ? "block" : "hidden"} >
+                        <TagsInput
+                            className="bg-gray-400"
+                            value={service}
+                            onChange={setService}
+                            name="tags"
+                            placeHolder="enter products"
                         />
                     </div>
                 </div>

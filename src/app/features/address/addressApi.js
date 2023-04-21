@@ -16,8 +16,8 @@ const addressApi = apiSlice.injectEndpoints({
             invalidatesTags: ["address"]
         }),
         getAllAddress: builder.query({
-            query: (query) => ({
-                url: `/address?${query}`,
+            query: () => ({
+                url: `/address`,
                 headers: {
                     authorization: localStorage.getItem("tech_token"),
                 }

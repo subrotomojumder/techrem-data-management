@@ -5,6 +5,7 @@ import { EmptyLoader } from '@/components/Spinner';
 import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
+import Private from '@/utils/Private';
 const AssignTask = () => {
     const [userQuery, setUserQuery] = useState({ role: "", country: "", state: "", village: "" });
     const [employee, setEmployee] = useState({});
@@ -121,4 +122,4 @@ const AssignTask = () => {
     );
 };
 
-export default AssignTask;
+export default Private(AssignTask);

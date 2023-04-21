@@ -61,6 +61,7 @@ const TeleAndFieldAssignForm = ({ employee }) => {
                 end: inputData.end
             }
         }
+    return console.log(task_data);
         if (employee.role === TELE_MARKETER) {
             postTelemarketerTask(task_data).then(res => {
                 console.log(res);
@@ -133,19 +134,19 @@ const TeleAndFieldAssignForm = ({ employee }) => {
                     <p className='text-[13px] font-medium border px-1 rounded text-center'><span className='text-green-500 drop-shadow-md text-sm'>{data?.data?.length}</span><br />Available</p>
                 </div>
             </div>
-            <div className='sticky  top-12 md:top-14 right-0 flex justify-between items-center bg-green-400 py-1'>
+            <div className='sticky  top-12 md:top-14 right-0 flex justify-between items-center gap-1 bg-green-400 py-1'>
                 <div className='relative'>
                     <label htmlFor="start" className='whitespace-pre font-semibold text-blue-500 cursor-pointer text-sm absolute left-1 top-2'>Start:</label>
                     <input
                         onChange={(e) => setInputData({ ...inputData, start: e.target.value })} min={format(new Date(), 'yyyy-MM-dd')}
-                        type="date" id='start' className="w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-600  pr-1 pl-10 leading-8 transition-colors duration-200 ease-in-out"
+                        type="date" id='start' className={`w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 ${!inputData.start && "border-red-500"} focus:ring-2 focus:ring-indigo-200  outline-none text-gray-600  pr-1 pl-10 leading-8 transition-colors duration-200 ease-in-out`}
                     />
                 </div>
                 <div className='relative'>
                     <label htmlFor="end" className='whitespace-pre font-semibold text-green-500 cursor-pointer text-sm absolute left-1 top-2'>End:</label>
                     <input
                         onChange={(e) => setInputData({ ...inputData, end: e.target.value })} min={inputData?.start || format(new Date(), 'yyyy-MM-dd')}
-                        type="date" id='end' className="w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-600  pr-1 pl-9 leading-8 transition-colors duration-200 ease-in-out"
+                        type="date" id='end' className={`w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 ${!inputData.end && "border-red-500"} focus:ring-2 focus:ring-indigo-200  outline-none text-gray-600  pr-1 pl-10 leading-8 transition-colors duration-200 ease-in-out`}
                     />
                 </div>
                 <button
@@ -161,7 +162,7 @@ const TeleAndFieldAssignForm = ({ employee }) => {
                         <th className="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-green-100 rounded-tr rounded-br"></th>
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-green-100 rounded-tl rounded-bl">Business</th>
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-green-100">Address</th>
-                        <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-green-100">Data</th>
+                        <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-green-100">Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -172,7 +173,7 @@ const TeleAndFieldAssignForm = ({ employee }) => {
                         </td>
                         <td className="px-4 py-3">{entire.businessDetails?.businessName}</td>
                         <td className="px-4 py-3">{entire.address?.country}, {entire.address?.state}</td>
-                        <td className="px-4 py-3 text-base text-gray-900">{format(new Date(entire.date), 'yyyy-MM-dd')}</td>
+                        <td className="px-4 py-3 text-base text-gray-900">{format(new Date(entire.create_date), 'yyyy-MM-dd')}</td>
                     </tr>)}
                 </tbody>
             </table>

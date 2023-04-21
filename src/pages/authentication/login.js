@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaFacebook, FaGoogle, FaInstagram } from "react-icons/fa";
 import { useForm } from 'react-hook-form';
-import registerImg from "../../assets/images/authentication.png";
+import registerImg from "../../assets/images/security.jpg";
 import { SmallSpinner } from '@/components/Spinner';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,8 +14,7 @@ const Login = () => {
     const { user, isLoading, isError, error } = useSelector((state) => state.auth);
     const router = useRouter();
     const dispatch = useDispatch();
-    const from = router.query.redirect || '/';
-
+    // const from = router.query.redirect || '/';
     // console.log(user, isLoading, isError, error);
     const handleLogin = async (data) => {
         dispatch(getUser(data)).then(res => {
@@ -24,17 +23,17 @@ const Login = () => {
                 errorToast(res.error.message);
             }
             if (res?.payload?.success) {
-                successToast("Your account login success!")
+                router.asPath === "/authentication/login" && successToast("Your account login success!")
+                router.asPath === "/authentication/login" && router.push('/');
                 localStorage.setItem("tech_token", res.payload.jwtToken);
                 reset();
-                router.replace(from);
             } else if (res.payload?.success === false) {
                 errorToast(res.payload?.message)
             }
         })
     };
     return (
-        <div className='min-h-[80vh] flex flex-col-reverse md:flex-row justify-center items-center'>
+        <div className='min-h-[90vh] flex flex-col-reverse md:flex-row justify-center items-center'>
             <Image width={200} height={70} className='mx-auto' src={registerImg} alt="" />
             <div className='shadow-2xl border rounded-md w-full max-w-md md:-ml-20 lg:-ml-40 mt-4 mx-auto px-10 pt-6 pb-8 h-fit'>
                 <h2 className='font-bold text-2xl mdd:text-3xl text-blue-600 mb-4'>Please Login</h2>

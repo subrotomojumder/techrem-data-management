@@ -77,15 +77,15 @@ const Register = () => {
     return (
         <div className='min-h-[80vh] flex items-center justify-center py-4 px-2'>
             {createSuccess ?
-                <div class="p-4  md:w-1/2 lg:w-1/3">
-                    <div class="h-full bg-gray-100 bg-opacity-75 drop-shadow-md border px-4 pt-6 pb-10 rounded-lg overflow-hidden text-center relative">
+                <div className="p-4  md:w-1/2 lg:w-1/3">
+                    <div className="h-full bg-gray-100 bg-opacity-75 drop-shadow-md border px-4 pt-6 pb-10 rounded-lg overflow-hidden text-center relative">
                         <button onClick={() => setCreateSuccess(null)} className='absolute top-2 right-2 px-[10px] pb-1 bg-red-500 rounded-full  text-white text-xl'>x</button>
-                        <h2 class="tracking-widest text-sm title-font underline font-medium text-gray-400 mb-2">ACCOUNTS</h2>
+                        <h2 className="tracking-widest text-sm title-font underline font-medium text-gray-400 mb-2">ACCOUNTS</h2>
                         <p className='text-4xl w-fit mx-auto text-indigo-500'><MdOutlineManageAccounts /></p>
-                        <h1 class="title-font text-base  text-gray-900">Name-{createSuccess?.name}</h1>
-                        <h1 class="title-font text-base  text-gray-900 mb-2">Email-{createSuccess?.email}</h1>
-                        <h1 class="title-font text-base font-medium text-green-500 mb-1">Id: {createSuccess?.userId}</h1>
-                        <h1 class="title-font text-base font-medium text-gray-900 mb-1">Password: {createSuccess?.password}</h1>
+                        <h1 className="title-font text-base  text-gray-900">Name-{createSuccess?.name}</h1>
+                        <h1 className="title-font text-base  text-gray-900 mb-2">Email-{createSuccess?.email}</h1>
+                        <h1 className="title-font text-base font-medium text-green-500 mb-1">Id: {createSuccess?.userId}</h1>
+                        <h1 className="title-font text-base font-medium text-gray-900 mb-1">Password: {createSuccess?.password}</h1>
                         <button
                             onClick={clipboardCopy}
                             className='border shadow-sm mt-6 px-2 py-1 rounded-md font-medium text-zinc-500 hover:text-zinc-600 active:border-gray-400'

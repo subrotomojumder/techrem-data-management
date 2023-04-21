@@ -27,3 +27,13 @@ export const EmptyLoader = ({ isLoading, otherText }) => {
         </div>
     );
 };
+export const InputLoader = ({ isLoading , height}) => {
+    return (
+        <div className={`bg-indigo-50 animate-pulse ${height} relative pt-4`}>
+            <nav className='bg-indigo-100 animate-pulse shadow-sm w-[70%] h-10'></nav>
+            <h1 className='text-lg font-medium text-gray-400 duration-500 absolute top-[40%] text-center w-full select-none'>{isLoading ? <span>Loading.....!</span> : ""} </h1>
+            <nav className='h-8 bg-indigo-100 w-[80%] animate-pulse mt-12 shadow-sm'></nav>
+            <div className='bg-blue-100  w-10/12 mt-2 h-[20px]'></div>
+        </div>
+    );
+};

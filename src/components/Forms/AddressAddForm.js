@@ -4,14 +4,14 @@ import React from 'react';
 import { useState } from 'react';
 import { BiMinus, BiPlus } from 'react-icons/bi';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import { LargeSpinner } from '../Spinner';
+import { InputLoader } from '../Spinner';
 
 const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
     // const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
     const [openAddress, setOpenAddress] = useState({ country: false, state: false, city: false });
     const [addressAdd, setAddressAdd] = useState({ country: false, state: false, city: false });
     const [currentAddress, setCurrentAddress] = useState({ states: [], cities: [] });
-    const { data, isLoading, isError, error } = useGetAllAddressQuery('');
+    const { data, isLoading, isError, error } = useGetAllAddressQuery();
     // const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
 
     // const handlePost = async () => {
@@ -21,7 +21,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
 
     let countryData = [];
     if (isLoading) {
-        return <LargeSpinner />
+        return <InputLoader isLoading={true} height={"min-h-[200px]"}></InputLoader>
     };
     if (isError) {
         if (error.error) {
@@ -33,7 +33,6 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
     if (!isLoading && data?.success) {
         countryData = data.data
     };
-    // console.log(countryData);
     return (
         <div className='w-full'>
             <div className="w-full pb-2 relative">
@@ -42,7 +41,10 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
                     {addressAdd.country ?
                         <div className='w-full'>
                             <input
-                                onChange={(e) => setAddressValue({ ...addressValue, country: e.target.value })}
+                                onChange={(e) => {
+                                    setAddressValue({ ...addressValue, country: e.target.value })
+                                    setCurrentAddress(c => ({ ...c, states: [], cities: [] }))
+                                }}
                                 placeholder={`Add new country`}
                                 className="w-full text-gray-800 py-[6px] px-3 border focus:outline-gray-600 border-blue-500 rounded-md"
                             />
@@ -90,7 +92,10 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
                     {addressAdd.state ?
                         <div className='w-full'>
                             <input
-                                onChange={(e) => setAddressValue({ ...addressValue, state: e.target.value })}
+                                onChange={(e) => {
+                                    setAddressValue({ ...addressValue, state: e.target.value })
+                                    setCurrentAddress(c=> ({...c, cities: []}))
+                                }}
                                 placeholder={`Add new state`}
                                 className="w-full text-gray-800 py-[6px] px-3 border focus:outline-gray-600 border-blue-500 rounded-md"
                             />

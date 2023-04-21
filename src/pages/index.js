@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import { useSelector } from 'react-redux'
+import InputTag from '@/components/Forms/TagInput'
 
 export default function Home() {
   // const { user, isLoading, isError, error } = useSelector((state) => state.auth);
@@ -14,6 +15,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
+       <div className='w-1/4'>
+       <InputTag></InputTag>
+       </div>
         <section className="text-gray-600 body-font">
           <div className="container px-5 py-24 mx-auto">
             <div className="flex flex-col text-center w-full mb-20">

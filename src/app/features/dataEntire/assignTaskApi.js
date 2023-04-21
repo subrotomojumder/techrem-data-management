@@ -2,6 +2,16 @@ import { apiSlice } from '../api/apiSlice'
 
 const assignTaskApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getEmployeeTask: builder.query({
+             query: (url) => ({
+                 url: url,
+                 headers: {
+                     'content-type': 'application/json',
+                     authorization: localStorage.getItem("tech_token"),
+                 }
+             }),
+            providesTags: ["tasks" ]
+         }),
         postMarketerTask: builder.mutation({
             query: (data) => ({
                 method: "POST",
@@ -12,8 +22,9 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["marketer"]
+            invalidatesTags: ["tasks"]
         }),
+        // data entire
         postEntireTask: builder.mutation({
             query: (data) => ({
                 method: "POST",
@@ -24,7 +35,7 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["entires"]
+            invalidatesTags: ["tasks"]
         }),
         postTelemarketerTask: builder.mutation({
             query: (data) => ({
@@ -36,7 +47,7 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["tele", "data"]
+            invalidatesTags: ["tasks", "data"]
         }),
         postFieldMarketerTask: builder.mutation({
             query: (data) => ({
@@ -48,7 +59,7 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["field", "data"]
+            invalidatesTags: ["tasks", "data"]
         }),
     })
 })
@@ -57,5 +68,6 @@ export const {
     usePostEntireTaskMutation,
     usePostMarketerTaskMutation,
     usePostTelemarketerTaskMutation,
+    useGetEmployeeTaskQuery,
     usePostFieldMarketerTaskMutation
 } = assignTaskApi;
