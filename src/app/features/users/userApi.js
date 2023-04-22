@@ -15,6 +15,17 @@ const userApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["user"]
         }),
+        userLogin: builder.mutation({
+            query: (data) => ({
+                method: "POST",
+                url: "/user/login",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                }
+            }),
+            invalidatesTags: ["user"]
+        }),
         getEmployeeByQue: builder.query({
             query: (url_query) => ({
                 url: `/user?${url_query}`,
@@ -30,5 +41,6 @@ const userApi = apiSlice.injectEndpoints({
 
 export const {
     useRegisterMutation,
+    useUserLoginMutation,
     useGetEmployeeByQueQuery,
 } = userApi;

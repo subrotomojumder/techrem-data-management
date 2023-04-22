@@ -16,7 +16,7 @@ const AssignTask = () => {
             if (error.data.message) {
                 errorToast(error.data.message);
             }
-            console.log(error);
+            // console.log(error);
         }
     }, [isError]);
     // console.log(userQuery);
@@ -122,4 +122,4 @@ const AssignTask = () => {
     );
 };
 
-export default Private(AssignTask);
+export default AssignTask;

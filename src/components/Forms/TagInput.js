@@ -14,7 +14,7 @@ const InputTag = () => {
     const deleteFun = product => {
         setProducts(c => ([...c.filter(pd => pd !== product)]))
     }
-    console.log(products);
+    // console.log(products);
     return (
         <div>
             {/* <pre>{JSON.stringify(products)}</pre> */}

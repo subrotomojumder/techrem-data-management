@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import AddressAddForm from '@/components/Forms/AddressAddForm';
 import { usePostAddressMutation } from '@/app/features/address/addressApi';
 import { TagsInput } from "react-tag-input-component";
+import Private from '@/utils/Private';
 
 const New_form = () => {
     const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
@@ -359,4 +360,4 @@ const New_form = () => {
     );
 };
 
-export default New_form;
+export default Private(New_form);

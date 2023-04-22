@@ -4,31 +4,41 @@ import { useForm } from 'react-hook-form';
 import registerImg from "../../assets/images/security.jpg";
 import { SmallSpinner } from '@/components/Spinner';
 import Image from 'next/image';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from '@/app/features/users/userSlice';
+import { getUser, loginUserSet } from '@/app/features/users/userSlice';
 import { useRouter } from 'next/router';
 import { errorToast, successToast } from '@/utils/neededFun';
+import { useUserLoginMutation } from '@/app/features/users/userApi';
+import { useDispatch } from 'react-redux';
 
 const Login = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
-    const { user, isLoading, isError, error } = useSelector((state) => state.auth);
+    const [userLogin, { isLoading: loginLoading }] = useUserLoginMutation();
     const router = useRouter();
     const dispatch = useDispatch();
-    // const from = router.query.redirect || '/';
-    // console.log(user, isLoading, isError, error);
+
     const handleLogin = async (data) => {
-        dispatch(getUser(data)).then(res => {
-            console.log(res);
-            if (res.error?.message) {
-                errorToast(res.error.message);
-            }
-            if (res?.payload?.success) {
+        userLogin(data).then(res => {
+            if (res?.data?.success) {
+                dispatch(loginUserSet(res.data.data))
                 router.asPath === "/authentication/login" && successToast("Your account login success!")
                 router.asPath === "/authentication/login" && router.push('/');
-                localStorage.setItem("tech_token", res.payload.jwtToken);
+                localStorage.setItem("tech_token", res.data.jwtToken);
                 reset();
-            } else if (res.payload?.success === false) {
-                errorToast(res.payload?.message)
+            } else {
+                // console.log(res);
+                if (res.error) {
+                    if (res.error?.message) {
+                        return errorToast(res.error.message);
+                    }
+                    if (res.error?.error) {
+                        return errorToast(res.error.error);
+                    }
+                    if (res?.error?.data?.dev_error) {
+                        return errorToast(res.error?.data.dev_error);
+                    }
+                }else if (res.data?.message) {
+                    errorToast(res?.data.message);                        
+                }
             }
         })
     };
@@ -82,8 +92,8 @@ const Login = () => {
                         {/* onClick={() => setReset("Reset your account password")} */}
                         <p className='text-blue-500 hover:underline hover:text-blue-700 cursor-pointer'>Reset Password</p>
                     </div>
-                    <button disabled={isLoading} type='submit' className='w-full py-2 rounded-md mt-1 disabled:bg-blue-500 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 active:outline outline-green-600  disabled:outline-none font-semibold text-white flex justify-center items-center'>
-                        {isLoading ? <SmallSpinner /> : "Login"}
+                    <button disabled={loginLoading} type='submit' className='w-full py-2 rounded-md mt-1 disabled:bg-blue-500 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 active:outline outline-green-600  disabled:outline-none font-semibold text-white flex justify-center items-center'>
+                        {loginLoading ? <SmallSpinner /> : "Login"}
                     </button>
                 </form>
             </div>

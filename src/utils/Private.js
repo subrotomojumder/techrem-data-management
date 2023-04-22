@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 
 const Private = (Component) => {
   const Auth = (props) => {
+    const { user, isLoading } = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
-    const { user } = useSelector((state) => state.auth)
     useEffect(() => {
       if (user.role) {
         setLoading(false);
@@ -15,20 +15,14 @@ const Private = (Component) => {
         setLoading(false)
       }
     }, [user]);
-    const router = useRouter();
-    // const navigate = (url) => {
-    //   router.push(url);
-    // }
-    // Check if user is authenticated, e.g. by checking a token in local storage
-    if (loading) {
+    if (loading || isLoading) {
       return <LargeSpinner />
     }
-    if (user.role) {
+    if (!isLoading && user.role) {
       return <Component {...props} />
-    } else {
+    } else if (!isLoading) {
       return <Login />;
     }
-    // navigate(`/authentication/login`);
   };
   return Auth;
 };

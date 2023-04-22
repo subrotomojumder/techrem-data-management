@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux'
 import InputTag from '@/components/Forms/TagInput'
 
 export default function Home() {
-  // const { user, isLoading, isError, error } = useSelector((state) => state.auth);
-  // console.log(user, isLoading, isError, error);
+  const { user, isLoading, isError, error } = useSelector((state) => state.auth);
+  console.log(user, isLoading, isError, error);
   return (
     <>
       <Head>

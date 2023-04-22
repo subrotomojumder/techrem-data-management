@@ -6,19 +6,18 @@ const initialState = {
         name: "",
         role: ""
     },
-    isLoading: false,
+    isLoading: true,
     isError: false,
     error: ""
 };
 export const getUser = createAsyncThunk(
     "users/getUser",
     async (data) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV}/user/login`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV}/user/jwt`, {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
                 'content-type': 'application/json',
-                authorization: localStorage.getItem("tech_token"),
             }
         });
         const results = await res.json();
@@ -32,8 +31,11 @@ const userSlice = createSlice({
         userLogoutSet: (state) => {
             state.user = { email: "", role: "" };
         },
-        autoUserSet: (state, {payload}) => {
+        loginUserSet: (state, {payload}) => {
+            state.isLoading = false;
             state.user = payload;
+            state.isError = false;
+            state.error = '';
         },
     },
     extraReducers: (builder) => {
@@ -66,5 +68,5 @@ const userSlice = createSlice({
     }
 })
 
-export const { userLogoutSet, autoUserSet } = userSlice.actions;
+export const { userLogoutSet, loginUserSet } = userSlice.actions;
 export default userSlice.reducer;
