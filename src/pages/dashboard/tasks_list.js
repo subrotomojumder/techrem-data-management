@@ -30,7 +30,7 @@ const TasksList = () => {
     if (!user.role) {
         content = <LargeSpinner></LargeSpinner>
     }
-    // console.log(data, isLoading, isError, error);
+    console.log(data, isLoading, isError, error);
     if (isError) {
         if (error.message) {
             content = <div className='text-center mt-10 md:mt-52'>
@@ -66,7 +66,7 @@ const TasksList = () => {
                                 </>}
                                 {(user.role === TELE_MARKETER || user.role === ON_FIELD_MARKETER) && <>
                                     <p className="leading-7 -mt-4 text-gray-700 col-span-2">In-Total</p>
-                                    <p className='col-span-5 -mt-4 font-[400]'>: {task.dataIds.length}</p>
+                                    <p className='col-span-5 -mt-4 font-[400]'>: {task.dataIds.length} Segment</p>
                                 </>}
                                 <p className="leading-7 -mt-4 text-gray-700 col-span-2">Task Scheme</p>
                                 <p className='col-span-5 -mt-4 font-[400]'>: {format(new Date(task.assign_date?.start), 'yyyy-MM-dd')} - {format(new Date(task.assign_date?.end), 'yyyy-MM-dd')}</p>

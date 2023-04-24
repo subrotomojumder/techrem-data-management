@@ -22,11 +22,20 @@ const dataEntireApi = apiSlice.injectEndpoints({
                 }
             }),
             providesTags: ["data"]
+        }),
+        getEntireDataById: builder.query({
+            query: (params) => ({
+                url: `/data_entry/${params}`,
+                headers: {
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            })
         })
     })
 })
 
 export const {
     useGetAllDataQuery,
-    usePostDataMutation
+    usePostDataMutation,
+    useGetEntireDataByIdQuery
 } = dataEntireApi;

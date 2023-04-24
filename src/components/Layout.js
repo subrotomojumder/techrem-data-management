@@ -2,7 +2,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
-import { store } from "@/app/store";
+import { store } from "../app/store";
 import { useEffect } from "react";
 import { getUser } from "@/app/features/users/userSlice";
 

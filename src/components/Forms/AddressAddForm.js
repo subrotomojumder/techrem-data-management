@@ -1,6 +1,6 @@
 import { useGetAllAddressQuery, usePostAddressMutation } from '@/app/features/address/addressApi';
 import { errorToast } from '@/utils/neededFun';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { BiMinus, BiPlus } from 'react-icons/bi';
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -12,12 +12,17 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
     const [addressAdd, setAddressAdd] = useState({ country: false, state: false, city: false });
     const [currentAddress, setCurrentAddress] = useState({ states: [], cities: [] });
     const { data, isLoading, isError, error } = useGetAllAddressQuery();
-    // const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
-
-    // const handlePost = async () => {
-    //     const result = await postAddress(addressValue);
-    //     console.log(result)
-    // }
+    const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
+    useEffect(() => {
+        if (addressAdd.country || addressAdd.state || addressAdd.city) {
+            console.log(18, "object");
+            postAddress(addressValue).then(res => {
+                console.log(res);
+            })
+        }
+        // setTimeout(()=> {
+        // }, 1000)
+    }, [addressAdd]);
 
     let countryData = [];
     if (isLoading) {
@@ -35,7 +40,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
     };
     return (
         <div className='w-full'>
-            <div className="w-full pb-2 relative">
+            <div className="w-full pb-1 relative">
                 <label htmlFor='serviceman' className={classes.label}>Country *</label>
                 <div className='w-full select-none mt-1 relative flex justify-start items-center gap-1'>
                     {addressAdd.country ?
@@ -68,7 +73,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
                                     {countryData.map((country, i) => <div key={i} >
                                         <p
                                             onClick={() => {
-                                                setAddressValue({ country: country.country })
+                                                setAddressValue({ ...addressValue, country: country.country, state: "", city: "" })
                                                 setCurrentAddress({ ...currentAddress, states: country.state })
                                                 setOpenAddress({ ...openAddress, country: false })
                                             }}
@@ -86,7 +91,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
                     </div>
                 </div>
             </div>
-            <div className="w-full pb-2 relative">
+            <div className="w-full pb-1 relative">
                 <label htmlFor='serviceman' className={classes.label}> State / Province *</label>
                 <div className='select-none mt-1 relative w-full flex justify-start items-center gap-1'>
                     {addressAdd.state ?
@@ -94,7 +99,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
                             <input
                                 onChange={(e) => {
                                     setAddressValue({ ...addressValue, state: e.target.value })
-                                    setCurrentAddress(c=> ({...c, cities: []}))
+                                    setCurrentAddress(c => ({ ...c, cities: [] }))
                                 }}
                                 placeholder={`Add new state`}
                                 className="w-full text-gray-800 py-[6px] px-3 border focus:outline-gray-600 border-blue-500 rounded-md"
@@ -136,7 +141,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
                     </div>
                 </div>
             </div>
-            <div className="w-full pb-2 relative">
+            <div className="w-full pb-1 relative">
                 <label htmlFor='serviceman' className={classes.label}>City / Suburb *</label>
                 <div className='select-none mt-1 relative w-full flex justify-start items-center gap-1'>
                     {addressAdd.city ?

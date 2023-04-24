@@ -5,12 +5,11 @@ import { EmptyLoader } from '@/components/Spinner';
 import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
-import Private from '@/utils/Private';
+import AddressAddForm from '@/components/Forms/AddressAddForm';
 const AssignTask = () => {
-    const [userQuery, setUserQuery] = useState({ role: "", country: "", state: "", village: "" });
+    const [userQuery, setUserQuery] = useState({ role: "", country: "", state: "", city: "" });
     const [employee, setEmployee] = useState({});
-    const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}&country=${userQuery.country}&state=${userQuery.state}&village=${userQuery.village}`);
-    // console.log(userData);
+    const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}&country=${userQuery.country}&state=${userQuery.state}&city=${userQuery.city}`);
     useEffect(() => {
         if (isError) {
             if (error.data.message) {
@@ -19,6 +18,9 @@ const AssignTask = () => {
             // console.log(error);
         }
     }, [isError]);
+    useEffect(() => {
+        if ((userQuery.country !== employee.address?.country) || (userQuery.state !== employee.address?.state) || (userQuery.city !== employee.address?.city)) setEmployee({});
+    }, [userQuery]);
     // console.log(userQuery);
     // console.log(userData,userLoading, isError, error);
     // console.log("query: ", userQuery.role, "employee: ", employee.role);
@@ -34,7 +36,7 @@ const AssignTask = () => {
                         <select
                             onChange={(e) => {
                                 setEmployee({});
-                                setUserQuery({ role: e.target.value, country: "", state: "", village: "" });
+                                setUserQuery({ role: e.target.value, country: "", state: "", city: "" });
                             }}
                             name='busiCategory' className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
                             <option selected disabled >Select task type</option>
@@ -44,45 +46,9 @@ const AssignTask = () => {
                             <option value={ON_FIELD_MARKETER}>Field Marketer</option>
                         </select>
                     </div>
-                    <div className="relative my-2 w-full">
+                    <div className="relative my-0 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
-                        <div className='grid grid-cols-10 justify-center'>
-                            <select
-                                onChange={(e) => {
-                                    setEmployee({});
-                                    setUserQuery({ ...userQuery, country: e.target.value, state: "", village: "" });
-                                }}
-                                name='busiCategory' className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                                <option selected value={""} >Select Country</option>
-                                <option value="Bangladesh">Bangladesh</option>
-                                <option value="India">India</option>
-                                <option value="Australia">Australia</option>
-                                <option value="Singapore">Singapore</option>
-                                <option value="Afghanistan">Afghanistan</option>
-                            </select>
-                            <select
-                                onChange={(e) => {
-                                    setEmployee({});
-                                    setUserQuery({ ...userQuery, state: e.target.value, village: "" });
-                                }}
-                                name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                                <option selected value={""} >state</option>
-                                <option value="noakhali">Noakhali</option>
-                                <option value="Borishal">Borishal</option>
-                                <option value="Asam">Asam</option>
-                                <option value="Dhaka">Dhaka</option>
-                            </select>
-                            <select
-                                onChange={(e) => {
-                                    setEmployee({});
-                                    setUserQuery({ ...userQuery, village: e.target.value });
-                                }}
-                                name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                                <option selected value={""} >Village</option>
-                                <option value="charbata">Charbata</option>
-                                <option value="Hazipur">Hazipur</option>
-                            </select>
-                        </div>
+                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs" }} />
                     </div>
                     <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Choose worker *</label>
@@ -112,9 +78,9 @@ const AssignTask = () => {
                 </div>
                 <main className='col-span-3 lg:pl-4'>
                     {userQuery.role === "" && <EmptyLoader otherText={"Select Employee type!"} />}
-                    {(userQuery.role === DATA_ENTRY_OPERATOR) && (employee.role === DATA_ENTRY_OPERATOR ) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === DATA_ENTRY_OPERATOR) && <EmptyLoader otherText={`Please select entire operator name!`} />}
-                    {(userQuery.role === MARKETER) && (employee.role === MARKETER ) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === MARKETER) && <EmptyLoader otherText={`Please select marketer name!`} />}
-                    {(userQuery.role === TELE_MARKETER) && (employee.role === TELE_MARKETER ) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === TELE_MARKETER) && <EmptyLoader otherText={`Please select telemarketer name!`} />}
+                    {(userQuery.role === DATA_ENTRY_OPERATOR) && (employee.role === DATA_ENTRY_OPERATOR) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === DATA_ENTRY_OPERATOR) && <EmptyLoader otherText={`Please select entire operator name!`} />}
+                    {(userQuery.role === MARKETER) && (employee.role === MARKETER) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === MARKETER) && <EmptyLoader otherText={`Please select marketer name!`} />}
+                    {(userQuery.role === TELE_MARKETER) && (employee.role === TELE_MARKETER) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === TELE_MARKETER) && <EmptyLoader otherText={`Please select telemarketer name!`} />}
                     {(userQuery.role === ON_FIELD_MARKETER) && (employee.role === ON_FIELD_MARKETER) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === ON_FIELD_MARKETER) && <EmptyLoader otherText={`Please select field marketer name!`} />}
                 </main>
             </div>

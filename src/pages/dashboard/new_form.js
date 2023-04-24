@@ -9,9 +9,13 @@ import AddressAddForm from '@/components/Forms/AddressAddForm';
 import { usePostAddressMutation } from '@/app/features/address/addressApi';
 import { TagsInput } from "react-tag-input-component";
 import Private from '@/utils/Private';
+import { multipartHeaders } from '@/utils/headers';
+import axios from 'axios';
 
 const New_form = () => {
-    const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
+    const [imgFiles, setImgFiles] = useState({});
+    const [imageUploads, setImageUploads] = useState({ image: '', images: [] });
+    const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" });
     const [inputData, setInputData] = useState({});
     const [count, setCount] = useState({ website: 1, branch: 1 });
     const [website, setWebsite] = useState({});
@@ -28,6 +32,7 @@ const New_form = () => {
             localStorage.setItem("entire", JSON.stringify(inputData));
         }, 500);
     }, [inputData]);
+    // console.log(imgFiles.images);
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!inputData?.businessDetails?.category) {
@@ -55,7 +60,7 @@ const New_form = () => {
             ...inputData,
             tag: service,
             address: { ...inputData.address, country: addressValue?.country, state: addressValue?.state, city: addressValue?.city },
-            have_website: { website_urls: Object.values(website), isWebsite: inputData?.have_website?.isWebsite },
+            have_website: { website_urls: Object.values(website).filter(link => link !== ''), isWebsite: inputData?.have_website?.isWebsite },
             have_branchs: { isBranch: inputData?.have_branchs?.isBranch, branch_detalis: Object.values(branch) }
         }
         const addressRes = await postAddress(addressValue);
@@ -63,17 +68,46 @@ const New_form = () => {
             console.log(addressRes);
             return errorToast("Address Error");
         } else {
+            const formData = new FormData();
+            const formData2 = new FormData();
+            if (imgFiles.logo) {
+                formData.append('image', imgFiles.logo);
+                const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, { headers: multipartHeaders })
+                if (result.data?.file) {
+                    entireData.businessDetails.businessLogo = result.data.file;
+                } else if (!result.success) {
+                    return console.log(result);
+                } else {
+                    return console.log(result);
+                }
+            }
+            if (imgFiles.images?.length) {
+                for (let i = 0; i < imgFiles.images.length; i++) {
+                    formData2.append('images', imgFiles.images[i]);
+                };
+                const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, { headers: multipartHeaders });
+                if (result2.data?.files?.length) {
+                    entireData.businessDetails.images = result2.data?.files;
+                } else if (!result2.success) {
+                    return console.log(result2);
+                } else {
+                    return console.log(result2);
+                }
+            }
+            // return console.log(entireData);
             postData(entireData)
                 .then(res => {
-                    console.log(res);
-                    if (res.error) {
-                        errorToast("Something went wrong!")
-                    } else if (res.data.success) {
+                    if (res.data?.success) {
+                        console.log(res.data);
                         successToast("Data Entire Successful!");
                         localStorage.removeItem("entire");
                         setInputData({});
+                        setService([]);
                         setAddressValue({ country: "", state: "", city: "" });
                         e.target.reset();
+                    } else {
+                        console.log(res);
+                        errorToast("Something went wrong!")
                     }
                 });
         }
@@ -206,7 +240,15 @@ const New_form = () => {
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='busi-logo' className="leading-7 font-[600] text-gray-700 col-span-3">Business logo</label>
                     <input
-                        type="file" id='busi-logo' placeholder='Enter business logo'
+                        onChange={(e) => setImgFiles({ ...imgFiles, logo: e.target.files[0] })} type="file" id='busi-logo' placeholder='Enter business logo'
+                        className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-[2px] px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    />
+                </div>
+                <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
+                    <label htmlFor='other_image' className="leading-7 font-[600] text-gray-700 col-span-3">Others image</label>
+                    <input
+                        onChange={(e) => setImgFiles({ ...imgFiles, images: e.target.files })}
+                        type="file" id='other_image' placeholder='Other image' multiple
                         className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-[2px] px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                 </div>
@@ -218,7 +260,7 @@ const New_form = () => {
                                 onClick={(e) => {
                                     setInputData({ ...inputData, have_website: { ...inputData?.have_website, isWebsite: inputData?.have_website?.isWebsite ? false : true } });
                                     setCount(c => ({ ...c, website: 1 }))
-                                }}
+                                }} readOnly
                                 type="checkbox" id="website"
                             />
                             <label className='ml-2 leading-7 font-[600] text-gray-700 col-span-3' htmlFor="website">Already have an website?</label>
@@ -268,7 +310,6 @@ const New_form = () => {
                                     <div className='w-full col-span-3'>
                                         <label className="leading-7 text-gray-700 text-xs">Country *</label>
                                         <select
-                                            // value={inputData?.address?.country}
                                             onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], country: e.target.value } }))}
                                             className="block w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-2 px-3 -mt-1 leading-8 transition-colors duration-200 ease-in-out"
                                         >
@@ -281,7 +322,6 @@ const New_form = () => {
                                     <div className="w-full col-span-3">
                                         <label htmlFor='branchState' className="leading-7 text-gray-700 text-xs">State / Province </label>
                                         <input
-                                            // value={inputData?.address?.state}
                                             onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], state: e.target.value } }))}
                                             type="text" id='branchState' placeholder='Local state state'
                                             className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1 leading-8 transition-colors duration-200 ease-in-out"
@@ -290,15 +330,14 @@ const New_form = () => {
                                     <div className="w-full col-span-6 -mt-1">
                                         <label htmlFor='address' className="leading-7 text-gray-700  text-xs">Street Address</label>
                                         <input
-                                            // value={inputData?.address?.street_address}
-                                            onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], address: e.target.value } }))}
+                                            onChange={(e) => setBranch(c => ({ ...c, [`branch${i}`]: { ...c[`branch${i}`], street_address: e.target.value } }))}
                                             type="text" id='address' placeholder='Street Address'
                                             className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 -mt-1 leading-8 transition-colors duration-200 ease-in-out"
                                         />
                                     </div>
                                 </div>
                             </div>)}
-                            <div className='flex justify-end'> <p onClick={() => setCount((c) => ({ ...c, branch: c.branch + 1 }))} className="text-white bg-red-400 border-0 h-7  whitespace-pre text-sm py-[4px] px-4 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">+ New website</p></div>
+                            <div className='flex justify-end'> <p onClick={() => setCount((c) => ({ ...c, branch: c.branch + 1 }))} className="text-white bg-red-400 border-0 h-7  whitespace-pre text-sm py-[4px] px-4 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">+ New Branch</p></div>
                         </div>
                     </div>
                 </div>
@@ -322,6 +361,7 @@ const New_form = () => {
                 </div>
                 <div className={`relative mb-2 w-full`}>
                     <input
+                        checked={inputData.products}
                         onClick={(e) => {
                             setInputData({ ...inputData, products: inputData?.products ? false : true });
                         }}
@@ -331,10 +371,7 @@ const New_form = () => {
                     <div className={inputData?.products ? "block" : "hidden"} >
                         <TagsInput
                             className="bg-gray-400"
-                            value={service}
-                            onChange={setService}
-                            name="tags"
-                            placeHolder="enter products"
+                            value={service} onChange={setService} name="tags" placeHolder="enter products"
                         />
                     </div>
                 </div>

@@ -36,6 +36,17 @@ const userApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["user"]
         }),
+        userDelete: builder.mutation({
+            query: (id) => ({
+                method: "DELETE",
+                url: `/user/${id}`,
+                 headers: {
+                    'content-type': 'application/json',
+                    authorization: `${localStorage.getItem('tech_token')}`,
+                }
+            }),
+            invalidatesTags: ["user"]
+        }),
     })
 })
 
@@ -43,4 +54,5 @@ export const {
     useRegisterMutation,
     useUserLoginMutation,
     useGetEmployeeByQueQuery,
+    useUserDeleteMutation,
 } = userApi;

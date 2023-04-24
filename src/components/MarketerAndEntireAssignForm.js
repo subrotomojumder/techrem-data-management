@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { EmptyLoader, SmallSpinner } from './Spinner';
-import Countries from 'countries-list';
 import { usePostEntireTaskMutation, usePostMarketerTaskMutation, } from '@/app/features/dataEntire/assignTaskApi';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { errorToast, successToast } from '@/utils/neededFun';
 import { DATA_ENTRY_OPERATOR, MARKETER } from '@/utils/constant';
 import { format } from 'date-fns';
+import AddressAddForm from './Forms/AddressAddForm';
 
 const MarketerAndEntireAssignForm = ({ employee }) => {
     const [taskAria, setTaskAria] = useState(employee.address);
@@ -65,44 +65,7 @@ const MarketerAndEntireAssignForm = ({ employee }) => {
             <form onSubmit={handleSubmit(submit)} className='col-span-2 grid grid-cols-1 gap-x-3 h-fit'>
                 <div className="relative my-1 w-full">
                     <label className="leading-7 font-[500] text-gray-600">Write Work Aria *</label>
-                    <div className='grid grid-cols-10 justify-center'>
-                        <select
-                            value={taskAria.country}
-                            onChange={(e) => {
-                                setTaskAria({ ...taskAria, country: e.target.value, state: "", village: "" });
-                            }}
-                            name='busiCategory' className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                            <option selected value={""} >Select Country</option>
-                            <option value="Bangladesh">Bangladesh</option>
-                            <option value="India">India</option>
-                            <option value="Australia">Australia</option>
-                            <option value="Singapore">Singapore</option>
-                            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
-                            <option value="Afghanistan">Afghanistan</option>
-                        </select>
-                        <select
-                            value={taskAria.state}
-                            onChange={(e) => {
-                                setTaskAria({ ...taskAria, state: e.target.value, village: "" });
-                            }}
-                            name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                            <option selected value={""} >state</option>
-                            <option value="noakhali">Noakhali</option>
-                            <option value="Borishal">Borishal</option>
-                            <option value="Asam">Asam</option>
-                            <option value="Dhaka">Dhaka</option>
-                        </select>
-                        <select
-                            value={taskAria.village}
-                            onChange={(e) => {
-                                setTaskAria({ ...taskAria, village: e.target.value });
-                            }}
-                            name='busiCategory' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out" >
-                            <option selected value={""} >Village</option>
-                            <option value="charbata">Charbata</option>
-                            <option value="Hazipur">Hazipur</option>
-                        </select>
-                    </div>
+                    <AddressAddForm addressValue={taskAria} setAddressValue={setTaskAria} classes={{ label: "text-xs" }} />
                 </div>
                 <div className='w-full flex justify-start gap-x-2 md:gap-x-4 xl:gap-x-8  '>
                     <div className='w-full'>

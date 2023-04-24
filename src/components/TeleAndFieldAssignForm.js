@@ -61,7 +61,7 @@ const TeleAndFieldAssignForm = ({ employee }) => {
                 end: inputData.end
             }
         }
-    return console.log(task_data);
+    // return console.log(task_data);
         if (employee.role === TELE_MARKETER) {
             postTelemarketerTask(task_data).then(res => {
                 console.log(res);
@@ -173,7 +173,7 @@ const TeleAndFieldAssignForm = ({ employee }) => {
                         </td>
                         <td className="px-4 py-3">{entire.businessDetails?.businessName}</td>
                         <td className="px-4 py-3">{entire.address?.country}, {entire.address?.state}</td>
-                        <td className="px-4 py-3 text-base text-gray-900">{format(new Date(entire.create_date), 'yyyy-MM-dd')}</td>
+                        <td className="px-4 py-3 text-base text-gray-900">{new Date(entire.updatedAt).toLocaleString()}</td>
                     </tr>)}
                 </tbody>
             </table>

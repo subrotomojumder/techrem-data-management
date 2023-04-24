@@ -33,8 +33,8 @@ const Login = () => {
                     if (res.error?.error) {
                         return errorToast(res.error.error);
                     }
-                    if (res?.error?.data?.dev_error) {
-                        return errorToast(res.error?.data.dev_error);
+                    if (res?.error?.data?.message) {
+                        return errorToast(res.error?.data.dev_error || res.error?.data.message);
                     }
                 }else if (res.data?.message) {
                     errorToast(res?.data.message);                        
