@@ -1007,6 +1007,7 @@ __metadata:
     react-icons: ^4.8.0
     react-redux: ^8.0.5
     react-tag-input-component: ^2.0.2
+    sweetalert2: ^11.7.3
     tailwindcss: ^3.3.1
     validator: ^13.9.0
   languageName: unknown
@@ -3986,6 +3987,13 @@ __metadata:
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
   checksum: 53b1e247e68e05db7b3808b99b892bd36fb096e6fba213a06da7fab22045e97597db425c724f2bbd6c99a3c295e1e73f3e4de78592289f38431049e1277ca0ae
+  languageName: node
+  linkType: hard
+
+"sweetalert2@npm:^11.7.3":
+  version: 11.7.3
+  resolution: "sweetalert2@npm:11.7.3"
+  checksum: 6d31e6b0fb7fca21ed34c34be97d23043349d2f1c89005bf370245388b057926cf147c33301ced90ac2fe15bada7d3e4277073b5cc36e6c131a9a6f99525ff5a
   languageName: node
   linkType: hard
 

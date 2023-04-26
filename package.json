@@ -28,6 +28,7 @@
     "react-icons": "^4.8.0",
     "react-redux": "^8.0.5",
     "react-tag-input-component": "^2.0.2",
+    "sweetalert2": "^11.7.3",
     "validator": "^13.9.0"
   },
   "devDependencies": {

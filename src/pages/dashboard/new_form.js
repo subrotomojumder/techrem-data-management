@@ -63,53 +63,57 @@ const New_form = () => {
             have_website: { website_urls: Object.values(website).filter(link => link !== ''), isWebsite: inputData?.have_website?.isWebsite },
             have_branchs: { isBranch: inputData?.have_branchs?.isBranch, branch_detalis: Object.values(branch) }
         }
-        const addressRes = await postAddress(addressValue);
-        if (!addressRes?.data.success) {
-            console.log(addressRes);
-            return errorToast("Address Error");
-        } else {
-            const formData = new FormData();
-            const formData2 = new FormData();
-            if (imgFiles.logo) {
-                formData.append('image', imgFiles.logo);
-                const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, { headers: multipartHeaders })
-                if (result.data?.file) {
-                    entireData.businessDetails.businessLogo = result.data.file;
-                } else if (!result.success) {
-                    return console.log(result);
-                } else {
-                    return console.log(result);
-                }
-            }
-            if (imgFiles.images?.length) {
-                for (let i = 0; i < imgFiles.images.length; i++) {
-                    formData2.append('images', imgFiles.images[i]);
-                };
-                const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, { headers: multipartHeaders });
-                if (result2.data?.files?.length) {
-                    entireData.businessDetails.images = result2.data?.files;
-                } else if (!result2.success) {
-                    return console.log(result2);
-                } else {
-                    return console.log(result2);
-                }
-            }
-            // return console.log(entireData);
-            postData(entireData)
-                .then(res => {
-                    if (res.data?.success) {
-                        console.log(res.data);
-                        successToast("Data Entire Successful!");
-                        localStorage.removeItem("entire");
-                        setInputData({});
-                        setService([]);
-                        setAddressValue({ country: "", state: "", city: "" });
-                        e.target.reset();
+        try {
+            const addressRes = await postAddress(addressValue);
+            if (!addressRes?.data.success) {
+                console.log(addressRes);
+                return errorToast("Address Error");
+            } else {
+                const formData = new FormData();
+                const formData2 = new FormData();
+                if (imgFiles.logo) {
+                    formData.append('image', imgFiles.logo);
+                    const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, { headers: multipartHeaders })
+                    if (result.data?.file) {
+                        entireData.businessDetails.businessLogo = result.data.file;
+                    } else if (!result.success) {
+                        return console.log(result);
                     } else {
-                        console.log(res);
-                        errorToast("Something went wrong!")
+                        return console.log(result);
                     }
-                });
+                }
+                if (imgFiles.images?.length) {
+                    for (let i = 0; i < imgFiles.images.length; i++) {
+                        formData2.append('images', imgFiles.images[i]);
+                    };
+                    const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, { headers: multipartHeaders });
+                    if (result2.data?.files?.length) {
+                        entireData.businessDetails.images = result2.data?.files;
+                    } else if (!result2.success) {
+                        return console.log(result2);
+                    } else {
+                        return console.log(result2);
+                    }
+                }
+                // return console.log(entireData);
+                postData(entireData)
+                    .then(res => {
+                        if (res.data?.success) {
+                            console.log(res.data);
+                            successToast("Data Entire Successful!");
+                            localStorage.removeItem("entire");
+                            setInputData({});
+                            setService([]);
+                            setAddressValue({ country: "", state: "", city: "" });
+                            e.target.reset();
+                        } else {
+                            console.log(res);
+                            errorToast("Something went wrong!")
+                        }
+                    });
+            }
+        } catch (error) {
+            errorToast(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
         }
     };
     return (
@@ -256,7 +260,7 @@ const New_form = () => {
                     <div className="relative mb-2 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                         <div className='col-span-3'>
                             <input
-                                checked={inputData?.have_website?.isWebsite}
+                                checked={inputData?.have_website?.isWebsite || false}
                                 onClick={(e) => {
                                     setInputData({ ...inputData, have_website: { ...inputData?.have_website, isWebsite: inputData?.have_website?.isWebsite ? false : true } });
                                     setCount(c => ({ ...c, website: 1 }))

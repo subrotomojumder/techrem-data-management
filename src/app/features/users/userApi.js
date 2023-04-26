@@ -36,11 +36,33 @@ const userApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["user"]
         }),
+        getEmployeeById: builder.query({
+            query: (id) => ({
+                url: `/user/${id}`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["user"]
+        }),
+        userUpdate: builder.mutation({
+            query: (user) => ({
+                method: "PUT",
+                url: `/user/${user._id}`,
+                body: user,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: `${localStorage.getItem('tech_token')}`,
+                }
+            }),
+            invalidatesTags: ["user"]
+        }),
         userDelete: builder.mutation({
             query: (id) => ({
                 method: "DELETE",
                 url: `/user/${id}`,
-                 headers: {
+                headers: {
                     'content-type': 'application/json',
                     authorization: `${localStorage.getItem('tech_token')}`,
                 }
@@ -54,5 +76,7 @@ export const {
     useRegisterMutation,
     useUserLoginMutation,
     useGetEmployeeByQueQuery,
+    useGetEmployeeByIdQuery,
     useUserDeleteMutation,
+    useUserUpdateMutation
 } = userApi;

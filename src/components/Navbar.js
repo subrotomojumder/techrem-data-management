@@ -14,7 +14,7 @@ const Navbar = () => {
     const [sideNave, setSideNave] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
-    const { user, isLoading, isError, error } = useSelector((state) => state.auth);
+    const { user } = useSelector((state) => state.auth);
     // console.log({ user, isLoading, isError, error });
     const cartRef = useRef();
     // const toggleCart = () => {
@@ -95,7 +95,7 @@ const Navbar = () => {
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
                                     <Menu.Button className="hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre">
-                                       AC-Register
+                                        AC-Register
                                     </Menu.Button>
                                 </div>
                                 <Transition
@@ -148,7 +148,7 @@ const Navbar = () => {
                                 : <img title={user.email} className='h-10 md:h-12 w-10 md:w-12 rounded-full cursor-pointer' src={user?.userImage} alt='' />}
                             {dropdown && <div className="absolute right-8 bg-pink-300 top-[54px] rounded-md px-3 py-3 w-28 text-center">
                                 <ul>
-                                    <Link href={`/authentication/account`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Account</li></Link>
+                                    <Link href={`/authentication/user_profile/${user._id}`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Account</li></Link>
                                     <Link href={`/dashboard/tasks_list`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Tasks-List</li></Link>
                                     <Link href={`/dashboard/tasks_submission`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Submission</li></Link>
                                     <li onClick={signOut} className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Logout</li>

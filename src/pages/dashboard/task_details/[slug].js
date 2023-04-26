@@ -24,7 +24,7 @@ const Details = () => {
         }
     }, [user]);
     const { data, isLoading, isError, error } = useGetEmployeeTaskQuery(`/divide_work/${role}/${slug}?data=true`);
-    console.log(data);
+    // console.log(data);
     let content;
     if (isLoading) {
         content = <LargeSpinner />;
@@ -32,7 +32,7 @@ const Details = () => {
     if (!user.role) {
         content = <LargeSpinner></LargeSpinner>
     }
-    console.log(data, isLoading, isError, error);
+    // console.log(data, isLoading, isError, error);
     if (isError) {
         if (error.message) {
             content = <div className='text-center mt-10 md:mt-52'>
@@ -118,7 +118,9 @@ const Details = () => {
                                     <td className="px-4 py-3">
                                         <span className='text-indigo-500'> {address?.state}, {address?.country} </span>
                                     </td>
-                                    <td className="px-4 py-3"></td>
+                                    <td className="px-4 py-3">
+                                       <span className='font-medium text-gray-500'> {onProcess?.teleMarketer?.process ? onProcess?.teleMarketer?.process : "Fresh"}</span>
+                                    </td>
                                     <td className="px-4 pl-0 pr-3">
                                         <Link href={`/dashboard/contact_manage/${_id}`}><button className='border border-yellow-200 hover:border-white px-2 rounded-lg font-medium text-md py-1 text-yellow-400 hover:text-white hover:bg-orange-400 active:bg-orange-500 duration-75'>Contact</button></Link>
                                     </td>

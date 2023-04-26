@@ -13,7 +13,7 @@ const addressApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["address"]
+            invalidatesTags: ["address","state","city"]
         }),
         getAllAddress: builder.query({
             query: () => ({
@@ -24,10 +24,30 @@ const addressApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["address"]
         }),
+        getAllState: builder.query({
+            query: (query) => ({
+                url: `/address/state?${query}`,
+                headers: {
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["state"]
+        }),
+        getAllCity: builder.query({
+            query: (query) => ({
+                url: `/address/city?${query}`,
+                headers: {
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["city"]
+        }),
     })
 })
 
 export const {
    usePostAddressMutation,
-   useGetAllAddressQuery
+   useGetAllAddressQuery,
+   useGetAllStateQuery,
+   useGetAllCityQuery
 } = addressApi;

@@ -48,7 +48,7 @@ const AssignTask = () => {
                     </div>
                     <div className="relative my-0 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
-                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs" }} />
+                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs",addBtn: "hidden" ,contain: 'grid grid-cols-2 gap-x-2' }} />
                     </div>
                     <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Choose worker *</label>

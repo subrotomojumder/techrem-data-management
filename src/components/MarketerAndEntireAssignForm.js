@@ -65,7 +65,7 @@ const MarketerAndEntireAssignForm = ({ employee }) => {
             <form onSubmit={handleSubmit(submit)} className='col-span-2 grid grid-cols-1 gap-x-3 h-fit'>
                 <div className="relative my-1 w-full">
                     <label className="leading-7 font-[500] text-gray-600">Write Work Aria *</label>
-                    <AddressAddForm addressValue={taskAria} setAddressValue={setTaskAria} classes={{ label: "text-xs" }} />
+                    <AddressAddForm addressValue={taskAria} setAddressValue={setTaskAria} classes={{ label: "text-xs", contain: 'grid grid-cols-2 gap-x-3'}} />
                 </div>
                 <div className='w-full flex justify-start gap-x-2 md:gap-x-4 xl:gap-x-8  '>
                     <div className='w-full'>

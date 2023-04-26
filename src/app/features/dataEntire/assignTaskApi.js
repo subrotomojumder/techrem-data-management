@@ -3,15 +3,15 @@ import { apiSlice } from '../api/apiSlice'
 const assignTaskApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getEmployeeTask: builder.query({
-             query: (url) => ({
-                 url: url,
-                 headers: {
-                     'content-type': 'application/json',
-                     authorization: localStorage.getItem("tech_token"),
-                 }
-             }),
-            providesTags: ["tasks" ]
-         }),
+            query: (url) => ({
+                url: url,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["tasks"]
+        }),
         postMarketerTask: builder.mutation({
             query: (data) => ({
                 method: "POST",
@@ -61,6 +61,28 @@ const assignTaskApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["tasks", "data"]
         }),
+        // all operator task submit api
+        postOperatorTaskSubmit: builder.mutation({
+            query: ({ url, data }) => ({
+                method: "POST",
+                url: url,
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["tasks"]
+        }),
+        getOperatorSubmissionById: builder.query({
+            query: (url) => ({
+                url: url,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            })
+        }),
     })
 })
 
@@ -69,5 +91,6 @@ export const {
     usePostMarketerTaskMutation,
     usePostTelemarketerTaskMutation,
     useGetEmployeeTaskQuery,
-    usePostFieldMarketerTaskMutation
+    usePostFieldMarketerTaskMutation,
+    usePostOperatorTaskSubmitMutation
 } = assignTaskApi;

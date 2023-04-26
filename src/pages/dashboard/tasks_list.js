@@ -22,6 +22,7 @@ const TasksList = () => {
             setRole("dataEntry_divide")
         }
     }, [user]);
+    // console.log(`/divide_work/${role}?account_id=${user._id}`);
     const { data, isLoading, isError, error } = useGetEmployeeTaskQuery(`/divide_work/${role}?account_id=${user._id}`);
     let content;
     if (isLoading) {
