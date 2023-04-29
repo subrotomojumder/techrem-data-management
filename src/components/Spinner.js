@@ -1,5 +1,12 @@
 import React from 'react';
 
+export const CustomLoader = () => {
+    return (
+        <div className='h-screen flex justify-center items-center '>
+            <div class="custom-loader"></div>
+        </div>
+    );
+};
 export const LargeSpinner = () => {
     return (
         <div className='w-full h-[90vh] flex justify-center items-center '>
@@ -27,7 +34,7 @@ export const EmptyLoader = ({ isLoading, otherText }) => {
         </div>
     );
 };
-export const InputLoader = ({ isLoading , height}) => {
+export const InputLoader = ({ isLoading, height }) => {
     return (
         <div className={`bg-indigo-50 animate-pulse ${height} relative pt-4`}>
             <nav className='bg-indigo-100 animate-pulse shadow-sm w-[70%] h-10'></nav>

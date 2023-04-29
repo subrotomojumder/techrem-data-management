@@ -4,13 +4,16 @@ import { ImPencil2 } from 'react-icons/im';
 import Link from 'next/link';
 import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
 import { LargeSpinner } from '@/components/Spinner';
+import { Private } from '@/utils/ProtectRoute';
+import { useRouter } from 'next/router';
 
 // / http://localhost:5000/api/v1/data_entry
 const Entires_data = () => {
     const [actionShow, setActionShow] = useState('');
     // limit=2
+    const router = useRouter()
     const { data, isLoading, isError, error } = useGetAllDataQuery("");
-    console.log(data?.data[0], isLoading, isError, error);
+    // console.log(data?.data[0], isLoading, isError, error);
 
     let content;
     if (isLoading) {
@@ -74,8 +77,7 @@ const Entires_data = () => {
                                                         onClick={() => setDeletedBooking(book)}
                                                         className='text-sm font-semibold px-4 w-full hover:bg-indigo-200 active:bg-indigo-300 cursor-pointer'
                                                     >Delete</button>
-                                                    <button
-                                                        onClick={() => navigate(`/booking-details/${_id}`)}
+                                                    <button onClick={()=> router.push(`/dashboard/entire_details/${_id}`)}
                                                         className='text-sm font-semibold px-4 w-full hover:bg-indigo-200 active:bg-indigo-300 cursor-pointer'
                                                     >Details</button>
                                                 </ul>
@@ -105,4 +107,4 @@ export async function getStaticProps(context) {
         props: {}, // will be passed to the page component as props
     }
 }
-export default Entires_data;
+export default Private(Entires_data);

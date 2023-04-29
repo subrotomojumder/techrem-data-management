@@ -1,4 +1,4 @@
-import Private from '@/utils/Private';
+import Private from '@/utils/ProtectRoute';
 import React from 'react';
 
 const About = () => {

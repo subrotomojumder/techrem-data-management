@@ -69,8 +69,8 @@ const TasksList = () => {
                                     <p className="leading-7 -mt-4 text-gray-700 col-span-2">In-Total</p>
                                     <p className='col-span-5 -mt-4 font-[400]'>: {task.dataIds.length} Segment</p>
                                 </>}
-                                <p className="leading-7 -mt-4 text-gray-700 col-span-2">Task Scheme</p>
-                                <p className='col-span-5 -mt-4 font-[400]'>: {format(new Date(task.assign_date?.start), 'yyyy-MM-dd')} - {format(new Date(task.assign_date?.end), 'yyyy-MM-dd')}</p>
+                                <p className="leading-7 -mt-4 text-gray-700 col-span-2">Date Range</p>
+                                <p className='col-span-5 -mt-4 font-[400]'>: {format(new Date(task.assign_date?.start), 'yyyy-MM-dd')} To {format(new Date(task.assign_date?.end), 'yyyy-MM-dd')}</p>
                             </div>
                         </div>
                     </Link>
@@ -79,7 +79,7 @@ const TasksList = () => {
         };
     };
     return (
-        <div className="text-gray-600 body-font max-w-6xl xxl:max-w-7xl border min-h-[95vh] my-4 mx-auto">
+        <div className="text-gray-600 body-font max-w-6xl xxl:max-w-7xl border min-h-[95vh] mb-4 mt-1 mx-auto">
             <section className="text-gray-600 body-font h-full relative">
                 <div className='w-full flex justify-end items-center gap-1 py-[6px] bg-indigo-300'>
                     <label className="relative block rounded-md">

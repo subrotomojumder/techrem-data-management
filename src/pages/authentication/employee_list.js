@@ -1,6 +1,7 @@
 import { useGetEmployeeByQueQuery } from '@/app/features/users/userApi';
 import SingleUser from '@/components/SingleUser';
 import { LargeSpinner } from '@/components/Spinner';
+import { AdminProtect } from '@/utils/ProtectRoute';
 import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import React, { useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
@@ -72,4 +73,4 @@ const EmployeeList = () => {
         </div >)
 };
 
-export default EmployeeList;
+export default AdminProtect(EmployeeList);

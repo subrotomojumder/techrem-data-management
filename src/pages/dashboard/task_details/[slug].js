@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 
 const Details = () => {
     const [role, setRole] = useState('');
+    const [queryData, setQueryData] = useState({ status: 'fresh' });
     const router = useRouter();
     const { slug } = router.query;
     const { user } = useSelector((state) => state.auth);
@@ -24,8 +25,11 @@ const Details = () => {
         }
     }, [user]);
     const { data, isLoading, isError, error } = useGetEmployeeTaskQuery(`/divide_work/${role}/${slug}?data=true`);
-    // console.log(data);
+    console.log(queryData);
     let content;
+    if (!slug) {
+        content = <LargeSpinner></LargeSpinner>
+    }
     if (isLoading) {
         content = <LargeSpinner />;
     };
@@ -81,17 +85,18 @@ const Details = () => {
                                     />
                                 </label>
                                 <select
-                                    className="text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 py-1 pl-1 pr-6 mt-1 leading-8 transition-colors duration-200 ease-in-out"
+                                    onChange={(e) => setQueryData(c => ({ ...c, status: e.target.value }))}
+                                    className="text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 py-[5px] pl-1 pr-6 mt-1 leading-8 transition-colors duration-200 ease-in-out"
                                 >
-                                    <option selected disabled >select-status</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Fresh">Fresh</option>
-                                    <option value="Complete">Complete</option>
-                                    <option value="Cancel">Cancel</option>
+                                    <option value=''  >All-Status</option>
+                                    <option value="fresh" selected>Fresh</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="complete">Complete</option>
+                                    <option value="cancel-call">Cancel-call</option>
                                 </select>
                                 <input
                                     type="date"
-                                    className="w-full text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
+                                    className="text-md bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                                 <p className='text-[13px] font-medium border px-1 rounded text-center'>Unacquit<br /><span className='text-green-500 drop-shadow-md text-sm'>{data?.data?.dataIds?.length}</span></p>
                             </div>
@@ -107,7 +112,7 @@ const Details = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data?.data?.dataIds?.map(({ businessDetails, onProcess, address, _id }, i) => <tr key={_id} className={`${i % 2 === 0 && 'bg-gray-50'} border-b capitalize`}>
+                                {data?.data?.dataIds?.filter((idData) => queryData.status ? idData.onProcess?.teleMarketer?.process === queryData.status : idData).map(({ businessDetails, onProcess, address, _id }, i) => <tr key={_id} className={`${i % 2 === 0 && 'bg-gray-50'} border-b capitalize`}>
                                     {/* <td className="w-10 text-left">
 
                                     </td> */}
@@ -119,7 +124,7 @@ const Details = () => {
                                         <span className='text-indigo-500'> {address?.state}, {address?.country} </span>
                                     </td>
                                     <td className="px-4 py-3">
-                                       <span className='font-medium text-gray-500'> {onProcess?.teleMarketer?.process ? onProcess?.teleMarketer?.process : "Fresh"}</span>
+                                        <span className='font-medium text-gray-500'> {onProcess?.teleMarketer?.process ? onProcess?.teleMarketer?.process : "Fresh"}</span>
                                     </td>
                                     <td className="px-4 pl-0 pr-3">
                                         <Link href={`/dashboard/contact_manage/${_id}`}><button className='border border-yellow-200 hover:border-white px-2 rounded-lg font-medium text-md py-1 text-yellow-400 hover:text-white hover:bg-orange-400 active:bg-orange-500 duration-75'>Contact</button></Link>

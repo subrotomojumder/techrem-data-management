@@ -4,17 +4,15 @@ import { LARGE, MEDIUM, SMALL } from '@/utils/constant';
 import { EmptyLoader, SmallSpinner } from '@/components/Spinner';
 import { usePostDataMutation } from '@/app/features/dataEntire/dataEntireApi';
 import { errorToast, successToast } from '@/utils/neededFun';
-import { useSelector } from 'react-redux';
 import AddressAddForm from '@/components/Forms/AddressAddForm';
 import { usePostAddressMutation } from '@/app/features/address/addressApi';
 import { TagsInput } from "react-tag-input-component";
-import Private from '@/utils/Private';
 import { multipartHeaders } from '@/utils/headers';
 import axios from 'axios';
+import { Private } from '@/utils/ProtectRoute';
 
 const New_form = () => {
-    const [imgFiles, setImgFiles] = useState({});
-    const [imageUploads, setImageUploads] = useState({ image: '', images: [] });
+    const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
     const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" });
     const [inputData, setInputData] = useState({});
     const [count, setCount] = useState({ website: 1, branch: 1 });

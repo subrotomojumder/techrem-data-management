@@ -21,7 +21,7 @@ const dataEntireApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            providesTags: ["data"]
+            providesTags: ["data","singleData"]
         }),
         getEntireDataById: builder.query({
             query: (params) => ({
@@ -29,8 +29,9 @@ const dataEntireApi = apiSlice.injectEndpoints({
                 headers: {
                     authorization: localStorage.getItem("tech_token"),
                 }
-            })
-        })
+            }),
+            providesTags: ["singleData"]
+        }),
     })
 })
 

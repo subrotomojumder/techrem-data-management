@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { SmallSpinner } from '@/components/Spinner';
+import { CustomLoader, SmallSpinner } from '@/components/Spinner';
 import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { useRegisterMutation } from '@/app/features/users/userApi';
 import { errorToast, successToast } from '@/utils/neededFun';
@@ -10,14 +10,16 @@ import Countries from 'countries-list';
 import AddressAddForm from '@/components/Forms/AddressAddForm';
 import { multipartHeaders } from '@/utils/headers';
 import axios from 'axios';
+import { AdminProtect } from '@/utils/ProtectRoute';
 
 const Register = () => {
+    const [loading, setLoading] = useState({ singleImg: false, multiImg: false, other: false });
     const [preview, setPreview] = useState({});
     const [imgFiles, setImgFiles] = useState({});
     const [createSuccess, setCreateSuccess] = useState(null);
     const [addressInfo, setAddressInfo] = useState({});
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
-    const [userRegister, { isLoading }] = useRegisterMutation();
+    const [userRegisterApi, { isLoading }] = useRegisterMutation();
 
     const handleSignUp = async (data) => {
         if (!addressInfo.country || !addressInfo.state || !addressInfo.city) {
@@ -29,31 +31,54 @@ const Register = () => {
             const formData = new FormData();
             const formData2 = new FormData();
             if (imgFiles.image) {
+                setLoading(c=> ({...c, singleImg: true}))
                 formData.append('image', imgFiles.image);
-                const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, { headers: multipartHeaders })
+                const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        'Access-Control-Allow-Origin': `http://localhost:5000`,
+                        'Access-Control-Allow-Credentials': 'true',
+                        authorization: localStorage.getItem("tech_token"),
+                    }
+                });
+                console.log(result);
                 if (result.data?.file) {
+                    setLoading(c=> ({...c, singleImg: false}))
                     data.userImage = result.data.file;
                 } else if (!result.success) {
+                    setLoading(c=> ({...c, singleImg: false}))
                     return console.log(result);
                 } else {
+                    setLoading(c=> ({...c, singleImg: false}))
                     return console.log(result);
                 }
             }
             if (imgFiles.document?.length) {
+                setLoading(c=> ({...c, multiImg: true}))
                 for (let i = 0; i < imgFiles.document.length; i++) {
                     formData2.append('images', imgFiles.document[i]);
                 };
-                const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, { headers: multipartHeaders });
+                const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        'Access-Control-Allow-Origin': `http://localhost:5000`,
+                        'Access-Control-Allow-Credentials': 'true',
+                        authorization: localStorage.getItem("tech_token"),
+                    }
+                });
                 if (result2.data?.files?.length) {
+                    setLoading(c=> ({...c, multiImg: false}))
                     data.document = result2.data?.files;
                 } else if (!result2.success) {
+                    setLoading(c=> ({...c, multiImg: false}))
                     return console.log(result2);
                 } else {
+                    setLoading(c=> ({...c, multiImg: false}))
                     return console.log(result2);
                 }
             }
             // return console.log(data);
-            userRegister(data).then(res => {
+            userRegisterApi(data).then(res => {
                 if (res.data?.success) {
                     successToast(res.data?.message);
                     setCreateSuccess(res.data.data);
@@ -77,12 +102,16 @@ const Register = () => {
                 }
             })
         } catch (error) {
-            errorToast(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
+            return errorToast(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
         }
     };
     const clipboardCopy = () => {
         navigator.clipboard.writeText(`Your accounts Id: ${createSuccess?.userId} and Password: ${createSuccess?.password}`);
         successToast("copy to clipboard!")
+    }
+
+    if (isLoading || loading.multiImg || loading.singleImg || loading.other) {
+        return <CustomLoader></CustomLoader>
     }
     return (
         <div className='min-h-[95vh] flex items-center justify-center py-4 md:py-8 px-2'>
@@ -228,7 +257,7 @@ const Register = () => {
                             type='submit' disabled={isLoading}
                             className={`w-full py-2 rounded-md mt-1 disabled:bg-blue-500 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 active:outline outline-green-600  disabled:outline-none font-semibold text-white flex justify-center items-center`}
                         >
-                            {isLoading ? <SmallSpinner /> : "REGISTER"}
+                            REGISTER
                         </button>
                     </form>
                 </div >}
@@ -236,4 +265,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default AdminProtect(Register);

@@ -37,11 +37,11 @@ const assignTaskApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["tasks"]
         }),
-        postTelemarketerTask: builder.mutation({
-            query: (data) => ({
+        postField_TelemarketerTask: builder.mutation({
+            query: ({task_data, postUrl}) => ({
                 method: "POST",
-                url: "/divide_work/tele_divide",
-                body: data,
+                url:  postUrl,
+                body: task_data,
                 headers: {
                     'content-type': 'application/json',
                     authorization: localStorage.getItem("tech_token"),
@@ -72,7 +72,19 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["tasks"]
+            invalidatesTags: ["tasks", "singleData"]
+        }),
+        updateOperatorSubmissionById: builder.mutation({
+            query: ({ url, updateData }) => ({
+                method: "PUT",
+                url: url,
+                body: updateData,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags:["singleData"]
         }),
         getOperatorSubmissionById: builder.query({
             query: (url) => ({
@@ -89,8 +101,9 @@ const assignTaskApi = apiSlice.injectEndpoints({
 export const {
     usePostEntireTaskMutation,
     usePostMarketerTaskMutation,
-    usePostTelemarketerTaskMutation,
+    usePostField_TelemarketerTaskMutation,
     useGetEmployeeTaskQuery,
     usePostFieldMarketerTaskMutation,
+    useUpdateOperatorSubmissionByIdMutation,
     usePostOperatorTaskSubmitMutation
 } = assignTaskApi;

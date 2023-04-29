@@ -6,9 +6,18 @@ import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from 
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
 import AddressAddForm from '@/components/Forms/AddressAddForm';
+import DropDown from '@/components/TailwindComponent/DropDown';
+const status = [
+    { id: 0, name: 'Tele Complete', value: "complete" },
+    { id: 2, name: 'Fresh', value: 'fresh' },
+    { id: 3, name: 'Tele Pending', value: "pending" },
+    { id: 4, name: 'Tele Cancel', value: "cancel-call" },
+    { id: 5, name: 'Tele Rejected', value: "rejected" },
+];
 const AssignTask = () => {
     const [userQuery, setUserQuery] = useState({ role: "", country: "", state: "", city: "" });
     const [employee, setEmployee] = useState({});
+    const [dataStatus, setDataStatus] = useState(status[0]);
     const { data: userData, isLoading: userLoading, isError, error } = useGetEmployeeByQueQuery(`role=${userQuery.role}&country=${userQuery.country}&state=${userQuery.state}&city=${userQuery.city}`);
     useEffect(() => {
         if (isError) {
@@ -21,13 +30,18 @@ const AssignTask = () => {
     useEffect(() => {
         if ((userQuery.country !== employee.address?.country) || (userQuery.state !== employee.address?.state) || (userQuery.city !== employee.address?.city)) setEmployee({});
     }, [userQuery]);
-    // console.log(userQuery);
+    // console.log(dataStatus);
     // console.log(userData,userLoading, isError, error);
     // console.log("query: ", userQuery.role, "employee: ", employee.role);
     return (
         <div className='max-w-lg md:max-w-2xl lg:max-w-7xl min-h-screen mx-auto px-6 md:px-8 lg:px-10 py-2 md:py-2 lg:py-4 md:my-2'>
-            <h2 className="text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase">Assign task</h2>
-            <p className="leading-relaxed mb-2 text-gray-600 w-80 md:w-full">Help us with your valuable information so that we can benefit you.</p>
+            <div className='grid grid-cols-1 lg:grid-cols-5 gap-x-14 '>
+                <h2 className="col-span-2 text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase">Assign task</h2>
+                <div className='col-span-3 flex justify-between items-center gap-1 bg-indigo-300 py-1'>
+                    <DropDown items={status} selected={dataStatus} setSelected={setDataStatus} />
+                </div>
+            </div>
+            {/* <p className="leading-relaxed mb-2 text-gray-600 w-80 md:w-full">Help us with your valuable information so that we can benefit you.</p> */}
             <div className='grid grid-cols-1 lg:grid-cols-5  lg:divide-x-2 gap-3 h-full relative'>
                 <div className='col-span-2 grid grid-cols-1 gap-x-3 h-fit lg:sticky top-14 left-0'>
                     <hr className='col-span-full' />
@@ -48,7 +62,7 @@ const AssignTask = () => {
                     </div>
                     <div className="relative my-0 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
-                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs",addBtn: "hidden" ,contain: 'grid grid-cols-2 gap-x-2' }} />
+                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs", addBtn: "hidden", contain: 'grid grid-cols-2 gap-x-2' }} />
                     </div>
                     <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Choose worker *</label>
@@ -80,8 +94,8 @@ const AssignTask = () => {
                     {userQuery.role === "" && <EmptyLoader otherText={"Select Employee type!"} />}
                     {(userQuery.role === DATA_ENTRY_OPERATOR) && (employee.role === DATA_ENTRY_OPERATOR) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === DATA_ENTRY_OPERATOR) && <EmptyLoader otherText={`Please select entire operator name!`} />}
                     {(userQuery.role === MARKETER) && (employee.role === MARKETER) ? <MarketerAndEntireAssignForm employee={employee} /> : (userQuery.role === MARKETER) && <EmptyLoader otherText={`Please select marketer name!`} />}
-                    {(userQuery.role === TELE_MARKETER) && (employee.role === TELE_MARKETER) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === TELE_MARKETER) && <EmptyLoader otherText={`Please select telemarketer name!`} />}
-                    {(userQuery.role === ON_FIELD_MARKETER) && (employee.role === ON_FIELD_MARKETER) ? <TeleAndFieldAssignForm employee={employee} /> : (userQuery.role === ON_FIELD_MARKETER) && <EmptyLoader otherText={`Please select field marketer name!`} />}
+                    {(userQuery.role === TELE_MARKETER) && (employee.role === TELE_MARKETER) ? <TeleAndFieldAssignForm employee={employee} dataStatus={dataStatus}/> : (userQuery.role === TELE_MARKETER) && <EmptyLoader otherText={`Please select telemarketer name!`} />}
+                    {(userQuery.role === ON_FIELD_MARKETER) && (employee.role === ON_FIELD_MARKETER) ? <TeleAndFieldAssignForm employee={employee} dataStatus={dataStatus}/> : (userQuery.role === ON_FIELD_MARKETER) && <EmptyLoader otherText={`Please select field marketer name!`} />}
                 </main>
             </div>
         </div>

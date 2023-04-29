@@ -5,12 +5,13 @@ import { Toaster } from 'react-hot-toast';
 import { store } from "../app/store";
 import { useEffect } from "react";
 import { getUser } from "@/app/features/users/userSlice";
+import DashboardLayout from "./DashboardLayout/DashboardLayout";
 
 export default function Layout({ children }) {
     const Main = ({ children }) => {
+        const { user, isLoading, isError, error } = useSelector((state) => state.auth);
+        // console.log(user, isLoading, isError, error);
         const dispatch = useDispatch();
-        // const { user, isLoading, isError, error } = useSelector((state) => state.auth);
-        // console.log({ user, isLoading, isError, error });
         useEffect(() => {
             dispatch(getUser({ authorization: localStorage.getItem("tech_token") }));
         }, []);
@@ -20,7 +21,12 @@ export default function Layout({ children }) {
         <>
             <Provider store={store}>
                 <Navbar />
-                <Main>{children}</Main>
+                <div className="flex justify-start relative">
+                    <DashboardLayout></DashboardLayout>
+                    <div className="flex-1">
+                        <Main>{children}</Main>
+                    </div>
+                </div>
                 <Footer />
             </Provider>
             <Toaster
