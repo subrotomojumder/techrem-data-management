@@ -7,7 +7,6 @@ import { errorToast, successToast } from '@/utils/neededFun';
 import AddressAddForm from '@/components/Forms/AddressAddForm';
 import { usePostAddressMutation } from '@/app/features/address/addressApi';
 import { TagsInput } from "react-tag-input-component";
-import { multipartHeaders } from '@/utils/headers';
 import axios from 'axios';
 import { Private } from '@/utils/ProtectRoute';
 
@@ -15,6 +14,7 @@ const New_form = () => {
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
     const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" });
     const [inputData, setInputData] = useState({});
+    const [imageLoading, setImageLoading] = useState(false);
     const [count, setCount] = useState({ website: 1, branch: 1 });
     const [website, setWebsite] = useState({});
     const [branch, setBranch] = useState({});
@@ -70,26 +70,42 @@ const New_form = () => {
                 const formData = new FormData();
                 const formData2 = new FormData();
                 if (imgFiles.logo) {
+                    setImageLoading(true);
                     formData.append('image', imgFiles.logo);
-                    const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, { headers: multipartHeaders })
+                    const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            'Access-Control-Allow-Origin': `http://localhost:5000`,
+                            'Access-Control-Allow-Credentials': 'true',
+                            authorization: localStorage.getItem("tech_token"),
+                        }
+                    })
                     if (result.data?.file) {
+                        setImageLoading(false);
                         entireData.businessDetails.businessLogo = result.data.file;
-                    } else if (!result.success) {
-                        return console.log(result);
                     } else {
+                        setImageLoading(false);
                         return console.log(result);
                     }
                 }
                 if (imgFiles.images?.length) {
+                    setImageLoading(true);
                     for (let i = 0; i < imgFiles.images.length; i++) {
                         formData2.append('images', imgFiles.images[i]);
                     };
-                    const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, { headers: multipartHeaders });
+                    const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            'Access-Control-Allow-Origin': `http://localhost:5000`,
+                            'Access-Control-Allow-Credentials': 'true',
+                            authorization: localStorage.getItem("tech_token"),
+                        }
+                    });
                     if (result2.data?.files?.length) {
+                        setImageLoading(false);
                         entireData.businessDetails.images = result2.data?.files;
-                    } else if (!result2.success) {
-                        return console.log(result2);
                     } else {
+                        setImageLoading(false);
                         return console.log(result2);
                     }
                 }
@@ -392,7 +408,7 @@ const New_form = () => {
                         setInputData({});
                     }}
                     className="text-white bg-red-400 border-0  h-10 w-[90px] py-2 px-6 mr-2 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded font-semibold select-none inline cursor-pointer">Clear</button>
-                <button disabled={isLoading} type='submit' className="text-white bg-indigo-500 border-0 h-10 w-[90px] py-2 px-6 focus:outline-none hover:bg-indigo-600 active:bg-indigo-700 font-semibold disabled:bg-indigo-400 rounded align-middle"> {isLoading ? <SmallSpinner /> : "Submit"}</button>
+                <button disabled={isLoading || imageLoading} type='submit' className="text-white bg-indigo-500 border-0 h-10 w-[90px] py-2 px-6 focus:outline-none hover:bg-indigo-600 active:bg-indigo-700 font-semibold disabled:bg-indigo-400 rounded align-middle"> {(isLoading || imageLoading) ? <SmallSpinner /> : "Submit"}</button>
                 <p className="text-xs text-gray-500 mt-3">Chicharrones blog helvetica normcore iceland tousled brook viral artisan.</p>
             </div>
         </form >

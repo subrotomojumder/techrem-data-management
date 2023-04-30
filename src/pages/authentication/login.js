@@ -49,19 +49,19 @@ const Login = () => {
                 <h2 className='font-bold text-2xl mdd:text-3xl text-blue-600 mb-4'>Please Login</h2>
                 <form onSubmit={handleSubmit(handleLogin)}>
                     <div className="w-full mb-3">
-                        <label htmlFor='email' className="font-semibold">Your email *</label>
+                        <label htmlFor='email' className="font-semibold">Your email </label>
                         <input
                             {...register("email", {
-                                required: "Email field is required!", pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: "Invalid email address!"
-                                }
+                                // required: "Email field is required!", pattern: {
+                                //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                //     message: "Invalid email address!"
+                                // }
                             })}
                             placeholder="Enter your email" type="email" id='email'
                             className="w-full text-lg text-gray-800 bg-slate-200 py-2 px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
                         />
-                        {errors.email?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
-                        {errors.email?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
+                        {/* {errors.email?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
+                        {errors.email?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>} */}
                     </div>
                     <div className="w-full mb-3">
                         <label htmlFor='id' className="font-semibold">Account Id *</label>

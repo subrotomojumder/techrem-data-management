@@ -12,6 +12,7 @@ const Entire_show = ({ data }) => {
             have_website: { website_urls },
             ownerDetails: { name, email, phone, country_code }
         } = data.data;
+        console.log(onProcess);
         return (
             <div>
                 <div className="flex justify-around mt-2">
@@ -129,50 +130,114 @@ const Entire_show = ({ data }) => {
                                         {images.map((img, i) => <Image key={i} width={300} height={300} src={img} alt='Company Logo'></Image>)}
                                     </div>}
                                 </div>
-                                : showData === "status" &&
-                                onProcess?.teleMarketer?.communicationId && <div className='col-span-12 lg:col-span-6 space-y-3 bg-indigo-100 p-4 font-medium'>
-                                    <h4 className='text-lg font-serif text-indigo-700 mb-2'>Work Processing status</h4>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-36'>Work process</h5>
-                                        <h5 className='flex-1'>: {onProcess.teleMarketer?.communicationId?.process}</h5>
-                                    </div>
-                                    {onProcess?.teleMarketer?.communicationId?.needWebsite && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Need A Website</h5>
-                                        <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.needWebsite && "Yes!"}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.website_category?.category && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Web Category</h5>
-                                        <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.website_category?.category}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.website_category?.include_app && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Include App</h5>
-                                        <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.website_category?.include_app && "Yes!"}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.website_category?.demo_site?.length > 0 && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Demo Site</h5>
-                                        <h5 className='flex-1'> {onProcess?.teleMarketer?.communicationId?.website_category?.demo_site.map((site, i) => <p key={i}>{++i}. <a href={site} className='text-blue-600 hover:underline mr-2'>{site}</a></p>)}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.talk_later_time && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Talk Later Time</h5>
-                                        <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.talk_later_time}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.communication_note && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Contact Note</h5>
-                                        <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.communication_note}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.createdAt && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Submit Date</h5>
-                                        <h5 className='flex-1'>: {new Date(onProcess?.teleMarketer?.communicationId?.createdAt).toLocaleString()}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.updatedAt && <div className='flex justify-start'>
-                                        <h5 className='w-36'>Last update</h5>
-                                        <h5 className='flex-1'>: {new Date(onProcess?.teleMarketer?.communicationId?.updatedAt).toLocaleString()}</h5>
-                                    </div>}
-                                    {onProcess?.teleMarketer?.communicationId?.requirement?.length > 0 && <div className=''>
-                                        <h5 className='w-36 underline'>New Requirement</h5>
-                                        {onProcess?.teleMarketer?.communicationId?.requirement.map((require, i) => <p key={i} className=''>{++i}. <span className='font-medium text-blue-500'>{require}</span></p>)}
-                                    </div>}
-                                </div>
+                                : showData === "status" && <>
+                                    {onProcess?.teleMarketer?.communicationId &&
+                                        <div className='col-span-12 lg:col-span-6 space-y-1 bg-indigo-100 p-4 text-[14px] font-medium'>
+                                            <h4 className='text-lg font-serif text-indigo-700 mb-2'> Telemarketing work process status</h4>
+                                            <div className='flex justify-start'>
+                                                <h5 className='w-36'>Telemarketer</h5>
+                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.account_id?.name}({onProcess?.teleMarketer?.account_id?.role})</h5>
+                                            </div>
+                                            <div className='flex justify-start'>
+                                                <h5 className='w-36'>Phone</h5>
+                                                <h5 className='flex-1'>: + {onProcess?.teleMarketer?.account_id?.country_code} {onProcess?.teleMarketer?.account_id?.phone}</h5>
+                                            </div>
+                                            <div className='flex justify-start'>
+                                                <h5 className='w-36'>Work process</h5>
+                                                <h5 className='flex-1'>: {onProcess.teleMarketer?.communicationId?.process}</h5>
+                                            </div>
+                                            {onProcess?.teleMarketer?.communicationId?.needWebsite && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Need A Website</h5>
+                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.needWebsite && "Yes!"}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.website_category?.category && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Web Category</h5>
+                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.website_category?.category}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.website_category?.include_app && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Include App</h5>
+                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.website_category?.include_app && "Yes!"}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.website_category?.demo_site?.length > 0 && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Demo Site</h5>
+                                                <h5 className='flex-1'> {onProcess?.teleMarketer?.communicationId?.website_category?.demo_site.map((site, i) => <p key={i}>{++i}. <a href={site} className='text-blue-600 hover:underline mr-2'>{site}</a></p>)}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.talk_later_time && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Talk Later Time</h5>
+                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.talk_later_time}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.communication_note && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Contact Note</h5>
+                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.communication_note}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.createdAt && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Submit Date</h5>
+                                                <h5 className='flex-1'>: {new Date(onProcess?.teleMarketer?.communicationId?.createdAt).toLocaleString()}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.updatedAt && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Last update</h5>
+                                                <h5 className='flex-1'>: {new Date(onProcess?.teleMarketer?.communicationId?.updatedAt).toLocaleString()}</h5>
+                                            </div>}
+                                            {onProcess?.teleMarketer?.communicationId?.requirement?.length > 0 && <div className=''>
+                                                <h5 className='w-36 underline'>New Requirement</h5>
+                                                {onProcess?.teleMarketer?.communicationId?.requirement.map((require, i) => <p key={i} className=''>{++i}. <span className='font-medium text-blue-500'>{require}</span></p>)}
+                                            </div>}
+                                        </div>
+                                    }
+                                    {onProcess?.onfieldMarketer?.communicationId &&
+                                        <div className='col-span-12 lg:col-span-6 space-y-1 bg-indigo-100 p-4 text-[14px] font-medium'>
+                                            <h4 className='text-lg font-serif text-indigo-700 mb-2'> Field Marketer work process status</h4>
+                                            <div className='flex justify-start'>
+                                                <h5 className='w-36'>Field Marketer</h5>
+                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.account_id?.name}({onProcess?.onfieldMarketer?.account_id?.role})</h5>
+                                            </div>
+                                            <div className='flex justify-start'>
+                                                <h5 className='w-36'>Phone</h5>
+                                                <h5 className='flex-1'>: + {onProcess?.onfieldMarketer?.account_id?.country_code} {onProcess?.onfieldMarketer?.account_id?.phone}</h5>
+                                            </div>
+                                            <div className='flex justify-start'>
+                                                <h5 className='w-36'>Work process</h5>
+                                                <h5 className='flex-1'>: {onProcess.onfieldMarketer?.communicationId?.process}</h5>
+                                            </div>
+                                            {onProcess?.teleMarketer?.communicationId?.needWebsite && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Need A Website</h5>
+                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.needWebsite && "Yes!"}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.website_category?.category && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Web Category</h5>
+                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.website_category?.category}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.website_category?.include_app && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Include App</h5>
+                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.website_category?.include_app && "Yes!"}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.website_category?.demo_site?.length > 0 && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Demo Site</h5>
+                                                <h5 className='flex-1'> {onProcess?.onfieldMarketer?.communicationId?.website_category?.demo_site.map((site, i) => <p key={i}>{++i}. <a href={site} className='text-blue-600 hover:underline mr-2'>{site}</a></p>)}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.talk_later_time && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Talk Later Time</h5>
+                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.talk_later_time}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.communication_note && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Contact Note</h5>
+                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.communication_note}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.createdAt && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Submit Date</h5>
+                                                <h5 className='flex-1'>: {new Date(onProcess?.onfieldMarketer?.communicationId?.createdAt).toLocaleString()}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.updatedAt && <div className='flex justify-start'>
+                                                <h5 className='w-36'>Last update</h5>
+                                                <h5 className='flex-1'>: {new Date(onProcess?.onfieldMarketer?.communicationId?.updatedAt).toLocaleString()}</h5>
+                                            </div>}
+                                            {onProcess?.onfieldMarketer?.communicationId?.requirement?.length > 0 && <div className=''>
+                                                <h5 className='w-36 underline'>New Requirement</h5>
+                                                {onProcess?.onfieldMarketer?.communicationId?.requirement.map((require, i) => <p key={i} className=''>{++i}. <span className='font-medium text-blue-500'>{require}</span></p>)}
+                                            </div>}
+                                        </div>
+                                    }
+                                </>
                 }
             </div>
         )

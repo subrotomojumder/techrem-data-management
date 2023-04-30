@@ -6,7 +6,7 @@ import { BiMinus, BiPlus } from 'react-icons/bi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { InputLoader } from '../Spinner';
 
-const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
+const AddressAddForm = ({ addressValue, setAddressValue, classes , loadingShow }) => {
     // const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
     const [openAddress, setOpenAddress] = useState({ country: false, state: false, city: false });
     const [addressAdd, setAddressAdd] = useState({ country: false, state: false, city: false });
@@ -26,6 +26,9 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes }) => {
     }, [addressAdd]);
     let countryData = [];
     if (isLoading) {
+        if(!loadingShow){
+            return 
+        }
         return <InputLoader isLoading={true} height={"min-h-[200px]"}></InputLoader>
     };
     if (isError) {

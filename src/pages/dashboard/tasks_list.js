@@ -1,5 +1,6 @@
 import { useGetEmployeeTaskQuery } from '@/app/features/dataEntire/assignTaskApi';
 import { LargeSpinner } from '@/components/Spinner';
+import { Private } from '@/utils/ProtectRoute';
 import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -104,4 +105,4 @@ const TasksList = () => {
 };
 
 
-export default TasksList;
+export default Private(TasksList);

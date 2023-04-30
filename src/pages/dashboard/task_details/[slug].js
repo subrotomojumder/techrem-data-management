@@ -1,5 +1,6 @@
 import { useGetEmployeeTaskQuery } from '@/app/features/dataEntire/assignTaskApi';
 import { LargeSpinner } from '@/components/Spinner';
+import { TeleAndFieldProtect } from '@/utils/ProtectRoute';
 import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -25,7 +26,7 @@ const Details = () => {
         }
     }, [user]);
     const { data, isLoading, isError, error } = useGetEmployeeTaskQuery(`/divide_work/${role}/${slug}?data=true`);
-    console.log(queryData);
+
     let content;
     if (!slug) {
         content = <LargeSpinner></LargeSpinner>
@@ -52,6 +53,7 @@ const Details = () => {
             </div>
         }
     } else if (!isLoading && data?.success) {
+        console.log(data.data)
         content = <section className="text-gray-600 body-font">
             <div className="w-full flex flex-col mdd:flex-row px-4">
                 <div className=" text-center sm:pr-8 sm:py-8">
@@ -112,24 +114,40 @@ const Details = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data?.data?.dataIds?.filter((idData) => queryData.status ? idData.onProcess?.teleMarketer?.process === queryData.status : idData).map(({ businessDetails, onProcess, address, _id }, i) => <tr key={_id} className={`${i % 2 === 0 && 'bg-gray-50'} border-b capitalize`}>
-                                    {/* <td className="w-10 text-left">
-
-                                    </td> */}
-                                    <td className="px-4 py-3 font-medium">
-                                        <p className='text-sm border-b inline-block'>{businessDetails?.category}</p> <br />
-                                        Name:<span className='text-indigo-500'> {businessDetails?.businessName}</span>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span className='text-indigo-500'> {address?.state}, {address?.country} </span>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span className='font-medium text-gray-500'> {onProcess?.teleMarketer?.process ? onProcess?.teleMarketer?.process : "Fresh"}</span>
-                                    </td>
-                                    <td className="px-4 pl-0 pr-3">
-                                        <Link href={`/dashboard/contact_manage/${_id}`}><button className='border border-yellow-200 hover:border-white px-2 rounded-lg font-medium text-md py-1 text-yellow-400 hover:text-white hover:bg-orange-400 active:bg-orange-500 duration-75'>Contact</button></Link>
-                                    </td>
-                                </tr>)}
+                            {/* এই কন্ডিশনটা শুধু টেলি মার্কেটের জন্য কাজ করবে যেখানে ফিল্টারটা দেয়া হয়েছে টেলি মার্কেটের কোনদিন নির্দিষ্ট প্রসেসের ডাটা */}
+                                {user.role === TELE_MARKETER ?
+                                    data?.data?.dataIds?.filter((idData) => queryData.status ? idData.onProcess?.teleMarketer?.process === queryData.status : idData).map(({ businessDetails, onProcess, address, _id }, i) => <tr key={_id} className={`${i % 2 === 0 && 'bg-gray-50'} border-b capitalize`}>
+                                        <td className="px-4 py-3 font-medium">
+                                            <p className='text-sm border-b inline-block'>{businessDetails?.category}</p> <br />
+                                            Name:<span className='text-indigo-500'> {businessDetails?.businessName}</span>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <span className='text-indigo-500'> {address?.state}, {address?.country} </span>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <span className='font-medium text-gray-500'> {onProcess?.teleMarketer?.process ? onProcess?.teleMarketer?.process : "Fresh"}</span>
+                                        </td>
+                                        <td className="px-4 pl-0 pr-3">
+                                            <Link href={`/dashboard/contact_manage/${_id}`}><button className='border border-yellow-200 hover:border-white px-2 rounded-lg font-medium text-md py-1 text-yellow-400 hover:text-white hover:bg-orange-400 active:bg-orange-500 duration-75'>Contact</button></Link>
+                                        </td>
+                                    </tr>)
+                                    :user.role === ON_FIELD_MARKETER &&
+                                    data?.data?.dataIds?.filter((idData) => queryData.status ? idData.onProcess?.onfieldMarketer?.process === queryData.status : idData).map(({ businessDetails, onProcess, address, _id }, i) => <tr key={_id} className={`${i % 2 === 0 && 'bg-gray-50'} border-b capitalize`}>
+                                        <td className="px-4 py-3 font-medium">
+                                            <p className='text-sm border-b inline-block'>{businessDetails?.category}</p> <br />
+                                            Name:<span className='text-indigo-500'> {businessDetails?.businessName}</span>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <span className='text-indigo-500'> {address?.state}, {address?.country} </span>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <span className='font-medium text-gray-500'> {onProcess?.onfieldMarketer?.process ? onProcess?.onfieldMarketer?.process : "Fresh"}</span>
+                                        </td>
+                                        <td className="px-4 pl-0 pr-3">
+                                            <Link href={`/dashboard/contact_manage/${_id}`}><button className='border border-yellow-200 hover:border-white px-2 rounded-lg font-medium text-md py-1 text-yellow-400 hover:text-white hover:bg-orange-400 active:bg-orange-500 duration-75'>Contact</button></Link>
+                                        </td>
+                                    </tr>)
+                                }
                             </tbody>
                         </table>
                     </section>
@@ -145,4 +163,4 @@ const Details = () => {
     );
 };
 
-export default Details;
+export default TeleAndFieldProtect(Details) ;

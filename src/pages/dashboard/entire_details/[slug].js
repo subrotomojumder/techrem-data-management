@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useGetEntireDataByIdQuery } from '@/app/features/dataEntire/dataEntireApi';
 import { LargeSpinner } from '@/components/Spinner';
+import { MarketerProtect } from '@/utils/ProtectRoute';
 
 const Entire_show = () => {
     const router = useRouter();
@@ -208,4 +209,4 @@ const Entire_show = () => {
     }
 };
 
-export default Entire_show;
+export default MarketerProtect(Entire_show);

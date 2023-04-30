@@ -1,5 +1,6 @@
 import { useGetEmployeeByIdQuery, useUserUpdateMutation } from '@/app/features/users/userApi';
 import { LargeSpinner, SmallSpinner } from '@/components/Spinner';
+import { Private } from '@/utils/ProtectRoute';
 import { multipartHeaders } from '@/utils/headers';
 import { errorToast, successToast } from '@/utils/neededFun';
 import axios from 'axios';
@@ -12,6 +13,7 @@ import { FiEdit } from 'react-icons/fi';
 const UpdateProfile = () => {
     const router = useRouter();
     const [editField, setEditField] = useState({});
+    const [imageLoading, setImageLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
     const { data, isLoading: isDbLoading, isError, error } = useGetEmployeeByIdQuery(router.query?.id);
     const [updateUser, { isLoading }] = useUserUpdateMutation();
@@ -34,22 +36,42 @@ const UpdateProfile = () => {
             const formData = new FormData();
             const formData2 = new FormData();
             if (form.image?.files[0]) {
+                setImageLoading(true);
                 formData.append('image', form.image.files[0]);
-                const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, { headers: multipartHeaders })
+                const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        'Access-Control-Allow-Origin': `http://localhost:5000`,
+                        'Access-Control-Allow-Credentials': 'true',
+                        authorization: localStorage.getItem("tech_token"),
+                    }
+                })
                 if (result.data?.file) {
+                    setImageLoading(false);
                     updateData.userImage = result.data.file;
                 } else {
+                    setImageLoading(false);
                     return console.log(result);
                 }
             }
             if (form.document?.files?.length) {
+                setImageLoading(true);
                 for (let i = 0; i < form.document?.files?.length; i++) {
                     formData2.append('images', form.document?.files[i]);
                 };
-                const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, { headers: multipartHeaders });
+                const result2 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload/multipal`, formData2, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        'Access-Control-Allow-Origin': `http://localhost:5000`,
+                        'Access-Control-Allow-Credentials': 'true',
+                        authorization: localStorage.getItem("tech_token"),
+                    }
+                });
                 if (result2.data?.files?.length) {
+                    setImageLoading(false);
                     updateData.document = result2.data?.files;
                 } else {
+                    setImageLoading(false);
                     return console.log(result2);
                 }
             }
@@ -103,6 +125,7 @@ const UpdateProfile = () => {
     }
     // এই কনস্ট্যান্ট এখানে থাকতে হবে না হলে লোডিং হওয়ার আগের ডাটা রিড করতে গেলে এরর আসবে
     const { email, name, address, country_code, userId, phone, role, userBio, updatedAt, userImage, document, _id } = data?.data;
+
     return (
         <div className='max-w-[1100px] xl:max-w-[1500px] mx-auto'>
             <form
@@ -141,7 +164,7 @@ const UpdateProfile = () => {
                             <h3 className='text-xl xl:text-2xl text-green-600  px-0 xl:px-10 my-3 ml-4'>Account Details</h3>
                             {editField.upBtn && <div className='flex justify-center gap-1 mr-3'>
                                 <div onClick={() => setEditField({})} className='px-8 py-1 mx-auto block border border-yellow-400 font-semibold text-yellow-500 select-none rounded-md hover:text-white hover:bg-yellow-400'>Cancel</div>
-                                <button disabled={isLoading} type='submit' className='px-8 py-1 w-28 mx-auto block bg-blue-700 active:outline outline-green-500 active:text-yellow-400 font-semibold text-white rounded-md hover:bg-blue-800'>{isLoading ? <SmallSpinner /> : "Update"}</button>
+                                <button disabled={isLoading || imageLoading} type='submit' className='px-8 py-1 w-28 mx-auto block bg-blue-700 active:outline outline-green-500 active:text-yellow-400 font-semibold text-white rounded-md hover:bg-blue-800'>{(isLoading || imageLoading) ? <SmallSpinner /> : "Update"}</button>
                             </div>}
                         </div>
                         <hr />
@@ -227,7 +250,6 @@ const UpdateProfile = () => {
                                     <label htmlFor='' className="">Additional Bio data</label>
                                     <textarea
                                         readOnly={!editField.userBio}
-                                        defaultValue={userBio}
                                         type="text" name="userBio"
                                         className="w-full min-h-[100px] text-gray-800 py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-md"
                                     />
@@ -255,4 +277,4 @@ const UpdateProfile = () => {
     );
 };
 
-export default UpdateProfile;
+export default Private(UpdateProfile);
