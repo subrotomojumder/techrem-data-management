@@ -72,7 +72,7 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags: ["tasks", "singleData"]
+            invalidatesTags: ["tasks", "singleData", "submission"]
         }),
         updateOperatorSubmissionById: builder.mutation({
             query: ({ url, updateData }) => ({
@@ -84,7 +84,7 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            invalidatesTags:["singleData"]
+            invalidatesTags:["singleData", "submission"]
         }),
         getOperatorSubmissionById: builder.query({
             query: (url) => ({
@@ -93,7 +93,8 @@ const assignTaskApi = apiSlice.injectEndpoints({
                     'content-type': 'application/json',
                     authorization: localStorage.getItem("tech_token"),
                 }
-            })
+            }),
+            providesTags: ["submission"]
         }),
     })
 })
@@ -105,5 +106,6 @@ export const {
     useGetEmployeeTaskQuery,
     usePostFieldMarketerTaskMutation,
     useUpdateOperatorSubmissionByIdMutation,
-    usePostOperatorTaskSubmitMutation
+    usePostOperatorTaskSubmitMutation,
+    useGetOperatorSubmissionByIdQuery
 } = assignTaskApi;

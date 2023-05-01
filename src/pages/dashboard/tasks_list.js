@@ -32,7 +32,7 @@ const TasksList = () => {
     if (!user.role) {
         content = <LargeSpinner></LargeSpinner>
     }
-    console.log(data, isLoading, isError, error);
+    // console.log(data, isLoading, isError, error);
     if (isError) {
         if (error.message) {
             content = <div className='text-center mt-10 md:mt-52'>

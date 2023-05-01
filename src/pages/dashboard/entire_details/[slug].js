@@ -3,12 +3,15 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useGetEntireDataByIdQuery } from '@/app/features/dataEntire/dataEntireApi';
 import { LargeSpinner } from '@/components/Spinner';
-import { MarketerProtect } from '@/utils/ProtectRoute';
+import { Private } from '@/utils/ProtectRoute';
+import { useSelector } from 'react-redux';
+import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER } from '@/utils/constant';
 
 const Entire_show = () => {
     const router = useRouter();
     const { slug } = router.query;
     const [showData, setShowData] = useState('overview');
+    const { user } = useSelector((state) => state.auth);
     const { data, isLoading, isError, error } = useGetEntireDataByIdQuery(slug);
     console.log(data, isLoading, isError, error);
     if (isLoading) {
@@ -51,10 +54,10 @@ const Entire_show = () => {
                         onClick={() => setShowData("owners")}
                         className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "owners" && "border-b-4 "} border-blue-400 `}
                     >Owners</button>
-                    <button
+                    {user.role !== DATA_ENTRY_OPERATOR && <button
                         onClick={() => setShowData("status")}
                         className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4 "} border-blue-400 `}
-                    >Status</button>
+                    >Status</button>}
                 </div>
                 {showData === "overview"
                     ? <div className='h-full bg-indigo-100 px-6 pb-8 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
@@ -209,4 +212,4 @@ const Entire_show = () => {
     }
 };
 
-export default MarketerProtect(Entire_show);
+export default Private(Entire_show);

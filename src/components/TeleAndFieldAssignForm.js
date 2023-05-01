@@ -63,11 +63,11 @@ const TeleAndFieldAssignForm = ({ employee, dataStatus, addressQuery }) => {
         let postUrl = `/divide_work/${employee.role === TELE_MARKETER ? "tele_divide" : "onField_divide"}`;
         // return console.log(postUrl);
         postField_TeleTasks({ task_data, postUrl }).then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.error) errorToast("Some thing went wrong!");
             if (res.data?.success) {
                 successToast("Successfully submited task!");
-                setInputData({});
+                setInputData({keyword: ""});
                 setSelectedData([]);
                 setAutoSelect(0);
             }

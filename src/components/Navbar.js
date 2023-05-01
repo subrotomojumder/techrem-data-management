@@ -70,7 +70,7 @@ const Navbar = () => {
                                 <ul>
                                     <Link href={`/authentication/user_profile/${user._id}`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Account</li></Link>
                                     <Link href={`/dashboard/tasks_list`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Tasks-List</li></Link>
-                                    <Link href={`/dashboard/tasks_submission`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Submission</li></Link>
+                                    <Link href={`/dashboard/all_tasks_submission`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Submission</li></Link>
                                     <li onClick={signOut} className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Logout</li>
                                 </ul>
                             </div>}

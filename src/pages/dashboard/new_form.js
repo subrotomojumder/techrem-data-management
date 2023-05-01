@@ -23,7 +23,7 @@ const New_form = () => {
     const [service, setService] = useState([]);
     const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
     useEffect(() => {
-        setInputData(JSON.parse(localStorage.getItem("entire") || {}))
+        setInputData(JSON.parse(localStorage.getItem("entire")) || {})
     }, [])
     useEffect(() => {
         setTimeout(() => {

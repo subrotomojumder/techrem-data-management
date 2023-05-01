@@ -3,7 +3,7 @@ import React from 'react';
 export const CustomLoader = () => {
     return (
         <div className='h-screen flex justify-center items-center '>
-            <div class="custom-loader"></div>
+            <div className="custom-loader"></div>
         </div>
     );
 };

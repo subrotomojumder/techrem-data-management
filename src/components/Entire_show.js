@@ -12,7 +12,7 @@ const Entire_show = ({ data }) => {
             have_website: { website_urls },
             ownerDetails: { name, email, phone, country_code }
         } = data.data;
-        console.log(onProcess);
+        // console.log(onProcess);
         return (
             <div>
                 <div className="flex justify-around mt-2">
