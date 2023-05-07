@@ -30,7 +30,7 @@ const Navbar = () => {
     const signOut = () => {
         dispatch(userLogoutSet());
         localStorage.removeItem("tech_token");
-        setTimeout(() => router.replace('/'), 1000);
+        setTimeout(() => router.replace('/'), 100);
     }
     return (
         <div className='w-full bg-indigo-100 shadow-md sticky top-0 left-0 z-20'>
@@ -47,12 +47,9 @@ const Navbar = () => {
                     <div className={`${sideNave ? "block mdd:block" : "hidden mdd:block"}`}>
                         <ul className={`bg-white mdd:bg-indigo-100 border mdd:border-0 absolute top-14 left-0 mdd:static flex flex-col mdd:flex-row items-center space-x-0 md:space-x-1 font-semibold`}>
                             <Link href={`/`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Home</li></Link>
-                            <Link href={`/dashboard/new_form`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>New-Form</li></Link>
-                            <Link href={`/dashboard/entires_data_list`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Data-List</li></Link>
-
                             {/* .................for account inquary................ */}
 
-                            
+
                             <Link href={`/dashboard/assign_task`}><li className='hover:bg-indigo-200 py-[6px] px-1 md:px-3 rounded-sm whitespace-pre'>Assign-Work</li></Link>
                         </ul>
                     </div>
@@ -69,8 +66,9 @@ const Navbar = () => {
                             {dropdown && <div className="absolute right-8 bg-pink-300 top-[54px] rounded-md px-3 py-3 w-28 text-center">
                                 <ul>
                                     <Link href={`/authentication/user_profile/${user._id}`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Account</li></Link>
-                                    <Link href={`/dashboard/tasks_list`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Tasks-List</li></Link>
-                                    <Link href={`/dashboard/all_tasks_submission`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Submission</li></Link>
+                                    {user.role !== ADMIN && <Link href={`/dashboard/tasks_list`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Tasks-List</li></Link>}
+                                    {user.role === ADMIN && <Link href={`/dashboard/show_assign_task_list`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Assign Tasks</li></Link>}
+                                    <Link href={`/dashboard/all_tasks_submission`}><li className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b whitespace-pre">My Submission</li></Link>
                                     <li onClick={signOut} className="py-1 w-full hover:shadow-md hover:text-white cursor-pointer text-sm duration-75 border-b">Logout</li>
                                 </ul>
                             </div>}

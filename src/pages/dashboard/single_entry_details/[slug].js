@@ -7,7 +7,7 @@ import { Private } from '@/utils/ProtectRoute';
 import { useSelector } from 'react-redux';
 import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER } from '@/utils/constant';
 
-const Entire_show = () => {
+const Single_Entry_show = () => {
     const router = useRouter();
     const { slug } = router.query;
     const [showData, setShowData] = useState('overview');
@@ -212,4 +212,4 @@ const Entire_show = () => {
     }
 };
 
-export default Private(Entire_show);
+export default Private(Single_Entry_show);

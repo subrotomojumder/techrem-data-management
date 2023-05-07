@@ -10,42 +10,17 @@ import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 
 const All_Tasks_submission = () => {
-    const [queryData, setQueryData] = useState({ dateType: '', country: "", state: "", city: "", keyword: '', category: '', create_date: '' });
-    const [actionShow, setActionShow] = useState('');
     const { user } = useSelector((state) => state.auth);
+    const [actionShow, setActionShow] = useState('');
+    const [queryData, setQueryData] = useState({ country: "", state: "", city: "", keyword: '', category: '', create_date: '' });
+    const [expectedData, setExpectedData] = useState(user.role === ON_FIELD_MARKETER ? "fild_marketer_data" : user.role === TELE_MARKETER ? "tele_marketer_data" : "data_entry");
     const router = useRouter();
-    // console.log(queryData);
     useEffect(() => {
-        if (user?.role === DATA_ENTRY_OPERATOR) {
-            setQueryData(c => ({ ...c, userRole: "data_entry" }))
-        } else if (user?.role === TELE_MARKETER) {
-            setQueryData(c => ({ ...c, userRole: "tele_marketer_data" }))
-        } else if (user?.role === ON_FIELD_MARKETER) {
-            setQueryData(c => ({ ...c, userRole: "fild_marketer_data" }))
-        } else if (user?.role === ADMIN) {
-            if (queryData?.dateType === "data_entry") {
-                setQueryData(c => ({ ...c, userRole: "data_entry" }))
-            } else if (queryData?.dateType === "tele_marketer_data") {
-                setQueryData(c => ({ ...c, userRole: "tele_marketer_data" }))
-            } else if (queryData?.dateType === "fild_marketer_data") {
-                setQueryData(c => ({ ...c, userRole: "fild_marketer_data" }))
-            }else{
-                setQueryData(c => ({ ...c, userRole: "data_entry" }))
-            }
-        } else if (user?.role === MARKETER) {
-            if (queryData?.dateType === "data_entry") {
-                setQueryData(c => ({ ...c, userRole: "data_entry" }))
-            } else if (queryData?.dateType === "tele_marketer_data") {
-                setQueryData(c => ({ ...c, userRole: "tele_marketer_data" }))
-            } else if (queryData?.dateType === "fild_marketer_data") {
-                setQueryData(c => ({ ...c, userRole: "fild_marketer_data" }))
-            }else{
-                setQueryData(c => ({ ...c, userRole: "data_entry" }))
-            }
-        }
-    }, [queryData.dateType, user]);
-    console.log(`/data_entry/account_to_data?account_id=${user?._id}&${queryData?.userRole}=true&country=${queryData.country}&state=${queryData.state}&city=${queryData.city}&keyword=${queryData.keyword}&category=${queryData.category}&create_date=${queryData.create_date}`);
-    const { data, isLoading, isError, error } = useGetOperatorSubmissionByIdQuery(`/data_entry/account_to_data?account_id=${user?._id}&${queryData?.userRole}=true&country=${queryData.country}&state=${queryData.state}&city=${queryData.city}&keyword=${queryData.keyword}&category=${queryData.category}&create_date=${queryData.create_date}`)
+        if (!router.isReady) return;
+    }, [router.isReady]);
+    // https://codeshare.io/Wdo84M // useEffect condition lonk
+    // console.log(expectedData);
+    const { data, isLoading, isError, error } = useGetOperatorSubmissionByIdQuery(`/data_entry/account_to_data?account_id=${user?._id}&expectedDataType=${expectedData}&country=${queryData.country}&state=${queryData.state}&city=${queryData.city}&keyword=${queryData.keyword}&category=${queryData.category}&create_date=${queryData.create_date}`)
     let content;
     if (isLoading) {
         content = <LargeSpinner />;
@@ -70,7 +45,7 @@ const All_Tasks_submission = () => {
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Logo</th>
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Category</th>
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Owner</th>
-                        <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Work-Process</th>
+                        <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Create Date</th>
                         <th className="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br pr-2 lg:pr-6">Action</th>
                     </tr>
                 </thead>
@@ -138,11 +113,20 @@ const All_Tasks_submission = () => {
                                 className='rounded-md border border-blue-500 hover:bg-blue-700 focus:outline outline-green-600 font-semibold hover:text-white px-3 py-0.5' type="button" value='All'
                                 onClick={() => setQueryData(c => ({ ...c, country: "", state: "", city: "", keyword: '', category: '', create_date: '' }))}
                             />
+                            {user.role !== DATA_ENTRY_OPERATOR && <select
+                                onChange={(e) => setExpectedData(e.target.value)}
+                                className="text-md bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 font-medium pl-1 py-[3px] leading-8 transition-colors duration-200 ease-in-out"
+                            >
+                                <option value={user.role === ON_FIELD_MARKETER ? "fild_marketer_data" : user.role === TELE_MARKETER ? "tele_marketer_data" : "data_entry"} selected>select type</option>
+                                <option value="data_entry">Data Entire</option>
+                                <option value="tele_marketer_data">Telemarketing</option>
+                                {user.role !== TELE_MARKETER && <option value="fild_marketer_data">Field Marketing</option>}
+                            </select>}
                             <select
                                 onChange={(e) => setQueryData(c => ({ ...c, category: e.target.value }))}
                                 className="text-md bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 font-medium pl-1 py-[3px] leading-8 transition-colors duration-200 ease-in-out"
                             >
-                                <option value='' selected>Select category</option>
+                                <option value='' selected>select category</option>
                                 <option value="clothes">Clothes</option>
                                 <option value="salon">Salon</option>
                                 <option value="grocery">Grocery</option>

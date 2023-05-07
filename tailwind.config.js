@@ -13,6 +13,14 @@ module.exports = {
       colors: {
         whiteRgb: "rgba(240, 217, 234, 0.98)",
         secondary: "#FFF0D9",
+        primary: "#1a202c", // define your primary color here
+        secondary: "#d6dae1",
+        tertiary: "#d1d1d1",
+        brandone: "#824CF2",
+        brandtwo: "#FF6ABB",
+      },
+      backgroundColor: {
+        primary: "#f5f5f5", // define your primary background color here
       },
       screens: {
         sm: '480px',
