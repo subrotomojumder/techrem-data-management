@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { CustomLoader, SmallSpinner } from '@/components/Spinner';
-import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
+import { ADMIN, BILLING_TEAM, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { useRegisterMutation } from '@/app/features/users/userApi';
-import { errorToast, successToast } from '@/utils/neededFun';
+import { errorSweetAlert, errorToast, successToast } from '@/utils/neededFun';
 import { MdOutlineManageAccounts } from 'react-icons/md';
 import Countries, { countries } from 'countries-list';
 import axios from 'axios';
 import { AdminProtect } from '@/utils/ProtectRoute';
 import CountryInput from '@/components/Forms/Inputs';
-import { AiOutlineEye } from 'react-icons/ai';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
 
 const Register = () => {
     const [loading, setLoading] = useState({ singleImg: false, multiImg: false, other: false });
@@ -30,11 +30,10 @@ const Register = () => {
         }
     }, [password]);
     const handleSignUp = async (data) => {
-        if (!addressInfo.country || !addressInfo.state || !addressInfo.city) {
-            return setAddressInfo({ ...addressInfo, addrErr: "All address is required!" })
-        } else setAddressInfo({ ...addressInfo, addrErr: "" });
-        const address = addressInfo;
-        data.address = address;
+        if (!selectedCountry?.name) {
+            return setAddressInfo({ ...addressInfo, countryErr: "Country field is required!" });
+        } else setAddressInfo({ ...addressInfo, countryErr: "" });
+        data.address = { country: selectedCountry.name, state: data.state, city: data.city, address_1: data.address1, address_2: data.address1, postcode: data.postcode };
         try {
             const formData = new FormData();
             const formData2 = new FormData();
@@ -49,13 +48,12 @@ const Register = () => {
                         authorization: localStorage.getItem("tech_token"),
                     }
                 });
-                console.log(result);
                 if (result.data?.file) {
                     setLoading(c => ({ ...c, singleImg: false }))
                     data.userImage = result.data.file;
                 } else if (!result.success) {
                     setLoading(c => ({ ...c, singleImg: false }))
-                    return console.log(result);
+                    return errorToast("In valid user image!");
                 } else {
                     setLoading(c => ({ ...c, singleImg: false }))
                     return console.log(result);
@@ -79,7 +77,7 @@ const Register = () => {
                     data.document = result2.data?.files;
                 } else if (!result2.success) {
                     setLoading(c => ({ ...c, multiImg: false }))
-                    return console.log(result2);
+                    return errorToast("In valid Document!");
                 } else {
                     setLoading(c => ({ ...c, multiImg: false }))
                     return console.log(result2);
@@ -91,26 +89,28 @@ const Register = () => {
                     successToast(res.data?.message);
                     setCreateSuccess(res.data.data);
                     setAddressInfo({});
+                    setPassword('')
+                    setSelectedCountry(null)
                     reset();
                 } else {
                     console.log(res);
                     if (res.error) {
                         if (res.error?.message) {
-                            return errorToast(res.error.message);
-                        }
-                        if (res.error?.error) {
-                            return errorToast(res.error.error);
+                            return errorSweetAlert(res.error.message);
                         }
                         if (res?.error?.data?.message) {
-                            return errorToast(res.error?.data.dev_error || res.error?.data.message);
+                            return errorSweetAlert(res.error?.data.dev_error || res.error?.data.message);
+                        }
+                        if (res.error?.error) {
+                            return errorSweetAlert(res.error.error);
                         }
                     } else if (res.data?.message) {
-                        errorToast(res?.data.message);
+                        errorSweetAlert(res?.data.message);
                     }
                 }
             })
         } catch (error) {
-            return errorToast(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
+            return errorSweetAlert(error.message === "Network Error" ? "Please check your internet connection!" : error.message)
         }
     };
     const clipboardCopy = () => {
@@ -125,8 +125,7 @@ const Register = () => {
             password += chars.substring(randomNumber, randomNumber + 1);
         }
         setPassword(password);
-    }
-    console.log(password)
+    };
     if (isLoading || loading.multiImg || loading.singleImg || loading.other) {
         return <CustomLoader></CustomLoader>
     }
@@ -148,7 +147,7 @@ const Register = () => {
                         >Copy to clip board!</button>
                     </div>
                 </div>
-                : <div className='relative shadow-2xl border rounded-lg max-w-3xl mx-auto bg-white px-10 lg:px-14 pt-8 pb-8'>
+                : <div className='relative shadow-2xl border md:rounded-lg max-w-3xl mx-auto bg-white px-10 lg:px-14 pt-8 pb-8'>
                     <div className='absolute right-11 top-7'>
                         <label htmlFor="image" className='block h-20 w-[4.375rem] rounded-md border-2 border-gray-500 bg-slate-300 hover:bg-green-200 text-center pt-6'>{preview?.imageLive ? "" : "Image"}</label>
                         <input
@@ -163,76 +162,82 @@ const Register = () => {
                         />
                         {preview?.imageLive && <label htmlFor="image"><img src={preview.imageLive} className='block h-[76px] w-[66px] rounded-md absolute right-[2px] top-[2px]' alt='preview_img' /></label>}
                     </div>
-                    <form onSubmit={handleSubmit(handleSignUp)} className='grid grid-cols-1 space-y-3 mdd:space-y-6'>
-                        <h2 className='font-bold text-xl mdd:text-2xl text-blue-600 -mb-3'>Add New User</h2>
+                    <form onSubmit={handleSubmit(handleSignUp)} className='grid grid-cols-1 space-y-6'>
+                        <h2 className='font-bold text-xl mdd:text-2xl text-blue-600 -mb-2'>Add New User</h2>
                         <p>Create a brand new user and add them to this site.</p>
                         <div className="relative grid grid-cols-1 md:grid-cols-7 gap-x-3 items-center">
                             <label htmlFor='first-name' className="leading-7 font-[600] text-gray-700 col-span-2">First Name (required)</label>
-                            <input
-                                type="first-name"
-                                {...register("fast_name", { required: "First name is required!" })}
-                                placeholder="Enter first name" id='first-name'
-                                className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
-                            />
-                            {errors.fast_name?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.fast_name?.message}</p>}
+                            <div className='col-span-4 w-full'>
+                                <input
+                                    type="first-name"
+                                    {...register("fast_name", { required: "First name is required!" })}
+                                    placeholder="Enter first name" id='first-name'
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                                {errors.fast_name?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.fast_name?.message}</p>}
+                            </div>
                         </div>
                         <div className="relative grid grid-cols-1 md:grid-cols-7 gap-x-3 items-center">
                             <label htmlFor='last_name' className="leading-7 font-[600] text-gray-700 col-span-2">Last Name (required)</label>
-                            <input
-                                type="name"
-                                {...register("last_name", { required: "Last name is required!" })}
-                                placeholder="Enter last name" id='last_name'
-                                className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
-                            />
-                            {errors.last_name?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.last_name?.message}</p>}
+                            <div className='col-span-4 w-full'>
+                                <input
+                                    type="name"
+                                    {...register("last_name", { required: "Last name is required!" })}
+                                    placeholder="Enter last name" id='last_name'
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                                {errors.last_name?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.last_name?.message}</p>}
+                            </div>
                         </div>
                         <div className="relative grid grid-cols-1 md:grid-cols-7 gap-x-3 items-center">
                             <label htmlFor='email' className="leading-7 font-[600] text-gray-700 col-span-2">Email (required)</label>
-                            <input
-                                {...register("email", {
-                                    required: "Email field is required!", pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message: "Invalid email address!"
-                                    }
-                                })}
-                                placeholder="Enter your email" id='email' type="email"
-                                className="col-span-4 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                            />
-                            {errors.email?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.email?.message}</p>}
-                            {errors.email?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.email?.message}</p>}
+                            <div className='col-span-4 w-full'>
+                                <input
+                                    {...register("email", {
+                                        required: "Email field is required!", pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "Invalid email address!"
+                                        }
+                                    })}
+                                    placeholder="Enter your email" id='email' type="email"
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                />
+                                {errors.email?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
+                                {errors.email?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
+                            </div>
                         </div>
                         <div className="relative grid grid-cols-1 md:grid-cols-7 gap-x-3 items-center">
                             <label htmlFor='phone' className="leading-7 font-[600] text-gray-700 col-span-2">Contact Number</label>
-                            <div className='col-span-4 grid grid-cols-4'>
-                                <select
-                                    {...register("country_code", {
-                                        required: "Country code is required!"
-                                    })}
-                                    className="col-span-1 w-full bg-white rounded rounded-r-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  text-center leading-8 transition-colors duration-200 ease-in-out" >
-                                    <option className='w-10' value='' selected disabled>+ code</option>
-                                    {Object.keys(countries).map((key, i) => (
-                                        <option className='w-10' key={i} value={countries[key].phone}> {key + ' ' + countries[key].phone}</option>
-                                    ))}
-                                </select>
-                                <input
-                                    {...register("phone", {
-                                        required: "phone number field is required!", minLength: { value: 7, message: "phone number must be 7 numeric!" },
-                                    })}
-                                    type="number" id='ph-number' placeholder='Enter phone number'
-                                    className="col-span-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full bg-white rounded  rounded-l-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
+                            <div className='col-span-4 w-full'>
+                                <div className='w-full grid grid-cols-4'>
+                                    <select
+                                        {...register("country_code", {
+                                            required: "Country code is required!"
+                                        })}
+                                        className="col-span-1 w-full bg-white rounded rounded-r-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  text-center leading-8 transition-colors duration-200 ease-in-out" >
+                                        <option className='w-10' value='' selected disabled>+ code</option>
+                                        {Object.keys(countries).map((key, i) => (
+                                            <option className='w-10' key={i} value={countries[key].phone}> {key + ' ' + countries[key].phone}</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        {...register("phone", {
+                                            required: "phone number field is required!", minLength: { value: 7, message: "phone number must be 7 numeric!" },
+                                        })}
+                                        type="number" id='ph-number' placeholder='Enter phone number'
+                                        className="col-span-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full bg-white rounded  rounded-l-none border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                </div>
+                                {errors.country_code?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.country_code?.message}</p>}
+                                {(!errors.country_code?.message && errors.phone?.type === 'required') && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.phone?.message}</p>}
+                                {(!errors.country_code?.message && errors.phone?.type === 'minLength') && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.phone?.message}</p>}
                             </div>
-                            {errors.country_code?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.country_code?.message}</p>}
-                            {(!errors.country_code?.message && errors.phone?.type === 'required') && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.phone?.message}</p>}
-                            {(!errors.country_code?.message && errors.phone?.type === 'minLength') && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.phone?.message}</p>}
                         </div>
                         <div className='w-full space-y-2 md:space-y-3'>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center pt-6">
                                 <label htmlFor='address1' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Address Line 1 :</label>
                                 <input
-                                    {...register("address1", {
-                                        // required: "Email field is required!", 
-                                    })} id='address1' type="text"
+                                    {...register("address1")} id='address1' type="text"
                                     className="col-span-7 w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                                 <span className='col-span-3'></span>
@@ -241,9 +246,7 @@ const Register = () => {
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='address2' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Address Line 2 :</label>
                                 <input
-                                    {...register("address2", {
-                                        // required: "Email field is required!", 
-                                    })} id='address2' type="text"
+                                    {...register("address2")} id='address2' type="text"
                                     className="col-span-7 w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                                 <span className='col-span-3'></span>
@@ -251,34 +254,45 @@ const Register = () => {
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='city' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">City :</label>
-                                <input
-                                    {...register("city", {
-                                        // required: "Email field is required!", 
-                                    })} id='city' type="text"
-                                    className="col-span-7 w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
+                                <div className='col-span-7 w-full'>
+                                    <input
+                                        {...register("city", {
+                                            required: "City field is required!",
+                                        })} id='city' type="text"
+                                        className="w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                    {errors.city?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.city?.message}</p>}
+                                </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='state' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">State/Province/Region :</label>
-                                <input
-                                    {...register("state", {
-                                        // required: "Email field is required!", 
-                                    })} id='state' type="text"
-                                    className="col-span-7 w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
+                                <div className='col-span-7 w-full'>
+                                    <input
+                                        {...register("state", {
+                                            required: "State field is required!",
+                                        })} id='state' type="text"
+                                        className="w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                    {errors.state?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.state?.message}</p>}
+                                </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
-                                <label htmlFor='postcode' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">ZIP/Postal code :</label>
-                                <input
-                                    {...register("postcode", {
-                                        // required: "Email field is required!", 
-                                    })} id='postcode' type="text"
-                                    className="col-span-7 w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
+                                <label htmlFor='postcode' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">ZIP/Postal code :</label><div className='col-span-7 w-full'>
+                                    <input
+                                        {...register("postcode", {
+                                            required: "ZIP/Postal code required!",
+                                        })} id='postcode' type="number"
+                                        className="w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                    {errors.postcode?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.postcode?.message}</p>}
+                                </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='country' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Country :</label>
-                                <div className='col-span-7'><CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} wornClass={{ input: " w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput></div>
+                                <div className='col-span-7'>
+                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} required={addressInfo.countryErr} wornClass={{ input: " w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
+                                    {!selectedCountry && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{addressInfo.countryErr}</p>}
+                                </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='Document' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Documents :</label>
@@ -298,9 +312,9 @@ const Register = () => {
                                     <div className='w-full flex justify-between gap-1'>
                                         <div className='w-full'>
                                             <input
-                                                type="password"
+                                                type={addressInfo.showPass ? 'text' : "password"}
                                                 {...register("password", {
-                                                    required: "Password field is required!", minLength: { value: 6, message: "Password must be 6 characters!" },
+                                                    required: "Strong password is required!", minLength: { value: 6, message: "Password must be 6 characters!" },
                                                 })} readOnly
                                                 className="w-full text-base text-gray-800 bg-slate-200 py-[6px] px-3 mt-1 border focus:outline-none border-blue-500 rounded-md"
                                             />
@@ -308,37 +322,39 @@ const Register = () => {
                                                 Strong
                                             </p>
                                         </div>
-                                        <p className="h-fit text-base font-medium text-gray-600 cursor-pointer bg-slate-100 select-none py-[6px] pl-1 pr-2 mt-1 border focus:outline-none border-zinc-200 rounded-md duration-75 flex justify-center items-center gap-1">
-                                            <AiOutlineEye className='inline' /> Hide
+                                        <p onClick={() => setAddressInfo(c => ({ ...c, showPass: !c.showPass && true }))} className="h-fit text-base font-medium text-gray-600 cursor-pointer bg-slate-100 select-none py-[6px] pl-1 pr-2 mt-1 border focus:outline-none border-zinc-200 rounded-md duration-75 flex justify-center items-center gap-1">
+                                            {addressInfo.showPass ? <BsEye className='inline' /> : < BsEyeSlash className='inline' />} Hide
                                         </p>
                                     </div>
+                                    {errors.password?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.password?.message}</p>}
                                 </div>
                             </div>
                         </div>
                         <div className="relative grid grid-cols-1 md:grid-cols-7 gap-x-3 items-center">
                             <label htmlFor='role' className="leading-7 font-[600] text-gray-700 col-span-2">User role (required)</label>
-                            <select
-                                {...register("role", {
-                                    required: "Employee role select required!"
-                                })}
-                                name='role' className="col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                            >
-                                <option value='' selected disabled >Select role</option>
-                                <option value={ADMIN}>Admin</option>
-                                <option value={MARKETER}>Marketing Manager</option>
-                                <option value={TELE_MARKETER}>Telemarketer</option>
-                                <option value={DATA_ENTRY_OPERATOR}>Data entire operator</option>
-                                <option value={ON_FIELD_MARKETER}>Field Marketer</option>
-                                <option value={""}>Billing Team</option>
-                            </select>
-                            {errors.role?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-2'>{errors.role?.message}</p>}
+                            <div className='col-span-3 w-full'>
+                                <select
+                                    {...register("role", {
+                                        required: "Employee role select required!"
+                                    })}
+                                    name='role' className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 md:py-[6px]  px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                >
+                                    <option value='' selected disabled >Select role</option>
+                                    <option value={ADMIN}>Admin</option>
+                                    <option value={MARKETER}>Marketing Manager</option>
+                                    <option value={TELE_MARKETER}>Telemarketer</option>
+                                    <option value={DATA_ENTRY_OPERATOR}>Data entire operator</option>
+                                    <option value={ON_FIELD_MARKETER}>Field Marketer</option>
+                                    <option value={BILLING_TEAM}>Billing Team</option>
+                                </select>
+                                {errors.role?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.role?.message}</p>}
+                            </div>
                         </div>
                         <div className="relative grid grid-cols-1 md:grid-cols-7 gap-x-3 items-center">
                             <label htmlFor='' className="leading-7 font-[600] text-gray-700 col-span-2">Send User Notification</label>
                             <div className="col-span-5 flex items-center">
                                 <input
                                     {...register("email_send")}
-                                    aria-describedby="offers-description"
                                     type="checkbox"
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                                 />
