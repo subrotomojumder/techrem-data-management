@@ -28,7 +28,7 @@ export const DateRangeInput = () => {
 
 
 
-export default function CountryInput({ wornClass, selectedCountry, setSelectedCountry, required }) {
+export default function CountryInput({ wornClass, selectedCountry, setSelectedCountry, placeHolder='', required }) {
   const [query, setQuery] = useState('')
   const countries = Object.values(Countries.countries);
   // console.log(countries);
@@ -57,7 +57,7 @@ export default function CountryInput({ wornClass, selectedCountry, setSelectedCo
           displayValue={(country) => country?.name}
           autoComplete="false"
           required={required}
-        // {...register("country", {required: "Country name is required!" })}
+        placeholder={placeHolder}
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />

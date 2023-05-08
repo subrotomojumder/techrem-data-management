@@ -131,7 +131,7 @@ export default function LayoutComponent({ children }) {
                                             href={subItem.href}
                                             className={classNames(
                                                 router.pathname == subItem.href ? 'bg-indigo-500 text-white' : 'hover:text-white hover:bg-indigo-500 ',
-                                                'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-md leading-6 font-semibold text-gray-700 group'
+                                                'flex items-center w-full text-left rounded-md my-1 p-2 gap-x-3 text-md leading-6 font-semibold text-gray-700 group'
                                             )}
                                         >
                                             <subItem.icon
