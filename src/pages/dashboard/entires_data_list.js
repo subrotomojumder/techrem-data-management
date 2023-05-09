@@ -35,7 +35,7 @@ const Entires_data = () => {
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
-    if (allDataLoading || isLoading) {
+    if (isLoading) {
         return <LargeSpinner />;
     };
     if (isError) {
@@ -75,7 +75,7 @@ const Entires_data = () => {
                                     // onChange={(e) => setQueryData(c => ({ ...c, role: e.target.value }))}
                                     className="text-base bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 font-medium pl-1 py-[4px] leading-8 transition-colors duration-200 ease-in-out"
                                 >
-                                    <option value='' selected >select entry</option>
+                                    <option value='' selected >Entry by</option>
                                     <option value={''}>Admin</option>
                                     <option value={''}>Marketer</option>
                                     <option value={""}>Data Entire</option>

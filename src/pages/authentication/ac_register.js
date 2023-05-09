@@ -290,7 +290,8 @@ const Register = () => {
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='country' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Country :</label>
                                 <div className='col-span-7'>
-                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} required={addressInfo.countryErr} wornClass={{ input: " w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
+                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} wornClass={{ input: " w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
+                                    <input type="" required={addressInfo.countryErr} className='sr-only ml-[30%]' />
                                     {!selectedCountry && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{addressInfo.countryErr}</p>}
                                 </div>
                             </div>
