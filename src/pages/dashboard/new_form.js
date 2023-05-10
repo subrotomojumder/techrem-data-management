@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import EntrySubPreview from '@/components/EntrySubPreview';
 import CategoryInput from '@/components/Forms/CategoryInput';
 
-const ourServices = ["Website design and Development", "ERP Solution", "App Development", "Business Accessories", "Digital Marketing"];
+const ourServices = [{ name: "Website design and Development" }, { name: "ERP Solution" }, { name: "App Development" }, { name: "Business Accessories" }, { name: "Digital Marketing" }];
 
 const New_form = () => {
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
@@ -64,7 +64,7 @@ const New_form = () => {
             we_offer_service: weCanService,
             they_offer_service: theyService,
             have_website: { needWebsite: inputData?.isWebsite, website_urls: Object.values(website).filter(link => link !== '') },
-            have_branchs: { isBranch: inputData?.isBranch, branch_detalis: branch },
+            // have_branchs: { isBranch: inputData?.isBranch, branch_detalis: branch },
             businessDetails: { category: selectedCategory, businessName, country_code, businessPhone: businessPhone?.toString(), businessEmail },
             address: { country: selectedCountry.name, state, city, street_address, postCode, location_link }
         }
@@ -100,6 +100,7 @@ const New_form = () => {
         postData(previewData)
             .then(res => {
                 if (res.data?.success) {
+                    setPreviewData(null);
                     localStorage.removeItem("entire");
                     setCount({ branch: 1, website: 1 });
                     setWebsite({});
@@ -109,7 +110,6 @@ const New_form = () => {
                     setWeCanService([]);
                     setInputData({});
                     setSelectedCategory({});
-                    setPreviewData(null);
                     reset();
                 } else {
                     errorToast("Something went wrong!")
@@ -131,7 +131,7 @@ const New_form = () => {
                         <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                             <label className="leading-7 font-[600] text-gray-700 col-span-3">Business Category *</label>
                             <div className="col-span-3 w-full">
-                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ input: "bg-white rounded border border-gray-300 px-3 py-[6px] flex justify-between items-center text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
+                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-12 left-0 ", input: "bg-white rounded border border-gray-300 px-3 py-[6px] flex justify-between items-center text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
                             </div>
                             {!selectedCategory.main && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{inputData.categoryErr}</p>}
                         </div>
@@ -361,13 +361,13 @@ const New_form = () => {
                                 {ourServices.map((service, i) => <div key={i} className="relative flex justify-start items-center gap-x-3">
                                     {++i}.
                                     <input
-                                        checked={weCanService.includes(service) || false}
-                                        onClick={() => setWeCanService(c => (weCanService.includes(service) ? [c.filter(p => service !== p)] : [...c, service]))}
+                                        checked={weCanService.includes(service.name) || false}
+                                        onClick={() => setWeCanService(c => (weCanService.includes(service.name) ? c.filter(p => service.name !== p) : [...c, service.name]))}
                                         id={i} type="checkbox"
                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                                     />
                                     <label htmlFor={i} className="font-[400] text-gray-900">
-                                        {service}
+                                        {service.name}
                                     </label>
                                 </div>)}
                             </div>

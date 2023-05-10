@@ -9,7 +9,7 @@ const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
     const [openMainChild, setOpenMainChild] = useState({})
     const { data: cateData, isLoading, isError } = useGetAllCategoryQuery(`/catagory`);
     const data = cateData || { success: true, data: [] };
-
+    
     if (isError) {
         return <div className='text-center mt-10 md:mt-52'>
             <p className="text-xl text-red-500">Something went wrong in category!</p>
@@ -22,7 +22,7 @@ const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
                     setOpen(false);
                     setOpenMainChild({})
                 }}
-                className='select-none mt-1 relative'
+                className='select-none relative'
             >
                 <div onClick={() => {
                     setOpen(!open)
@@ -32,19 +32,19 @@ const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
                 </div>
                 {open &&
                     <div
-                        className='border border-gray-400 bg-slate-100 py-1 w-full absolute z-40 top-12 left-0 h-[160px] md:h-[200px] overflow-y-scroll overflow-x-hidden'
+                        className={`border border-gray-400 bg-slate-100 py-1 w-full ${ownClass.position} max-h-[160px] md:max-h-[300px] overflow-y-scroll overflow-x-hidden`}
                     >
                         {data?.data?.length && data?.data?.map((main, i) => <div key={i} >
                             <p
                                 onClick={() => {
-                                    setSelectedValue({ main: main.mainCatagory })
-                                    setOpenMainChild({ [main.mainCatagory]: !openMainChild[main.mainCatagory] ? main.mainCatagory : "" })
+                                    setSelectedValue({ main: main.main })
+                                    setOpenMainChild({ [main.main]: !openMainChild[main.main] ? main.main : "" })
                                 }}
-                                className={`font-medium capitalize hover:bg-blue-500 ${openMainChild[main.mainCatagory] && "bg-blue-500 text-white"} px-3 hover:text-white duration-100 cursor-pointer border-b pb-[2px]`}
-                            >{main.mainCatagory}</p>
-                            {openMainChild[main.mainCatagory] && <div className='py-2 bg-green-100 w-full shadow-sm border'>
+                                className={`font-medium capitalize hover:bg-blue-500 ${openMainChild[main.main] && "bg-blue-500 text-white"} px-3 hover:text-white duration-100 cursor-pointer border-b pb-[2px]`}
+                            >{main.main}</p>
+                            {openMainChild[main.main] && <div className='py-2 bg-green-100 w-full shadow-sm border'>
                                 {
-                                    main?.subCatagory1?.length && main?.subCatagory1?.map((sub, i) => <li
+                                    !main?.sub1?.length  || main?.sub1?.map((sub, i) => <li
                                         onClick={() => {
                                             setSelectedValue({ ...selectedValue, sub1: sub.name });
                                             setOpen(false);

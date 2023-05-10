@@ -14,6 +14,18 @@ const dataEntireApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["data"]
         }),
+        updateEntryData: builder.mutation({
+            query: (data) => ({
+                method: "PUT",
+                url: `/data_entry/${data._id}`,
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["data", "singleData"]
+        }),
         getAllData: builder.query({
             query: (query) => ({
                 url: `/data_entry?${query}`,
@@ -21,7 +33,7 @@ const dataEntireApi = apiSlice.injectEndpoints({
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            providesTags: ["data","singleData"]
+            providesTags: ["data", "singleData"]
         }),
         getEntireDataById: builder.query({
             query: (params) => ({
@@ -38,5 +50,6 @@ const dataEntireApi = apiSlice.injectEndpoints({
 export const {
     useGetAllDataQuery,
     usePostDataMutation,
-    useGetEntireDataByIdQuery
+    useGetEntireDataByIdQuery,
+    useUpdateEntryDataMutation
 } = dataEntireApi;

@@ -13,3 +13,19 @@ export const errorSweetAlert = (message) => {
         text: message
     })
 };
+
+export const updateConfirm = (updatedData, setUpdateEntry) => {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't update business date!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setUpdateEntry(updatedData)
+        }
+    })
+}

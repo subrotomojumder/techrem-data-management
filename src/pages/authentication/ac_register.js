@@ -33,6 +33,7 @@ const Register = () => {
         if (!selectedCountry?.name) {
             return setAddressInfo({ ...addressInfo, countryErr: "Country field is required!" });
         } else setAddressInfo({ ...addressInfo, countryErr: "" });
+        data.userId = data.fast_name.toLowerCase().split(" ").join("") + data.last_name.toLowerCase().split(" ").join("") + Math.floor(Math.random() * 9000);
         data.address = { country: selectedCountry.name, state: data.state, city: data.city, address_1: data.address1, address_2: data.address1, postcode: data.postcode };
         try {
             const formData = new FormData();

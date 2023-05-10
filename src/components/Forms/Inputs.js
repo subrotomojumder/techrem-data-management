@@ -4,15 +4,12 @@ import { Combobox } from '@headlessui/react'
 import DatePicker from "react-datepicker";
 import Countries from 'countries-list';
 
-export const DateRangeInput = () => {
-  const [dateRange, setDateRange] = useState([null, null]);
+export const DateRangeInput = ({dateRange, setDateRange}) => {
   const [startDate, endDate] = dateRange;
-
-  // console.log(dateRange)
   return (
     <div className="">
       <DatePicker
-        className="text-base py-1 bg-white border border-slate-300 rounded-md pr-6 pl-2 shadow-sm focus:outline-none focus:border-sky-500 focus: focus:ring-sky-500 focus:ring-1"
+        className="rounded-md placeholder:text-gray-600 bg-white pl-3 pr-5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
         selectsRange={true}
         startDate={startDate}
         endDate={endDate}
@@ -58,7 +55,6 @@ export default function CountryInput({ wornClass, selectedCountry, setSelectedCo
           autoComplete="false"
           placeholder={placeHolder}
           required={selectedCountry?.name ? false : true}
-          name='country'
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />

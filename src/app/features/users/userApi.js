@@ -36,6 +36,15 @@ const userApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["user"]
         }),
+        getAllUserName: builder.query({
+            query: () => ({
+                url: `/user/specific_field`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            })
+        }),
         getEmployeeById: builder.query({
             query: (id) => ({
                 url: `/user/${id}`,
@@ -75,6 +84,7 @@ const userApi = apiSlice.injectEndpoints({
 export const {
     useRegisterMutation,
     useUserLoginMutation,
+    useGetAllUserNameQuery,
     useGetEmployeeByQueQuery,
     useGetEmployeeByIdQuery,
     useUserDeleteMutation,
