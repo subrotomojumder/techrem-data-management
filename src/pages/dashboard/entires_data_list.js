@@ -8,7 +8,7 @@ import { FaEdit } from 'react-icons/fa';
 import { CgArrowsExchangeV } from 'react-icons/cg';
 import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import DataEntryFilters from '@/components/Forms/dataEntryFilters';
+// import DataEntryFilters from '@/components/Forms/dataEntryFilters';
 import { DateRangeInput } from '@/components/Forms/Inputs';
 import CategoryInput from '@/components/Forms/CategoryInput';
 import UserInput from '@/components/Forms/UserInput';
@@ -74,6 +74,7 @@ const Entires_data = () => {
                                     <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                                     <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
                                     <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
+
                                     <button
                                         onClick={() => setOpenFilter(c => (!c))} type="button"
                                         className="rounded-md bg-white pl-4 pr-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
@@ -232,7 +233,7 @@ const Entires_data = () => {
                                                         'px-3 py-3.5 text-sm text-gray-500 lg:table-cell'
                                                     )}
                                                 >
-                                                    <div className="text-gray-900 w-40">{!we_offer_service?.length ? "N/A" : we_offer_service.map((service, i) => <span key={i}>{service}{we_offer_service?.length - 1 === i || ", "} </span>)}</div>
+                                                    <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length <20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
                                                 </td>
                                                 <td
                                                     className={classNames(
@@ -241,7 +242,7 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     <button
-                                                        onClick={()=> updateConfirm(_id, setUpdateEntry)}
+                                                        onClick={() => updateConfirm(_id, setUpdateEntry)}
                                                         className="flex justify-center items-center gap-2 hover:bg-slate-100 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75">
                                                         <FaEdit /> Edit
                                                     </button>

@@ -124,7 +124,7 @@ const UpdateProfile = () => {
         </div>
     }
     // এই কনস্ট্যান্ট এখানে থাকতে হবে না হলে লোডিং হওয়ার আগের ডাটা রিড করতে গেলে এরর আসবে
-    const { email, name, address, country_code, userId, phone, role, userBio, updatedAt, userImage, document, _id } = data?.data;
+    const { email, fast_name, last_name, address, country_code, userId, phone, role, userBio, updatedAt, userImage, document, _id } = data?.data;
 
     return (
         <div className='max-w-[1100px] xl:max-w-[1500px] mx-auto'>
@@ -135,7 +135,7 @@ const UpdateProfile = () => {
                     <div className='col-span-1 h-fit bg-gray-200 border rounded-md px-0 xl:px-10'>
                         <div className='text-center relative'>
                             <figure className='pt-4 relative'>
-                                <img className='rounded-full w-[60%] max-w-[200px] mx-auto border-4 border-blue-500 p-[2px]' src={previewImage || userImage || demoUser} alt="" />
+                                <img className='rounded-full w-[50%] max-w-[150px] mx-auto border-2 border-blue-500 p-[2px]' src={previewImage || userImage || demoUser} alt="" />
                                 <input
                                     onChange={(e) => setPreviewImage(window.URL.createObjectURL(e.target.files[0]))}
                                     onClick={() => setEditField({ ...editField, upBtn: true })}
@@ -147,17 +147,17 @@ const UpdateProfile = () => {
                             </figure>
                             <h2 className='text-2xl mdd:text-xl lg:text-2xl mt-1 font-serif px-1 lg:px-4'>{name}</h2>
                             <h5 className='font-medium text-lg mdd:text-sm lg:text-lg mb-1'>{email}</h5>
-                            <h5 className='text-sm mb-1'>Last updated: {new Date(updatedAt).toLocaleString()}</h5>
                             <div className=' bg-blue-300 py-1'>
-                                <h4 className='font-semibold text-sm mb-1 capitalize'>Designation: {role}</h4>
+                                <h4 className='font-semibold text-sm mb-1 capitalize'>Position: {role}</h4>
                                 <h5 className='font-bold text-xs text-gray-500'>UID: {userId}</h5>
                             </div>
+                            <h5 className='text-sm mb-1'>Last updated: {new Date(updatedAt).toLocaleString()}</h5>
                         </div>
                         <hr className='bg-blue-400 h-[2px] mt-4 mx-4' />
-                        <div className='mx-4 mt-1'>
+                        {/* <div className='mx-4 mt-1'>
                             <h4 className='text-lg'>Bio</h4>
                             <p className='p-2 mb-4 border-black min-h-[60px] rounded-md bg-gray-100'>{userBio}</p>
-                        </div>
+                        </div> */}
                     </div>
                     <div className='col-span-2 border rounded-md'>
                         <div className='flex justify-between items-center'>
@@ -171,14 +171,24 @@ const UpdateProfile = () => {
                         <div className='mx-4 mt-3  px-0 xl:px-10 pb-3'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div className="w-full relative">
-                                    <label htmlFor='full-name' className="">Full name</label>
+                                    <label htmlFor='full-name' className="">First name</label>
                                     <input
-                                        readOnly={!editField.name}
-                                        defaultValue={name}
+                                        readOnly={!editField.fast_name}
+                                        defaultValue={fast_name}
                                         type="text" name='name'
                                         className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
                                     />
-                                    <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, name: true, upBtn: true })} /></p>
+                                    <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, first_name: true, upBtn: true })} /></p>
+                                </div>
+                                <div className="w-full relative">
+                                    <label htmlFor='full-name' className="">Last name</label>
+                                    <input
+                                        readOnly={!editField.last_name}
+                                        defaultValue={last_name}
+                                        type="text" name='text'
+                                        className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
+                                    />
+                                    <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, last_name: true, upBtn: true })} /></p>
                                 </div>
                                 <div className="w-full relative">
                                     <label htmlFor='phone' className="">Phone</label>
@@ -208,48 +218,67 @@ const UpdateProfile = () => {
                                     />
                                     {/* <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, email: true })} /></p> */}
                                 </div>
-                                <div className="w-full relative">
-                                    <label htmlFor='password' className="">Password</label>
-                                    <div
-                                        className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border border-blue-100 rounded-sm"
-                                    >
-                                        <p>Password change N/A</p>
+                                <div className='col-span-2 w-full grid grid-cols-3 gap-2'>
+                                    <div className="w-full relative">
+                                        <label htmlFor='password' className="">Password</label>
+                                        <div
+                                            className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border border-blue-100 rounded-sm"
+                                        >
+                                            <p>Password change N/A</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="w-full relative">
-                                    <label htmlFor='country' className="">County</label>
-                                    <input
-                                        readOnly={!editField.country}
-                                        defaultValue={address?.country}
-                                        type="text" name="country"
-                                        className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
-                                    />
-                                    <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, country: true, upBtn: true })} /></p>
-                                </div>
-                                <div className="w-full relative">
-                                    <label htmlFor='state' className="">State</label>
-                                    <input
-                                        readOnly={!editField.state}
-                                        defaultValue={address?.state}
-                                        type="text" name="state"
-                                        className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
-                                    />
-                                    <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, state: true, upBtn: true })} /></p>
-                                </div>
-                                <div className="w-full relative">
-                                    <label htmlFor='city' className="">City</label>
-                                    <input
-                                        readOnly={!editField.city}
-                                        defaultValue={address?.city}
-                                        type="text" name="city"
-                                        className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
-                                    />
-                                    <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, city: true, upBtn: true })} /></p>
+                                    <div className="w-full relative">
+                                        <label htmlFor='password' className="">Password</label>
+                                        <div
+                                            className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border border-blue-100 rounded-sm"
+                                        >
+                                            <p>Password change N/A</p>
+                                        </div>
+                                    </div>
+                                    <div className="w-full relative">
+                                        <label htmlFor='password' className="">Password</label>
+                                        <div
+                                            className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border border-blue-100 rounded-sm"
+                                        >
+                                            <p>Password change N/A</p>
+                                        </div>
+                                    </div>
+                                    <div className="w-full relative">
+                                        <label htmlFor='country' className="">County</label>
+                                        <input
+                                            readOnly={!editField.country}
+                                            defaultValue={address?.country}
+                                            type="text" name="country"
+                                            className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
+                                        />
+                                        <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, country: true, upBtn: true })} /></p>
+                                    </div>
+                                    <div className="w-full relative">
+                                        <label htmlFor='state' className="">State</label>
+                                        <input
+                                            readOnly={!editField.state}
+                                            defaultValue={address?.state}
+                                            type="text" name="state"
+                                            className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
+                                        />
+                                        <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, state: true, upBtn: true })} /></p>
+                                    </div>
+                                    <div className="w-full relative">
+                                        <label htmlFor='city' className="">City</label>
+                                        <input
+                                            readOnly={!editField.city}
+                                            defaultValue={address?.city}
+                                            type="text" name="city"
+                                            className="w-full text-gray-800 font-medium py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-sm"
+                                        />
+                                        <p className='absolute top-11 right-2'><FiEdit onClick={() => setEditField({ ...editField, city: true, upBtn: true })} /></p>
+                                    </div>
                                 </div>
                                 <div className="w-full relative col-span-2">
                                     <label htmlFor='' className="">Additional Bio data</label>
                                     <textarea
                                         readOnly={!editField.userBio}
+                                        defaultValue={userBio}
                                         type="text" name="userBio"
                                         className="w-full min-h-[100px] text-gray-800 py-2 pl-3 pr-7 mt-2 border focus:outline-gray-600 border-blue-500 rounded-md"
                                     />
@@ -265,7 +294,7 @@ const UpdateProfile = () => {
                                     onClick={() => setEditField({ ...editField, upBtn: true })}
                                     className='hidden' type="file" accept='image/*' multiple name="document" id="document"
                                 />
-                                <label className='absolute bottom-2 left-[43%] bg-blue-600 rounded-2xl text-white border-2 border-gray-200 px-3 py-1 font-medium hover:bg-indigo-600 drop-shadow-lg' htmlFor="document">
+                                <label className='absolute bottom-2 left-[43%] bg-blue-400 rounded-2xl text-white border-2 border-gray-200 px-3 py-1 font-medium cursor-pointer drop-shadow-lg' htmlFor="document">
                                     upload document
                                 </label>
                             </div>

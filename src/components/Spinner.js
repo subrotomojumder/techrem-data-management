@@ -1,4 +1,5 @@
 import React from 'react';
+import { Dna } from 'react-loader-spinner';
 
 export const CustomLoader = () => {
     return (
@@ -12,6 +13,22 @@ export const LargeSpinner = () => {
         <div className='w-full h-[90vh] flex justify-center items-center '>
             <div className='mx-auto mb-20 animate-spin border-t-4 border-t-blue-500 border-r-4 border-r-blue-500  border-b-4 border-b-blue-500 border-l-4 border-l-white rounded-full w-8 h-8'>
                 {/* jfksajfkl  */}
+            </div>
+        </div>
+    );
+};
+export const MagnifyingLoader = () => {
+    return (
+        <div className='w-full h-[90vh] flex justify-center items-center '>
+            <div className='relative'>
+                <Dna
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="dna-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="dna-wrapper"
+                />
             </div>
         </div>
     );

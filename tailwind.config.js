@@ -33,9 +33,15 @@ module.exports = {
         xl: '1440px',
         xxl: '1920px',
       },
-      
+
     }
   },
-  plugins: [],
+  plugins: [
+    // install tailwind forms
+    //     npm cache clean --force
+    // rm -rf .next/cache
+    // npm install -D @tailwindcss/form
+    // require('@tailwindcss/forms'),
+  ],
 }
 

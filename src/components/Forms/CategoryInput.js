@@ -9,7 +9,7 @@ const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
     const [openMainChild, setOpenMainChild] = useState({})
     const { data: cateData, isLoading, isError } = useGetAllCategoryQuery(`/catagory`);
     const data = cateData || { success: true, data: [] };
-    
+
     if (isError) {
         return <div className='text-center mt-10 md:mt-52'>
             <p className="text-xl text-red-500">Something went wrong in category!</p>
@@ -42,20 +42,23 @@ const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
                                 }}
                                 className={`font-medium capitalize hover:bg-blue-500 ${openMainChild[main.main] && "bg-blue-500 text-white"} px-3 hover:text-white duration-100 cursor-pointer border-b pb-[2px]`}
                             >{main.main}</p>
-                            {openMainChild[main.main] && <div className='py-2 bg-green-100 w-full shadow-sm border'>
-                                {
-                                    !main?.sub1?.length  || main?.sub1?.map((sub, i) => <li
-                                        onClick={() => {
-                                            setSelectedValue({ ...selectedValue, sub1: sub.name });
-                                            setOpen(false);
-                                        }}
-                                        key={i}
-                                        className="list-none capitalize pl-6 hover:text-white hover:bg-blue-500 hover:font-semibold active:bg-orange-500 active:text-white cursor-pointer"
-                                    >
-                                        {sub.name}
-                                    </li>)
-                                }
-                            </div>}
+
+                            {openMainChild[main.main] &&
+                                <div className='py-2 bg-green-100 w-full shadow-sm border'>
+                                    {
+                                        !main?.sub1?.length || main?.sub1?.map((sub, i) => <li
+                                            onClick={() => {
+                                                setSelectedValue({ ...selectedValue, sub1: sub.name });
+                                                setOpen(false);
+                                            }}
+                                            key={i}
+                                            className="list-none capitalize pl-6 hover:text-white hover:bg-blue-500 hover:font-semibold active:bg-orange-500 active:text-white cursor-pointer"
+                                        >
+                                            {sub.name}
+                                        </li>)
+                                    }
+                                </div>
+                            }
                         </div>)}
                     </div>}
             </div>

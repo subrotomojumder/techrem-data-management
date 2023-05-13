@@ -24,6 +24,15 @@ const addressApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["address"]
         }),
+        // getAllCountry: builder.query({
+        //     query: (query) => ({
+        //         url: `/address/country`,
+        //         headers: {
+        //             authorization: localStorage.getItem("tech_token"),
+        //         }
+        //     }),
+        //     providesTags: ["state"]
+        // }),
         getAllState: builder.query({
             query: (query) => ({
                 url: `/address/state?${query}`,

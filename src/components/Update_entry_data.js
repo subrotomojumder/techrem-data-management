@@ -11,7 +11,7 @@ import { errorToast, successToast } from '@/utils/neededFun';
 import axios from 'axios';
 
 const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
-    const { data, isLoading, isError, error } = useGetEntireDataByIdQuery(updateEntry);
+    const { data, isLoading, isError, error } = useGetEntireDataByIdQuery(updateEntry, { refetchOnMountOrArgChange: true });
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
     const [inputData, setInputData] = useState({});
     const [selectedCountry, setSelectedCountry] = useState(null);
@@ -40,7 +40,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
             }, 100)
         }
     }, [data]);
-    const submit = async (data) => {
+    const submit = async (formDatas) => {
         if (!selectedCategory.main) {
             return setInputData(c => ({ ...c, categoryErr: "Business category is required!" }));
         } else setInputData(c => ({ ...c, categoryErr: null }));
@@ -48,7 +48,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
             return setInputData(c => ({ ...c, countryErr: "Country is required!" }));
         } else setInputData(c => ({ ...c, countryErr: "" }));
         setImageLoading(true)
-        const { businessName, country_code, businessPhone, businessEmail, state, city, street_address, postCode, location_link, other_information, } = data;
+        const { businessName, country_code, businessPhone, businessEmail, state, city, street_address, postCode, location_link, other_information, } = formDatas;
         const entireData = {
             _id: inputData.id,
             other_information,
@@ -56,7 +56,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
             they_offer_service: theyService,
             have_website: { needWebsite: inputData?.isWebsite, website_urls: Object.values(website).filter(link => link !== '') },
             // have_branchs: { isBranch: inputData?.isBranch, branch_detalis: branch },
-            businessDetails: { category: selectedCategory, businessName, country_code, businessPhone: businessPhone?.toString(), businessEmail },
+            businessDetails: { category: selectedCategory, businessName, country_code, businessPhone: businessPhone?.toString(), businessEmail, businessLogo:data?.data?.businessDetails?.businessLogo || '' },
             address: { country: selectedCountry.name, state, city, street_address, postCode, location_link }
         }
         // return console.log(entireData);
@@ -79,7 +79,8 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
                     setImageLoading(false);
                     return console.log(result);
                 }
-            }
+            } 
+
             updateData(entireData)
                 .then(res => {
                     console.log(res);

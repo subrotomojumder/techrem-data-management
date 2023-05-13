@@ -100,6 +100,7 @@ const New_form = () => {
         postData(previewData)
             .then(res => {
                 if (res.data?.success) {
+                    successToast("Your business data submission successful!")
                     setPreviewData(null);
                     localStorage.removeItem("entire");
                     setCount({ branch: 1, website: 1 });

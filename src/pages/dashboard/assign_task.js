@@ -52,6 +52,17 @@ const AssignTask = () => {
             <div className='grid grid-cols-1 lg:grid-cols-5  lg:divide-x-2 gap-3 h-full relative'>
                 <div className='col-span-2 grid grid-cols-1 gap-x-3 h-fit lg:sticky top-14 left-0'>
                     <hr className='col-span-full' />
+                    <div className="relative my-0 w-full">
+                        <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
+                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs", addBtn: "hidden", contain: 'grid grid-cols-2 gap-x-2' }} />
+                    </div>
+                    <div className="relative my-2 w-full">
+                        <label className="leading-7 font-[600] text-gray-700">Campaign Objective *</label>
+                        <input
+                            type='text' placeholder='Campaign objective'
+                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
+                        />
+                    </div>
                     <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Select task type *</label>
                         <select
@@ -67,10 +78,6 @@ const AssignTask = () => {
                             <option value={ON_FIELD_MARKETER}>Field Marketer</option>
                         </select>
                     </div>
-                    <div className="relative my-0 w-full">
-                        <label className="leading-7 font-[600] text-gray-700">Employee address *</label>
-                        <AddressAddForm addressValue={userQuery} setAddressValue={setUserQuery} classes={{ label: "text-xs", addBtn: "hidden", contain: 'grid grid-cols-2 gap-x-2' }} />
-                    </div>
                     <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Choose worker *</label>
                         {userLoading ?
@@ -84,18 +91,18 @@ const AssignTask = () => {
                             >
                                 <option selected >{userData?.success && userData.data.length === 0 && userQuery.role ? `Empty ${userQuery?.role}` : "Select below name"}</option>
                                 {userQuery.role && userData?.success && userData.data.map(user =>
-                                    <option key={user.userId} value={user.userId}>{user.name + ' - ' + user.userId}</option>
+                                    <option key={user.userId} value={user.userId}>{user.fast_name + user.last_name}</option>
                                 )}
                             </select>
                         }
                     </div>
-                    <div className="relative my-2 w-full">
+                    {/* <div className="relative my-2 w-full">
                         <label className="leading-7 font-[600] text-gray-700">Other Address *</label>
                         <input
                             value={`Village - ${employee?.address?.village ? employee?.address?.village : "invalid"} Postcode - ${employee?.address?.postcode ? employee?.address?.postcode : "invalid"}`} type="text" disabled
                             className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-1 px-3 mt-1 leading-8 transition-colors duration-200 ease-in-out"
                         />
-                    </div>
+                    </div> */}
                 </div>
                 <main className='col-span-3 lg:pl-4'>
                     {userQuery.role === "" && <EmptyLoader otherText={"Select Employee type!"} />}

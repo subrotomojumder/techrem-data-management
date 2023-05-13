@@ -4,18 +4,18 @@ import { apiSlice } from "../api/apiSlice";
 
 const othersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        // postGroupData: builder.mutation({
-        //     query: (data) => ({
-        //         method: "POST",
-        //         url: "/group_data_entry",
-        //         body: data,
-        //         headers: {
-        //             'content-type': 'application/json',
-        //             authorization: localStorage.getItem("tech_token"),
-        //         }
-        //     }),
-        //     invalidatesTags: ["groups"]
-        // }),
+        postCategory: builder.mutation({
+            query: (data) => ({
+                method: "POST",
+                url: "/catagory",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["category"]
+        }),
         getAllCategory: builder.query({
             query: (url) => ({
                 url: url,
@@ -25,9 +25,20 @@ const othersApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["category"]
         }),
+        getOfferService: builder.query({
+            query: (url) => ({
+                url: url,
+                headers: {
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["our_service"]
+        }),
     })
 })
 
 export const {
-    useGetAllCategoryQuery
+    usePostCategoryMutation,
+    useGetAllCategoryQuery,
+    useGetOfferServiceQuery
 } = othersApi;

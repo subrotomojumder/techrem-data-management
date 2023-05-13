@@ -122,15 +122,15 @@ const Contact_manage = () => {
     };
     if (isError) {
         if (error.message) {
-            return <div className='text-center mt-10 md:mt-40'>
+            return <div className='text-center my-10 md:my-40'>
                 <p className="text-2xl text-red-500">{error.message}</p>
             </div>
         } else if (error.error) {
-            return <div className='text-center mt-10 md:mt-40'>
+            return <div className='text-center my-10 md:my-40'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else if (error.data.message) {
-            return <div className='text-center mt-10 md:mt-40'>
+            return <div className='text-center my-10 md:my-40'>
                 <p className="text-2xl text-red-500">{error.data.dev_err || error.data.message}</p>
             </div>
         }

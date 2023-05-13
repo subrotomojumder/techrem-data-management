@@ -47,8 +47,7 @@ export default function LayoutComponent({ children }) {
             children: [
                 { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
                 { name: 'Business Data List', icon: TbListDetails, href: '/dashboard/entires_data_list' },
-                { name: 'Create Category', icon: MdOutlineCategory, href: '' },
-                { name: 'Category List', icon: BiListCheck, href: '' },
+                { name: 'Category Enquiry', icon: MdOutlineCategory, href: '/all_list_enquiry/category_enquiry' },
             ],
         },
         {
@@ -60,14 +59,16 @@ export default function LayoutComponent({ children }) {
                 { name: 'Campaign History', icon: VscHistory, href: '' },
             ],
         },
-        {
-            name: 'Facebook Group',
-            current: false,
-            children: [
-                { name: 'Entire Group', icon: UsersIcon, href: '/dashboard/group_entire' },
-                { name: 'Group Data List', icon: FaUsersCog, href: '/dashboard/group_data_list' },
-            ],
-        },
+        // { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
+        { name: 'Our Services', icon: BiListCheck, href: '/all_list_enquiry/our_service_enquiry' },
+        // {
+        //     name: 'Facebook Group',
+        //     current: false,
+        //     children: [
+        //         { name: 'Entire Group', icon: UsersIcon, href: '/dashboard/group_entire' },
+        //         { name: 'Group Data List', icon: FaUsersCog, href: '/dashboard/group_data_list' },
+        //     ],
+        // },
         { name: 'Send Email', icon: FcVoicePresentation, href: '', current: false },
         // { name: 'Staff Activity log', icon: TbActivity, href: '/', current: false },
 
@@ -111,7 +112,7 @@ export default function LayoutComponent({ children }) {
                         <>
                             <Disclosure.Button
                                 className={classNames(
-                                    router.pathname == item.href ? 'bg-indigo-500 text-white' : 'hover:text-white hover:bg-indigo-500 ',
+                                    router.pathname == item.href ? 'bg-indigo-500 text-white' : 'hover:text-white hover:bg-indigo-400 ',
                                     'flex items-center justify-between w-full text-left rounded-md text-md p-2 gap-x-3 leading-6 font-semibold text-gray-600'
                                 )}
                             >
@@ -152,14 +153,17 @@ export default function LayoutComponent({ children }) {
             )}
         </li>
     ));
-    
+
     const signOut = () => {
         dispatch(userLogoutSet());
         localStorage.removeItem("tech_token");
         setTimeout(() => router.replace('/'), 100);
     }
+    if(!user.role){
+        return children
+    }
     return (
-        <>
+        <section className='max-w-[1700px] mx-auto'>
             <div className='bg-gray-100'>
                 <Transition.Root show={sidebarOpen} as={Fragment}>
                     <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -389,12 +393,12 @@ export default function LayoutComponent({ children }) {
                             </div>
                         </div>
                     </div>
-                    <main className="">
+                    <main className="bg-gray-100">
                         {children}
                         <Footer></Footer>
                     </main>
                 </div>
             </div>
-        </>
+        </section>
     )
 }
