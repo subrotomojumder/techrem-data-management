@@ -3,7 +3,7 @@ import AddressInput from '@/components/Forms/AddressInput';
 import SingleUser from '@/components/SingleUser';
 import { LargeSpinner } from '@/components/Spinner';
 import { AdminProtect } from '@/utils/ProtectRoute';
-import { ADMIN, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
+import { ADMIN, BILLING_TEAM, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { Menu, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
@@ -15,8 +15,9 @@ import { TbArrowsDownUp } from 'react-icons/tb';
 
 const EmployeeList = () => {
     const [openFilter, setOpenFilter] = useState(false);
-    const [queryData, setQueryData] = useState({ role: "", keyword: "", active: true });
-    const { data, isLoading, isError, error } = useGetEmployeeByQueQuery(`role=${queryData.role}&keyword=${queryData.keyword}&status=${queryData.status || ""}`);
+    const [selectedAddress, setSelectedAddress] = useState({});
+    const [queryData, setQueryData] = useState({});
+    const { data, isLoading, isError, error } = useGetEmployeeByQueQuery(`role=${queryData.role || ''}&keyword=${queryData.keyword || ''}&active=${queryData.status || ""}&country=${selectedAddress.country || ""}&state=${selectedAddress.state || ""}&city=${selectedAddress.city || ""}`);
 
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
@@ -27,17 +28,17 @@ const EmployeeList = () => {
     };
     if (isError) {
         if (error.error) {
-            content = <div className='text-center mt-10 md:mt-52'>
+            content = <div className='text-center w-full h-screen flex justify-center items-center'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else {
-            content = <div className='text-center mt-10 md:mt-52'>
+            content = <div className='text-center w-full h-screen flex justify-center items-center'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
     };
-    if (!isLoading && data?.data?.lengh4 === 0) {
-        content = <div className='text-center mt-10 md:mt-52'>
+    if (!isLoading && data?.data?.length === 0) {
+        content = <div className='text-center w-full h-screen flex justify-center items-center'>
             <p className="text-2xl text-red-500">User collection empty!</p>
         </div>
     };
@@ -87,13 +88,13 @@ const EmployeeList = () => {
                                     <td
                                         className={classNames(
                                             personIdx !== data.data.length - 1 ? 'border-b border-gray-200' : '',
-                                            'whitespace-nowrap py-1 md:py-2 lg:py-4 pl-4 pr-3 text-xs md:text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
+                                            'whitespace-nowrap py-1 md:py-2 lg:py-4 pl-4 pr-3 text-xs md:text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8:'
                                         )}
                                     >
-                                        <Link href={`/authentication/vew_profile/${user._id}`}>
-                                            <div className="flex items-center gap-x-4">
+                                        <Link href={`/authentication/view_profile/${user._id}`}>
+                                            <div className="flex items-center gap-x-4 group">
                                                 <img src={user.userImage} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
-                                                <div className="truncate font-medium leading-6 text-gray-700 capitalize">{user.fast_name + " " + user.last_name}</div>
+                                                <div className="truncate font-medium leading-6 text-gray-600 group-hover:text-gray-900 capitalize duration-200">{user.fast_name + " " + user.last_name}</div>
                                             </div>
                                         </Link>
                                     </td>
@@ -111,7 +112,7 @@ const EmployeeList = () => {
                                             'whitespace-nowrap hidden px-3 py-1 md:py-2 lg:py-4 text-xs md:text-sm text-center text-gray-500 lg:table-cell'
                                         )}
                                     >
-                                        {user.active ? <button
+                                        {user.status?.active ? <button
                                             type="button"
                                             className="rounded-full bg-indigo-50 px-2.5 py-1.5 text-xs md:text-sm font-semibold text-indigo-600 shadow-sm"
                                         >
@@ -159,7 +160,7 @@ const EmployeeList = () => {
         </div>
     };
     return (
-        <div className="px-4 sm:px-6 lg:px-8 w-full overflow-x-auto md:overflow-x-visible">
+        <div className="px-4 sm:px-6 lg:px-8 w-full min-h-screen overflow-x-auto md:overflow-x-visible">
             <div className="w-full flex justify-between items-center my-4">
                 <div className="sm:flex-auto">
                     <h1 className="text-base font-semibold leading-6 text-gray-900 whitespace-pre  w-fit px-1">Total User: {data?.data?.length || 0}</h1>
@@ -190,6 +191,8 @@ const EmployeeList = () => {
                     </div>
                 </div>
                 <div className='flex justify-end gap-2'>
+
+                    <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
                     <select
                         onChange={(e) => setQueryData(c => ({ ...c, role: e.target.value }))}
                         className="text-sm bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-1 py-1 lg:py-1.5 leading-8 transition-colors duration-200 ease-in-out"
@@ -200,16 +203,25 @@ const EmployeeList = () => {
                         <option value={DATA_ENTRY_OPERATOR}>Data Entire</option>
                         <option value={ON_FIELD_MARKETER}>Field Marketer</option>
                         <option value={TELE_MARKETER}>Telemarketer</option>
+                        <option value={BILLING_TEAM}>Billing Team</option>
                     </select>
                     <select
                         onChange={(e) => setQueryData(c => ({ ...c, status: e.target.value }))}
                         className="text-sm bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-1 py-1 lg:py-1.5 leading-8 transition-colors duration-200 ease-in-out"
                     >
                         <option value='' selected >Select Status</option>
-                        <option value={`active`}>Active</option>
-                        <option value={`inactive`}>Inactive</option>
+                        <option value={true}>Active</option>
+                        <option value={false}>Inactive</option>
                     </select>
-                    <AddressInput></AddressInput>
+                    <button
+                        onClick={() => {
+                            setQueryData({});
+                            setSelectedAddress({});
+                        }}
+                        className="rounded-md bg-white pl-3 pr-3 py-1 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                    >
+                        All
+                    </button>
                 </div>
             </div>
             {content}

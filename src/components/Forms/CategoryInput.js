@@ -11,7 +11,7 @@ const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
     const data = cateData || { success: true, data: [] };
 
     if (isError) {
-        return <div className='text-center mt-10 md:mt-52'>
+        return <div className='text-center w-full h-screen flex justify-center items-center'>
             <p className="text-xl text-red-500">Something went wrong in category!</p>
         </div>
     }

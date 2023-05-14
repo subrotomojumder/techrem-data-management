@@ -10,7 +10,7 @@ const AddressAddForm = ({ addressValue, setAddressValue, classes , loadingShow }
     // const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
     const [openAddress, setOpenAddress] = useState({ country: false, state: false, city: false });
     const [addressAdd, setAddressAdd] = useState({ country: false, state: false, city: false });
-    const { data, isLoading, isError, error } = useGetAllAddressQuery();
+    const { data, isLoading, isError, error } = useGetAllAddressQuery(`/address`);
     const { data: stateData } = useGetAllStateQuery(`country=${addressValue.country}`);
     const { data: cityData } = useGetAllCityQuery(`country=${addressValue.country}&state=${addressValue.state}`);
     const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();

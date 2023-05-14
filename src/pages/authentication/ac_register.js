@@ -9,8 +9,8 @@ import { MdOutlineManageAccounts } from 'react-icons/md';
 import Countries, { countries } from 'countries-list';
 import axios from 'axios';
 import { AdminProtect } from '@/utils/ProtectRoute';
-import CountryInput from '@/components/Forms/Inputs';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
+import { CountryInput } from '@/components/Forms/Inputs';
 
 const Register = () => {
     const [loading, setLoading] = useState({ singleImg: false, multiImg: false, other: false });

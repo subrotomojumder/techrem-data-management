@@ -3,23 +3,25 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useGetAllAddressQuery } from '@/app/features/address/addressApi';
 
-export default function AddressInput() {
-    const [selectedValue, setSelectedValue] = useState({});
-    const [open, setOpen] = useState(false);
+export default function AddressInput({selectedValue, setSelectedValue}) {
     const [openMainChild, setOpenMainChild] = useState({});
     const [openCity, setOpenCity] = useState({});
-    const { data, isLoading, isError } = useGetAllAddressQuery();
+    const { data, isLoading, isError } = useGetAllAddressQuery(`/address`);
     const addressData = data?.data || { success: true, data: [] };
-    console.log(addressData)
 
     return (
-        <div className="z-20 w-56 text-right">
+        <div className="z-20 w-fit text-right">
             <Menu as="div" className="relative inline-block text-left">
                 <div>
-                    <Menu.Button className="text-sm bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-1  px-2 leading-8 transition-colors duration-200 ease-in-out flex justify-between items-center">
-                        Options
+                    <Menu.Button
+                    onBlur={()=> {
+                        setOpenMainChild({})
+                        setOpenCity({})
+                    }}
+                    className="text-sm bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-3  px-2 leading-8 transition-colors duration-200 ease-in-out flex justify-between items-center">
+                        Location
                         <ChevronDownIcon
-                            className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
+                            className="ml-2 -mr-1 h-5 w-5 text-gray-500"
                             aria-hidden="true"
                         />
                     </Menu.Button>
@@ -33,47 +35,49 @@ export default function AddressInput() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {addressData?.length && addressData?.map((country, i) => <div key={i} className='max-h-screen overflow-y-auto p-1'>
+                    <Menu.Items className="absolute right-0  select-non mt-2 w-56 max-h-[400px] overflow-y-auto p-1 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {addressData?.length && addressData?.map((country, i) => <div key={i} className=''>
                             <Menu.Item>
                                 {({ active }) => (
                                     <>
                                         <button
                                             onClick={() => {
-                                                setSelectedValue({ country: country.country })
+                                                setSelectedValue({ country: country.country, state: '', city: '' })
                                                 setOpenMainChild({ [country.country]: !openMainChild[country.country] ? country.country : "" })
                                             }}
                                             className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                                                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                } group flex w-full items-center rounded-md  hover:bg-slate-100 px-2 py-2 text-sm capitalize`}
                                         >
                                             {country.country}
                                         </button>
                                         {openMainChild[country.country] &&
-                                            <div className='ml-2 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" '>
+                                            <div className='ml-2 divide-y divide-gray-100 rounded-sm bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" '>
                                                 {
                                                     !country?.state?.length || country?.state?.map((state, i) =>
                                                         <div
                                                             onClick={() => {
-                                                                setSelectedValue({ ...selectedValue, state: state.name });
-                                                                setOpenCity({ [state.name]: !openMainChild[state.name] ? state.name : "" })
+                                                                setSelectedValue({ ...selectedValue, state: state.name, city: '' });
+                                                                setOpenCity({ [state.name]: !openCity[state.name] ? state.name : "" })
                                                             }}
                                                             key={i}
                                                             // hover:text-white hover:bg-blue-500 hover:font-semibold active:bg-orange-500 active:text-white
-                                                            className="list-none capitalize pl-6   cursor-pointer"
+                                                            className="list-none capitalize pl-6  hover:bg-slate-100  cursor-pointer"
                                                         >
                                                             {state.name}
                                                             <div>
                                                                 {openCity[state.name] &&
-                                                                    <div className='ml-2 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" '>
+                                                                    <div className='ml-2 divide-y divide-gray-100 rounded-sm bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" '>
                                                                         {
                                                                             !state?.city?.length || state?.city?.map((city, i) =>
                                                                                 <div
-                                                                                    onClick={() => {
-                                                                                        setSelectedValue({ ...selectedValue, state: state.name, city: city.name });
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation()
+                                                                                        // console.log({ ...selectedValue, city: city.name })
+                                                                                        setSelectedValue({ ...selectedValue, city: city.name });
                                                                                     }}
                                                                                     key={i}
                                                                                     // hover:text-white hover:bg-blue-500 hover:font-semibold active:bg-orange-500 active:text-white
-                                                                                    className="list-none capitalize pl-6   cursor-pointer"
+                                                                                    className="list-none capitalize pl-6 hover:bg-slate-100  cursor-pointer"
                                                                                 >
                                                                                     {city.name}
                                                                                 </div>

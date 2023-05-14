@@ -10,11 +10,11 @@ const Group_data_list = () => {
     };
     if (isError) {
         if (error.error) {
-            content = <div className='text-center mt-10 md:mt-52'>
+            content = <div className='text-center w-full h-screen flex justify-center items-center'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else {
-            content = <div className='text-center mt-10 md:mt-52'>
+            content = <div className='text-center w-full h-screen flex justify-center items-center'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }

@@ -38,11 +38,11 @@ const Entires_data = () => {
     };
     if (isError) {
         if (error.error) {
-            return <div className='text-center mt-10 md:mt-52'>
+            return <div className='text-center w-full h-screen flex justify-center items-center'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else {
-            return <div className='text-center mt-10 md:mt-52'>
+            return <div className='text-center w-full h-screen flex justify-center items-center'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
