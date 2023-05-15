@@ -175,13 +175,13 @@ const UpdateProfile = () => {
         if (error.error) {
             return <h4 className='text-center mt-10 md:mt-20'>{error.error}</h4>
         } else if (error.data?.message) {
-            return <div className='text-center w-full h-screen flex justify-center items-center'>
+            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
     };
     if (!data?.success) {
-        return <div className='text-center w-full h-screen flex justify-center items-center'>
+        return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
             <p className="text-2xl text-red-500">Something went wrong!</p>
         </div>
     }
@@ -310,7 +310,7 @@ const UpdateProfile = () => {
                                     <div className="w-full relative">
                                         <label htmlFor='password' className="">Password</label>
                                         <p onClick={() => generatePassword()} className="w-full mb-4 py-2 rounded-sm mt-2 cursor-pointer select-none bg-orange-300 hover:bg-orange-400 active:outline outline-2 outline-indigo-400 font-semibold text-white flex justify-center items-center duration-75">
-                                            Regenerate Password
+                                            Reset Password
                                         </p>
                                     </div>
                                     <div className="w-full relative">

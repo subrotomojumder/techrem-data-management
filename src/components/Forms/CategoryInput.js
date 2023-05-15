@@ -7,12 +7,12 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 const CategoryInput = ({ selectedValue, setSelectedValue, ownClass }) => {
     const [open, setOpen] = useState(false);
     const [openMainChild, setOpenMainChild] = useState({})
-    const { data: cateData, isLoading, isError } = useGetAllCategoryQuery(`/catagory`);
+    const { data: cateData, isLoading, isError } = useGetAllCategoryQuery(`/category`);
     const data = cateData || { success: true, data: [] };
 
     if (isError) {
-        return <div className='text-center w-full h-screen flex justify-center items-center'>
-            <p className="text-xl text-red-500">Something went wrong in category!</p>
+        return <div className='text-center align-middle'>
+            <p className="text-sm mt-1 text-red-500">Something went wrong in category!</p>
         </div>
     }
     if (data.success) {

@@ -7,7 +7,31 @@ const othersApi = apiSlice.injectEndpoints({
         postCategory: builder.mutation({
             query: (data) => ({
                 method: "POST",
-                url: "/catagory",
+                url: "/category",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["category"]
+        }),
+        updateCategory: builder.mutation({
+            query: (data) => ({
+                method: "PUT",
+                url: "/category",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["category"]
+        }),
+        deleteCategory: builder.mutation({
+            query: (data) => ({
+                method: "DELETE",
+                url: "/category",
                 body: data,
                 headers: {
                     'content-type': 'application/json',
@@ -40,5 +64,7 @@ const othersApi = apiSlice.injectEndpoints({
 export const {
     usePostCategoryMutation,
     useGetAllCategoryQuery,
+    useUpdateCategoryMutation,
+    useDeleteCategoryMutation,
     useGetOfferServiceQuery
 } = othersApi;

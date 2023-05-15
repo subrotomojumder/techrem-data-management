@@ -38,11 +38,11 @@ const Entires_data = () => {
     };
     if (isError) {
         if (error.error) {
-            return <div className='text-center w-full h-screen flex justify-center items-center'>
+            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else {
-            return <div className='text-center w-full h-screen flex justify-center items-center'>
+            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
@@ -67,7 +67,7 @@ const Entires_data = () => {
                                 <div className='flex justify-end gap-2'>
                                     <button
                                         type="button"
-                                        className="rounded-md bg-white px-5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 hover:bg-gray-50"
+                                        className="rounded-md h-fit bg-white px-5 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 hover:bg-gray-50"
                                     >
                                         All
                                     </button>

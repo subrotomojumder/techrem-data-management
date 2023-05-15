@@ -68,7 +68,7 @@ export function CountryInput({ wornClass, selectedCountry, setSelectedCountry, d
                 className={({ active }) =>
                   classNames(
                     'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                    active ? 'bg-indigo-600 text-white capitalize ' : 'text-gray-900'
                   )
                 }
               >
@@ -141,7 +141,7 @@ export function StateInput({ wornClass, selectedState, setSelectedState, country
                 className={({ active }) =>
                   classNames(
                     'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                    active ? 'bg-indigo-600 text-white capitalize' : 'text-gray-900'
                   )
                 }
               >
@@ -213,7 +213,7 @@ export function CityInput({ wornClass, selectedCity, setSelectedCity, country, s
                 className={({ active }) =>
                   classNames(
                     'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                    active ? 'bg-indigo-600 text-white capitalize' : 'text-gray-900'
                   )
                 }
               >

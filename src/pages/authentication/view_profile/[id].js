@@ -22,13 +22,13 @@ const Profile = () => {
         if (error.error) {
             return <h4 className='text-center mt-10 md:mt-20'>{error.error}</h4>
         } else if (error.data?.message) {
-            return <div className='text-center w-full h-screen flex justify-center items-center'>
+            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
     };
     if (!data?.success) {
-        return <div className='text-center w-full h-screen flex justify-center items-center'>
+        return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
             <p className="text-2xl text-red-500">Something went wrong!</p>
         </div>
     }

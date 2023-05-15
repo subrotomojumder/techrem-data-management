@@ -46,7 +46,7 @@ const GroupEntire = () => {
                 <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label className="leading-7 font-[600] text-gray-700 col-span-3">Group Category *</label>
                     <select
-                        {...register("catagory", { required: "category field is required!" })}
+                        {...register("category", { required: "category field is required!" })}
                         className="col-span-7 md:col-span-3 w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     >
                         <option value='' selected disabled >Select category</option>
@@ -59,7 +59,7 @@ const GroupEntire = () => {
                         <option value="Agency">Agency</option>
                         <option value="Add New">Add New</option>
                     </select>
-                    {errors.catagory?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm col-span-6 text-right'>{errors.catagory?.message}</p>}
+                    {errors.category?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm col-span-6 text-right'>{errors.category?.message}</p>}
                 </div>
                 <div className="relative mb-4 mt-0 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                     <label htmlFor='group_followers' className="leading-7 font-[600] text-gray-700 col-span-3">Group followers *</label>

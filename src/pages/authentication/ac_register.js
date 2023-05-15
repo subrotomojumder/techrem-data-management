@@ -10,11 +10,13 @@ import Countries, { countries } from 'countries-list';
 import axios from 'axios';
 import { AdminProtect } from '@/utils/ProtectRoute';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
-import { CountryInput } from '@/components/Forms/Inputs';
+import { CityInput, CountryInput, StateInput } from '@/components/Forms/Inputs';
 
 const Register = () => {
     const [loading, setLoading] = useState({ singleImg: false, multiImg: false, other: false });
     const [selectedCountry, setSelectedCountry] = useState(null);
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
     const [password, setPassword] = useState('');
     const [preview, setPreview] = useState({});
     const [imgFiles, setImgFiles] = useState({});
@@ -31,10 +33,16 @@ const Register = () => {
     }, [password]);
     const handleSignUp = async (data) => {
         if (!selectedCountry?.name) {
-            return setAddressInfo({ ...addressInfo, countryErr: "Country field is required!" });
+            return setAddressInfo({ ...addressInfo, countryErr: "Country select is required!" });
         } else setAddressInfo({ ...addressInfo, countryErr: "" });
+        if (!selectedState?.name) {
+            return setAddressInfo({ ...addressInfo, stateErr: "State select is required!" });
+        } else setAddressInfo({ ...addressInfo, stateErr: "" });
+        if (!selectedCity?.name) {
+            return setAddressInfo({ ...addressInfo, cityErr: "City select is required!" });
+        } else setAddressInfo({ ...addressInfo, cityErr: "" });
         data.userId = data.fast_name.toLowerCase().split(" ").join("") + data.last_name.toLowerCase().split(" ").join("") + Math.floor(Math.random() * 9000);
-        data.address = { country: selectedCountry.name, state: data.state, city: data.city, address_1: data.address1, address_2: data.address1, postcode: data.postcode };
+        data.address = { country: selectedCountry.name, state: selectedState.name, city: selectedCity.name, address_1: data.address1, address_2: data.address1, postcode: data.postcode };
         try {
             const formData = new FormData();
             const formData2 = new FormData();
@@ -89,9 +97,11 @@ const Register = () => {
                 if (res.data?.success) {
                     successToast(res.data?.message);
                     setCreateSuccess(res.data.data);
-                    setAddressInfo({});
                     setPassword('')
-                    setSelectedCountry(null)
+                    setAddressInfo({});
+                    setSelectedCountry(null);
+                    setSelectedState(null);
+                    setSelectedCity(null);
                     reset();
                 } else {
                     console.log(res);
@@ -254,27 +264,38 @@ const Register = () => {
                                 <span className='col-span-7 text-sm text-zinc-700'>Apartment, suite, unit, building, floor, etc.</span>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
-                                <label htmlFor='city' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">City :</label>
-                                <div className='col-span-7 w-full'>
-                                    <input
-                                        {...register("city", {
-                                            required: "City field is required!",
-                                        })} id='city' type="text"
-                                        className="w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    />
-                                    {errors.city?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.city?.message}</p>}
+                                <label htmlFor='country' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Country :</label>
+                                <div className='col-span-7'>
+                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} wornClass={{ input: " w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
+                                    {!selectedCountry && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{addressInfo.countryErr}</p>}
                                 </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
                                 <label htmlFor='state' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">State/Province/Region :</label>
                                 <div className='col-span-7 w-full'>
-                                    <input
+                                    <StateInput country={selectedCountry?.name || ""} selectedState={selectedState} setSelectedState={setSelectedState} wornClass={{ input: "w-full bg-white rounded-sm border border-gray-300  text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200" }} />
+                                    {!selectedState && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{addressInfo.stateErr}</p>}
+                                    {/* <input
                                         {...register("state", {
                                             required: "State field is required!",
                                         })} id='state' type="text"
+                                        className="w-full bg-white rounded-sm border border-gray-300  text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200"
+                                    />
+                                    {errors.state?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.state?.message}</p>} */}
+                                </div>
+                            </div>
+                            <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
+                                <label htmlFor='city' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">City :</label>
+                                <div className='col-span-7 w-full'>
+                                    <CityInput country={selectedCountry?.name || ""} state={selectedState?.name || ""} selectedCity={selectedCity} setSelectedCity={setSelectedCity} wornClass={{ input: "w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }} />
+                                    {!selectedCity && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{addressInfo.cityErr}</p>}
+                                    {/* <input
+                                        {...register("city", {
+                                            required: "City field is required!",
+                                        })} id='city' type="text"
                                         className="w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
                                     />
-                                    {errors.state?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.state?.message}</p>}
+                                    {errors.city?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.city?.message}</p>} */}
                                 </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
@@ -286,14 +307,6 @@ const Register = () => {
                                         className="w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out"
                                     />
                                     {errors.postcode?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{errors.postcode?.message}</p>}
-                                </div>
-                            </div>
-                            <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
-                                <label htmlFor='country' className="leading-7 font-[600] text-gray-700 col-span-3 md:text-right">Country :</label>
-                                <div className='col-span-7'>
-                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} wornClass={{ input: " w-full bg-white rounded-sm border border-gray-300 focus:border-zinc-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-[2px] md:py-1  px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
-                                    <input type="" required={addressInfo.countryErr} className='sr-only ml-[30%]' />
-                                    {!selectedCountry && <p role="alert" className='pl-4px text-red-500 text-sm -mb-1'>{addressInfo.countryErr}</p>}
                                 </div>
                             </div>
                             <div className="relative grid grid-cols-1 md:grid-cols-10 gap-x-3 items-center">
