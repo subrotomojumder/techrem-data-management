@@ -86,8 +86,8 @@ const othersApi = apiSlice.injectEndpoints({
         updateOurService: builder.mutation({
             query: (data) => ({
                 method: "PUT",
-                data: data,
-                url: `service_we_offer/${data.id}`,
+                body: { name: data.name, active: data.active },
+                url: `service_we_offer/${data?.id}`,
                 headers: {
                     'content-type': 'application/json',
                     authorization: localStorage.getItem("tech_token"),

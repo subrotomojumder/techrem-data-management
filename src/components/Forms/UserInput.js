@@ -12,7 +12,7 @@ export default function CountryInput({ wornClass, selectedUser, setSelectedUser,
     const users = data?.data ? data.data.map(user => {
         return {
             _id: user._id,
-            name: user.fast_name + " " + user.last_nam,
+            name: user.fast_name + " " + user.last_name,
             email: user.email
         }
     }) : [];
@@ -47,7 +47,7 @@ export default function CountryInput({ wornClass, selectedUser, setSelectedUser,
                     <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {filteredCountry.map((user) => (
                             <Combobox.Option
-                                key={user.name}
+                                key={user._id}
                                 value={user}
                                 title={user.email}
                                 className={({ active }) =>

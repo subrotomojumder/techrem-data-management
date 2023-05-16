@@ -20,6 +20,7 @@ const New_form = () => {
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [selectedState, setSelectedState] = useState(null);
     const [selectedCity, setSelectedCity] = useState(null);
+    const [newSuggestService, setNewSuggestService] = useState([]);
     const [imageLoading, setImageLoading] = useState(false);
     const [count, setCount] = useState({ website: 1, branch: 1 });
     const [website, setWebsite] = useState({});
@@ -49,13 +50,14 @@ const New_form = () => {
             setTheyService(localStorageEntry?.theyService || []);
             setSelectedCategory(localStorageEntry.selectedCategory || {})
             setWeCanService(localStorageEntry?.weCanService || []);
+            setNewSuggestService(localStorageEntry?.newSuggestService || [])
         }, 100)
     }, [])
     useEffect(() => {
         setTimeout(() => {
-            localStorage.setItem("entire", JSON.stringify({ ...inputData, country: selectedCountry, state: selectedState, city: selectedCity, website, count, branch, theyService, weCanService, selectedCategory }));
+            localStorage.setItem("entire", JSON.stringify({ ...inputData, country: selectedCountry, state: selectedState, city: selectedCity, website, count, branch, theyService, newSuggestService, weCanService, selectedCategory }));
         }, 500);
-    }, [inputData, selectedCountry, selectedState, selectedCity, website, count, branch, theyService, weCanService, selectedCategory]);
+    }, [inputData, selectedCountry, selectedState, selectedCity, website, count, branch, theyService, weCanService, selectedCategory, newSuggestService]);
     const submit = async (data) => {
         if (!selectedCategory.main) {
             return setInputData(c => ({ ...c, categoryErr: "Business category is required!" }));
@@ -64,9 +66,10 @@ const New_form = () => {
             return setInputData(c => ({ ...c, countryErr: "Country is required!" }));
         } else setInputData(c => ({ ...c, countryErr: "" }));
         setImageLoading(true)
-        const { businessName, country_code, businessPhone, businessEmail, state, city, street_address, postCode, location_link, other_information, } = data;
+        const { businessName, country_code, businessPhone, businessEmail, street_address, postCode, location_link, other_information, } = data;
         const entireData = {
             other_information,
+            suggestions: newSuggestService,
             we_offer_service: weCanService,
             they_offer_service: theyService,
             have_website: { needWebsite: inputData?.isWebsite, website_urls: Object.values(website).filter(link => link !== '') },
@@ -119,6 +122,7 @@ const New_form = () => {
                     setWeCanService([]);
                     setInputData({});
                     setSelectedCategory({});
+                    setNewSuggestService([]);
                     reset();
                 } else {
                     errorToast("Something went wrong!")
@@ -314,7 +318,7 @@ const New_form = () => {
                             </div>
                         </div>
                         <div className={`relative mb-2 w-full`}>
-                            <label className='leading-7 font-[600] text-gray-700 col-span-3' htmlFor="branch">Services They Offer</label>
+                            <label className='leading-7 font-[600] text-gray-700 col-span-3' htmlFor="">Services They Offer</label>
                             <div className={""} >
                                 <TagsInput
                                     className="bg-gray-400"
@@ -385,7 +389,7 @@ const New_form = () => {
                         </div> */}
                         <div className="relative mb-4 grid grid-cols-1 gap-x-3 py-2 rounded bg-slate-50 -mx-4 px-4">
                             <p className="leading-7 font-[600] text-gray-700 col-span-3">Services We can Offer *</p>
-                            <div className="col-span-4 grid grid-cols-1 relative gap-x-2 gap-y-3 mt-2">
+                            <div className="col-span-4 grid grid-cols-1 relative gap-x-2 gap-y-3 mt-2 max-h-[400px] overflow-y-auto">
                                 {ourServices.map((service, i) => <div key={i} className="relative flex justify-start items-center gap-x-3">
                                     {++i}.
                                     <input
@@ -398,6 +402,15 @@ const New_form = () => {
                                         {service.name}
                                     </label>
                                 </div>)}
+                            </div>
+                        </div>
+                        <div className={`relative mb-2 w-full`}>
+                            <label className='leading-7 font-[600] text-gray-700 col-span-3' htmlFor="">Suggestion more service</label>
+                            <div className={""} >
+                                <TagsInput
+                                    className="bg-gray-400"
+                                    value={newSuggestService} onChange={setNewSuggestService} name="tags" placeHolder="enter products"
+                                />
                             </div>
                         </div>
                         <div className="relative mb-4 mt-2">

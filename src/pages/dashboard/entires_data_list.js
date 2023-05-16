@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
 import { LargeSpinner } from '@/components/Spinner';
@@ -8,34 +7,50 @@ import { FaEdit } from 'react-icons/fa';
 import { CgArrowsExchangeV } from 'react-icons/cg';
 import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-// import DataEntryFilters from '@/components/Forms/dataEntryFilters';
 import { DateRangeInput } from '@/components/Forms/Inputs';
 import CategoryInput from '@/components/Forms/CategoryInput';
 import UserInput from '@/components/Forms/UserInput';
 import { format } from 'date-fns';
 import Update_entry_data from '@/components/Update_entry_data';
 import { updateConfirm } from '@/utils/neededFun';
+import { TbFilter, TbFilterOff } from 'react-icons/tb';
+import AddressInput from '@/components/Forms/AddressInput';
+import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
 
 const Entires_data = () => {
     const [updateEntry, setUpdateEntry] = useState(null)
     const [openFilter, setOpenFilter] = useState(false);
     const [queryData, setQueryData] = useState({});
+    const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedCategory, setSelectedCategory] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const searchQuery = `country=${""}&state=${""}&city=${""}&keyword=${queryData.keyword || ''}&create_date=${queryData.create_date || ''}&sort=${queryData.sort || ''}`;
+    // ${queryData.createDate && `&create_date[eq]=${queryData.createDate}`} main=&sub1=&country=&state=&city=&keyword=&account_id=&we_offer=&create_date=&sort=&create_date[gte]=&create_date[lte]=
+    const searchQuery = `main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaignStatus=${queryData.campaign || ""}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
-    const { data: allData, isLoading: allDataLoading, isError: allIsError, error: AllError } = useGetAllDataQuery("sort=last");
+    const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
+
     // console.log(allData, allDataLoading, allIsError, AllError);
     // console.log(data?.data, isLoading, isError, error);
-    console.log(queryData)
+    console.log(searchQuery)
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
     if (isLoading) {
         return <LargeSpinner />;
     };
+    if (serviceIsError) {
+        if (serviceError.error) {
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{serviceError.error}</p>
+            </div>
+        } else {
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{serviceError.data.message}</p>
+            </div>
+        }
+    }
     if (isError) {
         if (error.error) {
             return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
@@ -51,7 +66,7 @@ const Entires_data = () => {
             return <div className='w-full max-w-[1940px] mx-auto'>
                 <div className="px-4 sm:px-4 xl:px-8 py-4 sm:py-6 xl:py-6">
                     <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-serif'>All Entire data list</h1>
-                    <div className='overflow-x-scroll p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
+                    <div className='overflow-x-auto p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
                         <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
                             <div className='bg-indigo-100 shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
                                 <div className="relative">
@@ -69,48 +84,48 @@ const Entires_data = () => {
                                         type="button"
                                         className="rounded-md h-fit bg-white px-5 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 hover:bg-gray-50"
                                     >
-                                        All
+                                        Reset
                                     </button>
-                                    <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
-                                    <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
-                                    <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
-
                                     <button
                                         onClick={() => setOpenFilter(c => (!c))} type="button"
                                         className="rounded-md bg-white pl-4 pr-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                     >
-                                        Filters {openFilter ? <AiOutlineUp className={`inline-block -mt-1 ml-4`} /> : <AiOutlineDown className={`inline ml-4`} />}
+                                        Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="rounded-md bg-white pl-3 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                    >
+                                        Last 30 Days  <AiOutlineDown className={`inline ml-4`} />
                                     </button>
                                 </div>
                             </div>
-                            <div className={` w-full flex justify-end items-center gap-2 ${openFilter ? "h-12" : "h-0"} duration-300 overflow-hidden bg-green-100 drop-shadow-md px-3`}>
-                                <select
-                                    // onChange={(e) => setQueryData(c => ({ ...c, role: e.target.value }))}
-                                    className="rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                                >
-                                    <option value='' selected >Campaign Status</option>
-                                    <option value={'active'}>Active</option>
-                                    <option value={'not_yet'}>Not Yet</option>
-                                </select>
-                                <select
-                                    // onChange={(e) => setQueryData(c => ({ ...c, role: e.target.value }))}
-                                    className="rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                                >
-                                    <option value='' selected >We can offer</option>
-                                    <option value={''}>App</option>
-                                    <option value={''}>Development</option>
-                                </select>
+                            <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-100 drop-shadow-md px-3 py-2`}>
+                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
+                                <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
+                                <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
+                                <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
                                 <input
-                                    onChange={(e) => setQueryData(c => ({ ...c, create_date: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
+                                    onChange={(e) => setQueryData(c => ({ ...c, createDate: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
                                     type="date"
                                     className="rounded-md bg-white pl-2 pr-2 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 />
-                                <button
-                                    type="button"
-                                    className="rounded-md bg-white pl-3 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                <select
+                                    onChange={(e) => setQueryData(c => ({ ...c, we_offer: e.target.value }))}
+                                    className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 >
-                                    Last 30 Days  <AiOutlineDown className={`inline ml-4`} />
-                                </button>
+                                    <option value='' selected >We can offer</option>
+                                    {ourServiceData?.data?.map((service, i) => <option key={i} value={service.name}>{service.name.slice(0, 15)}</option>)}
+                                </select>
+                                <select
+                                    onChange={(e) => setQueryData(c => ({ ...c, campaign: e.target.value }))}
+                                    className="rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                >
+                                    <option value='' selected >Campaign Status</option>
+                                    <option value={true}>Active</option>
+                                    <option value={false}>Not Yet</option>
+                                </select>
                             </div>
                             <table className="min-w-full divide-y divide-gray-300 lg:px-4">
                                 <thead>
@@ -141,7 +156,7 @@ const Entires_data = () => {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
+                                            className="pl-1 pr-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
                                         >
                                             Campaign
                                         </th>
@@ -168,13 +183,13 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     <Link href={`/dashboard/single_entry_details/${_id}`}>
-                                                        <div className="flex items-center">
-                                                            <div className="h-11 w-11 flex-shrink-0">
-                                                                <img className="h-11 w-11 rounded-md" src={businessDetails?.businessLogo || "http://localhost:5000/image/no_image-1682919865051.png"} alt="" />
+                                                        <div className="flex items-center min-w-[90px]">
+                                                            <div className="w-full flex flex-col justify-center mb-2">
+                                                                <img className="h-11 w-14 mx-auto rounded-md" src={businessDetails?.businessLogo || "http://localhost:5000/image/no_image-1682919865051.png"} alt="" />
+                                                                <div className="font-bold text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName}{/* .length > 15 ? businessDetails?.businessName.slice(0, 15) + '...' : businessDetails?.businessName */}</div>
                                                             </div>
-                                                            <div className="ml-4">
-                                                                <div className="font-medium text-gray-900 whitespace-pre">{businessDetails?.businessName}</div>
-                                                            </div>
+                                                            {/* <div className="ml-4">
+                                                            </div> */}
                                                         </div>
                                                     </Link>
                                                 </td>
@@ -221,7 +236,7 @@ const Entires_data = () => {
                                                 >
                                                     <button
                                                         type="button"
-                                                        className="inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-orange-500 drop-shadow hover:bg-gray-50"
+                                                        className="items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-green-500  shadow bg-gray-100"
                                                     >
                                                         Active
                                                     </button>
@@ -232,7 +247,7 @@ const Entires_data = () => {
                                                         'px-3 py-3.5 text-sm text-gray-500 lg:table-cell'
                                                     )}
                                                 >
-                                                    <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length <20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
+                                                    <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
                                                 </td>
                                                 <td
                                                     className={classNames(

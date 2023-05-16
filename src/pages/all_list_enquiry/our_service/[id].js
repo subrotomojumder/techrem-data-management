@@ -38,7 +38,7 @@ function UpdateService() {
     const handleSubmite = async (e) => {
         e.preventDefault()
         const name = e.target.name.value
-        serviceUpdate({ id: id, name, active: categoryState })
+        serviceUpdate(({ id: id, name, active: categoryState }))
             .then(res => {
                 console.log(res);
                 if (res.data?.success) {
