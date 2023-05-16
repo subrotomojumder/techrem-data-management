@@ -9,7 +9,7 @@ const SideNav = () => {
     const [expanded, setExpanded] = React.useState(true);
     const [activeKey, setActiveKey] = React.useState('1');
     return (
-        <div className='min-w-[100px] h-screen sticky top-16 left-0 overflow-y-scroll scrollbar'>
+        <div className='min-w-[100px]min-h-screen sticky top-16 left-0 overflow-y-scroll scrollbar'>
             <Toggle
                 onChange={setExpanded}
                 checked={expanded}

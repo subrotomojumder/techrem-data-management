@@ -5,7 +5,7 @@ import { EmptyLoader } from '@/components/Spinner';
 import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
-import AddressAddForm from '@/components/Forms/AddressAddForm';
+import AddressAddForm from '@/components/extra/AddressAddForm';
 import DropDown from '@/components/TailwindComponent/DropDown';
 import { MarketerProtect } from '@/utils/ProtectRoute';
 const status = [

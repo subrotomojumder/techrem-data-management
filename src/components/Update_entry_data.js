@@ -4,17 +4,22 @@ import { useGetEntireDataByIdQuery, useUpdateEntryDataMutation } from '@/app/fea
 import { useForm } from 'react-hook-form';
 import { TagsInput } from 'react-tag-input-component';
 import { PhotoIcon, PlusIcon } from '@heroicons/react/20/solid';
-import CountryInput from './Forms/Inputs';
+import { CityInput, CountryInput, StateInput } from './Forms/Inputs';
 import CategoryInput from './Forms/CategoryInput';
 import { countries } from 'countries-list';
 import { errorToast, successToast } from '@/utils/neededFun';
 import axios from 'axios';
+import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
 
 const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
     const { data, isLoading, isError, error } = useGetEntireDataByIdQuery(updateEntry, { refetchOnMountOrArgChange: true });
+    const { data: serviceData, isLoading: serviceLoading } = useGetOurServiceQuery(`/service_we_offer`);
+    const ourServices = serviceData?.data || [];
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
     const [inputData, setInputData] = useState({});
     const [selectedCountry, setSelectedCountry] = useState(null);
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
     const [imageLoading, setImageLoading] = useState(false);
     const [count, setCount] = useState({ website: 1, branch: 1 });
     const [website, setWebsite] = useState({});
@@ -32,6 +37,8 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
                     { ...address, ...businessDetails, other_information }
                 );
                 setSelectedCountry({ name: address.country });
+                setSelectedState({ name: address.state });
+                setSelectedCity({ name: address.city })
                 setCount({ website: have_website?.website_urls?.length > 0 ? have_website.website_urls.length : 1 });
                 setWebsite(have_website?.website_urls?.length > 0 ? have_website.website_urls.reduce((a, v, i) => ({ ...a, [`site${++i}`]: v }), {}) : {});
                 setTheyService(they_offer_service || []);
@@ -56,8 +63,8 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
             they_offer_service: theyService,
             have_website: { needWebsite: inputData?.isWebsite, website_urls: Object.values(website).filter(link => link !== '') },
             // have_branchs: { isBranch: inputData?.isBranch, branch_detalis: branch },
-            businessDetails: { category: selectedCategory, businessName, country_code, businessPhone: businessPhone?.toString(), businessEmail, businessLogo:data?.data?.businessDetails?.businessLogo || '' },
-            address: { country: selectedCountry.name, state, city, street_address, postCode, location_link }
+            businessDetails: { category: selectedCategory, businessName, country_code, businessPhone: businessPhone?.toString(), businessEmail, businessLogo: data?.data?.businessDetails?.businessLogo || '' },
+            address: { country: selectedCountry.name, state: selectedState.name, city: selectedCity.name, street_address, postCode, location_link }
         }
         // return console.log(entireData);
         try {
@@ -79,7 +86,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
                     setImageLoading(false);
                     return console.log(result);
                 }
-            } 
+            }
 
             updateData(entireData)
                 .then(res => {
@@ -88,7 +95,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
                         successToast("Business data update successful!")
                         setCount({ branch: 1, website: 1 });
                         setWebsite({});
-                        setSelectedCountry(null)
+                        setSelectedCountry(null);
                         setTheyService([]);
                         setWeCanService([]);
                         setInputData({});
@@ -108,7 +115,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
     const handleInput = e => {
         setInputData({ ...inputData, [e.target.name]: e.target.value });
     }
-    if (isLoading) {
+    if (isLoading || serviceLoading) {
         return <LargeSpinner />;
     };
     if (isError) {
@@ -126,7 +133,7 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
             </div>
         }
     };
-    const ourServices = [{ name: "Website design and Development" }, { name: "ERP Solution" }, { name: "App Development" }, { name: "Business Accessories" }, { name: "Digital Marketing" }];
+
     return (
         <div className='relative'>
             <form onSubmit={handleSubmit(submit)}>
@@ -203,25 +210,32 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
                                 />
                                 {errors.street_address?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.street_address.message}</p>}
                             </div>
-                            <div className='col-span-1 w-full'>
-                                <input
-                                    {...register("city", { required: "City / Suburb is required!" })}
-                                    onChange={handleInput} name='city'
-                                    placeholder='City / Suburb' type="text"
-                                    className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
-                                {errors.city?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.city.message}</p>}
+                            <div className='col-span-1 w-full '>
+                                <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} placeHolder={"Country"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
+                                {/* <input type="" required={inputData.countryErr} className='sr-only ml-[30%]' /> */}
+                                {!selectedCountry && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{inputData.countryErr}</p>}
                             </div>
                             <div className='col-span-1 w-full'>
-                                <input
-                                    {...register("state", { required: "State / Province is required!" })}
-                                    onChange={handleInput} name='state'
-                                    placeholder='State / Province' type="text"
-                                    className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                />
-                                {errors.state?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.state.message}</p>}
+                                <StateInput country={selectedCountry?.name || ""} selectedState={selectedState} setSelectedState={setSelectedState} placeHolder={"State / Province"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }} />
+                                {/* <input
+                                        {...register("state", { required: "State / Province is required!" })}
+                                        onChange={handleInput} name='state'
+                                        placeholder='State / Province' type="text"
+                                        className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                    {errors.state?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.state.message}</p>} */}
                             </div>
                             <div className='col-span-1 w-full'>
+                                <CityInput country={selectedCountry?.name || ""} state={selectedState?.name || ""} selectedCity={selectedCity} setSelectedCity={setSelectedCity} placeHolder={"City / Suburb"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }} />
+                                {/* <input
+                                        {...register("city", { required: "City / Suburb is required!" })}
+                                        onChange={handleInput} name='city'
+                                        placeholder='City / Suburb' type="text"
+                                        className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                    {errors.city?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.city.message}</p>} */}
+                            </div>
+                            <div className='col-span-1 w-full mt-2'>
                                 <input
                                     {...register("postCode", { required: "Postal code is required!" })}
                                     onChange={handleInput} name='postCode'
@@ -229,11 +243,6 @@ const Update_entry_data = ({ updateEntry, setUpdateEntry }) => {
                                     className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                                 {errors.postCode?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.postCode.message}</p>}
-                            </div>
-                            <div className='col-span-1 w-full -mt-2'>
-                                <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} placeHolder={"Country"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
-                                {/* <input type="" required={inputData.countryErr} className='sr-only ml-[30%]' /> */}
-                                {!selectedCountry && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{inputData.countryErr}</p>}
                             </div>
                         </div>
                     </div>

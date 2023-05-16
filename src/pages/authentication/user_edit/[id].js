@@ -175,13 +175,13 @@ const UpdateProfile = () => {
         if (error.error) {
             return <h4 className='text-center mt-10 md:mt-20'>{error.error}</h4>
         } else if (error.data?.message) {
-            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
     };
     if (!data?.success) {
-        return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+        return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
             <p className="text-2xl text-red-500">Something went wrong!</p>
         </div>
     }
@@ -262,7 +262,7 @@ const UpdateProfile = () => {
                                             disabled={!editField.phone}
                                             defaultValue={country_code}
                                             type="text" name="country_code"
-                                            className="col-span-1 w-full text-gray-800 font-medium py-2 text-center mt-2 border focus:outline-indigo-400 border-blue-500 rounded-sm"
+                                            className="col-span-1 w-full text-gray-900 font-medium py-2 text-center mt-2 border focus:outline-indigo-400 border-blue-500 rounded-sm"
                                         >
                                             {Object.keys(countries).map((key, i) => (
                                                 <option className='w-10' key={i} value={countries[key].phone}> {key + ' ' + countries[key].phone}</option>

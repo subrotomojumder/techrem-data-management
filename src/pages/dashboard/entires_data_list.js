@@ -38,11 +38,11 @@ const Entires_data = () => {
     };
     if (isError) {
         if (error.error) {
-            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else {
-            return <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }
@@ -174,7 +174,6 @@ const Entires_data = () => {
                                                             </div>
                                                             <div className="ml-4">
                                                                 <div className="font-medium text-gray-900 whitespace-pre">{businessDetails?.businessName}</div>
-                                                                <div className="mt-1 text-gray-500 whitespace-pre">{'+ ' + businessDetails.country_code + ' ' + businessDetails.businessPhone}</div>
                                                             </div>
                                                         </div>
                                                     </Link>
@@ -186,7 +185,7 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     {businessDetails?.category.main} <br />
-                                                    <span className='text-xs'>{businessDetails?.category.sub1 || ''}</span>
+                                                    <span className=''>{businessDetails?.category.sub1 || ''}</span>
                                                 </td>
                                                 <td
                                                     className={classNames(

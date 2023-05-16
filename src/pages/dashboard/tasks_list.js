@@ -36,15 +36,15 @@ const TasksList = () => {
     console.log(data, isLoading, isError, error);
     if (isError) {
         if (error.message) {
-            content = <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+            content = <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.message}</p>
             </div>
         } else if (error.error) {
-            content = <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+            content = <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else {
-            content = <div className='text-center w-full h-screen flex justify-center items-center -pt-20'>
+            content = <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
             </div>
         }

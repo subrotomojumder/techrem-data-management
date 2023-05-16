@@ -1,196 +1,114 @@
-import { useGetAllAddressQuery, useGetAllCityQuery, useGetAllStateQuery, usePostAddressMutation } from '@/app/features/address/addressApi';
-import { errorToast } from '@/utils/neededFun';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { BiMinus, BiPlus } from 'react-icons/bi';
-import { IoMdArrowDropdown } from 'react-icons/io';
-import { InputLoader } from '../Spinner';
+import { usePostCategoryMutation, useUpdateCategoryMutation } from "@/app/features/others/othersApi"
+import categoryImage from '../../assets/images/category.png'
+import Image from "next/image";
+import { SmallSpinner } from "../Spinner";
+import { errorToast, successToast } from "@/utils/neededFun";
 
-const AddressAddForm = ({ addressValue, setAddressValue, classes , loadingShow }) => {
-    // const [addressValue, setAddressValue] = useState({ country: "", state: "", city: "" })
-    const [openAddress, setOpenAddress] = useState({ country: false, state: false, city: false });
-    const [addressAdd, setAddressAdd] = useState({ country: false, state: false, city: false });
-    const { data, isLoading, isError, error } = useGetAllAddressQuery(`/address`);
-    const { data: stateData } = useGetAllStateQuery(`country=${addressValue.country}`);
-    const { data: cityData } = useGetAllCityQuery(`country=${addressValue.country}&state=${addressValue.state}`);
-    const [postAddress, { isLoading: postLoading, }] = usePostAddressMutation();
-    useEffect(() => {
-        if (addressAdd.country || addressAdd.state || addressAdd.city) {
-            console.log(18, "object");
-            postAddress(addressValue).then(res => {
-                console.log(res);
-            })
-        }
-        // setTimeout(()=> {
-        // }, 1000)
-    }, [addressAdd]);
-    let countryData = [];
-    if (isLoading) {
-        if(!loadingShow){
-            return 
-        }
-        return <InputLoader isLoading={true} height={"min-h-[200px]"}></InputLoader>
-    };
-    if (isError) {
-        if (error.error) {
-            return errorToast(error);
-        } else {
-            return errorToast(error.data.massage)
-        }
-    };
-    if (!isLoading && data?.success) {
-        countryData = data.data
-    };
-    return (
-        <div className={`w-full ${classes.contain}`}>
-            <div className="w-full pb-1 relative">
-                <label htmlFor='serviceman' className={classes.label}>Country *</label>
-                <div className='w-full select-none mt-1 relative flex justify-start items-center gap-1'>
-                    {addressAdd.country || !countryData?.length ?
-                        <div className='w-full'>
-                            <input
-                                onChange={(e) => {
-                                    setAddressValue({ ...addressValue, country: e.target.value , state: "", city: "" })
-                                }}
-                                placeholder={`Add new country`}
-                                className="w-full text-gray-800 py-[6px] px-3 border focus:outline-gray-600 border-blue-500 rounded-md"
-                            />
-                        </div>
-                        : <div className='w-full'>
-                            <div
-                                onClick={() => {
-                                    setOpenAddress({ country: !openAddress.country })
-                                }}
-                                className={`capitalize w-full border border-blue-500 px-3 py-[6px] ${openAddress.country && "text-gray-500 outline outline-1 outline-blue-700 px-2 py-[4.8px]"} bg-slate-50 px-3 py-[6px] rounded-md flex justify-between whitespace-pre`}>
-                                <p>{addressValue.country ? addressValue.country : "Select country"}</p>
-                                <IoMdArrowDropdown size={20} className={`ml-auto mt-[2px] ${openAddress.country || "-rotate-90"} duration-100`} />
-                            </div>
-                            {openAddress.country && countryData.length > 0 &&
-                                <div
-                                    onMouseLeave={() => {
-                                        setOpenAddress({ ...openAddress, country: false })
-                                    }}
-                                    className='border border-gray-400 bg-slate-100 py-2 w-[95%] absolute z-40 top-10 left-0 max-h-[150px] overflow-y-scroll'
-                                >
-                                    {countryData.map((country, i) => <div key={i} >
-                                        <p
-                                            onClick={() => {
-                                                setAddressValue({ ...addressValue, country: country.country, state: "", city: "" })
-                                                setOpenAddress({ ...openAddress, country: false })
-                                            }}
-                                            className={`font-medium hover:bg-blue-500 px-3 hover:text-white duration-100 cursor-pointer border-b pb-[2px] capitalize`}
-                                        >{country.country}</p>
-                                    </div>)}
-                                </div>}
-                        </div>
+export default function AddressAddForm({ selectedData, setSelectedData }) {
+    const [updateExCategory, { isLoading: updateLoading, }] = useUpdateCategoryMutation();
+    const [postNewCategory, { isLoading, }] = usePostCategoryMutation();
+    const handleSubmit = e => {
+        e.preventDefault();
+        const form = e.target;
+        // return console.log({ main: { id: currentCategory.mainCtg.id, name: form.main?.value, } });
+        if (selectedData?.method === "Update main category") {
+            updateExCategory({ main: { id: selectedData.mainCtg.id, name: form.main?.value, } })
+                .then(res => {
+                    console.log(res);
+                    if (res.data?.success) {
+                        successToast("Main category update successful!")
+                        setSelectedData(null)
+                        form.reset();
+                    } else {
+                        errorToast("Something went wrong!")
                     }
-                    <div
-                        onClick={() => setAddressAdd({ addressAdd, country: !addressAdd.country })}
-                        className={`${classes.addBtn} mt-1 text-2xl cursor-pointer text-gray-500 hover:text-white active:text-blue-500 hover:bg-gray-300 border border-gray-300 active:border-white duration-75 select-none rounded-full`}
-                    >
-                        {React.createElement(addressAdd.country ? BiMinus : BiPlus, { size: "18" })}
+                });
+        } else if (selectedData?.method === "Update Sub category") {
+            updateExCategory({ sub1: { id: selectedData.subCtg, name: form.sub1.value } })
+                .then(res => {
+                    console.log(res);
+                    if (res.data?.success) {
+                        successToast("Category update successful!")
+                        setSelectedData(null)
+                        form.reset();
+                    } else {
+                        errorToast("Something went wrong!")
+                    }
+                });
+        } else if (selectedData?.method === "Add new sub category") {
+            postNewCategory({ main: form.main?.value, sub1: form.sub1?.value })
+                .then(res => {
+                    console.log(res);
+                    if (res.data?.success) {
+                        successToast("New category add successful!")
+                        setSelectedData(null)
+                        form.reset();
+                    } else {
+                        errorToast("Something went wrong!")
+                    }
+                });
+        }
+    }
+
+    return (
+        <>
+            <div className="flex min-h-screen flex-1 flex-col justify-start items-center px-6 py-12 lg:px-8">
+                <div className="w-full max-w-2xl h-fit py-6 mdd:py-10 bg-white rounded-lg drop-shadow-sm relative">
+                    <button
+                        onClick={() => setSelectedData(null)} type="button"
+                        className="absolute top-8 right-8 rounded-full bg-indigo-50 px-3.5 py-2 text-sm font-semibold text-red-500 shadow-sm hover:bg-indigo-200"
+                    >X</button>
+                    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                        <Image
+                            src={categoryImage}
+                            className="mx-auto h-10 w-auto"
+                            width={300} height={100}
+                            alt="Your category"
+                        />
+                        <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                            {selectedData.method}
+                        </h2>
                     </div>
-                </div>
-            </div>
-            <div className="w-full pb-1 relative">
-                <label htmlFor='serviceman' className={classes.label}> State / Province *</label>
-                <div className='select-none mt-1 relative w-full flex justify-start items-center gap-1'>
-                    {addressAdd.state || (addressValue.country && !stateData?.data?.length) ?
-                        <div className='w-full'>
-                            <input
-                                onChange={(e) => {
-                                    setAddressValue({ ...addressValue, state: e.target.value, city: "" })
-                                }}
-                                placeholder={`Add new state`}
-                                className="w-full text-gray-800 py-[6px] px-3 border focus:outline-gray-600 border-blue-500 rounded-md"
-                            />
-                        </div>
-                        : <div className='w-full'>
-                            <div
-                                onClick={() => {
-                                    setOpenAddress({ state: !openAddress.state })
-                                }}
-                                className={`capitalize w-full border border-blue-500 px-3 py-[6px] ${openAddress.state && "text-gray-500 outline outline-1 outline-blue-700 px-2 py-[4.8px]"} bg-slate-50 px-3 py-[6px] rounded-md flex justify-between whitespace-pre`}>
-                                <p>{addressValue.state ? addressValue.state : "Select state"}</p>
-                                <IoMdArrowDropdown size={20} className={`ml-auto mt-[2px] ${!openAddress.state && "-rotate-90"} duration-100`} />
+                    <div className="my-6 sm:mx-auto sm:w-full sm:max-w-sm">
+                        <form onSubmit={handleSubmit} className="space-y-3" action="#" method="POST">
+                            <div>
+                                <label htmlFor="main" className="block text-md font-medium leading-6 text-gray-900">
+                                    Main Category *
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        defaultValue={selectedData.mainCtg?.main || ''} disabled={selectedData.mainDis}
+                                        id="main" name="main" type="main" required placeholder="Enter main category..."
+                                        className="block w-full rounded-md border-0 disabled:cursor-not-allowed py-1.5 px-2 capitalize text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 outline-none  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-md sm:leading-6"
+                                    />
+                                </div>
                             </div>
-                            {addressValue.country && openAddress.state && stateData?.data?.length > 0 &&
-                                <div
-                                    onMouseLeave={() => {
-                                        setOpenAddress({ ...openAddress, state: false })
-                                    }}
-                                    className='border border-gray-400 bg-slate-100 py-2 w-[95%] absolute z-40 top-10 left-0 max-h-[150px] overflow-y-scroll'
+                            {selectedData?.method !== "Update main category" && <div>
+                                <div className="flex items-center justify-between">
+                                    <label htmlFor="sub1" className="block text-md font-medium leading-6 text-gray-900">
+                                        Sub Category
+                                    </label>
+                                </div>
+                                <div className="mt-2">
+                                    <input
+                                        defaultValue={selectedData.subCtg?.name || ''}
+                                        id="sub1" name="sub1" type="text" placeholder="Enter sub category..."
+                                        className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-md sm:leading-6"
+                                    />
+                                </div>
+                            </div>}
+                            <div className="flex justify-center pt-5">
+                                <button
+                                    type="submit" disabled={isLoading || updateLoading}
+                                    className="w-40 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-400"
                                 >
-                                    {stateData?.data?.map((state, i) => <div key={i} >
-                                        <p
-                                            onClick={() => {
-                                                setAddressValue({ ...addressValue, state: state.name, city: "" })
-                                                setOpenAddress({ ...openAddress, state: false })
-                                            }}
-                                            className={`capitalize font-medium hover:bg-blue-500 px-3 hover:text-white duration-100 cursor-pointer border-b pb-[2px]`}
-                                        >{state.name}</p>
-                                    </div>)}
-                                </div>}
-                        </div>}
-                    <div
-                        onClick={() => setAddressAdd({ addressAdd, state: !addressAdd.state })}
-                        className={`${classes.addBtn} mt-1 text-2xl cursor-pointer text-gray-500 hover:text-white active:text-blue-500 hover:bg-gray-300 border border-gray-300 active:border-white duration-75 select-none rounded-full`}
-                    >
-                        {React.createElement(addressAdd.state ? BiMinus : BiPlus, { size: "18" })}
-                    </div>
-                </div>
-            </div>
-            <div className="w-full pb-1 relative">
-                <label htmlFor='serviceman' className={classes.label}>City / Suburb *</label>
-                <div className='select-none mt-1 relative w-full flex justify-start items-center gap-1'>
-                    {addressAdd.city || (addressValue.state && !cityData?.data?.length) ?
-                        <div className='w-full'>
-                            <input
-                                onChange={(e) => setAddressValue({ ...addressValue, city: e.target.value })}
-                                placeholder={`Add new city`}
-                                className="w-full text-gray-800 py-[6px] px-3 border focus:outline-gray-600 border-blue-500 rounded-md"
-                            />
-                        </div>
-                        : <div className='w-full'>
-                            <div
-                                onClick={() => {
-                                    setOpenAddress({ city: !openAddress.city })
-                                }}
-                                className={`capitalize w-full border border-blue-500 px-3 py-[6px] ${openAddress.city && "text-gray-500 outline outline-1 outline-blue-700 px-2 py-[4.8px]"} bg-slate-50 px-3 py-[6px] rounded-md flex justify-between whitespace-pre`}>
-                                <p>{addressValue.city ? addressValue.city : "Select city"}</p>
-                                <IoMdArrowDropdown size={20} className={`ml-auto mt-[2px] ${!openAddress.city && "-rotate-90"}`} />
+                                    {(isLoading || updateLoading) ? <SmallSpinner /> : "Continue"}
+                                </button>
                             </div>
-                            {addressValue.state && openAddress.city && cityData?.data?.length > 0 &&
-                                <div
-                                    onMouseLeave={() => {
-                                        setOpenAddress({ ...openAddress, city: false })
-                                    }}
-                                    className='border border-gray-400 bg-slate-100 py-2 w-[95%] absolute z-40 top-10 left-0 max-h-[150px] overflow-y-scroll'
-                                >
-                                    {cityData?.data?.map((city, i) => <div key={i} >
-                                        <p
-                                            onClick={() => {
-                                                setAddressValue({ ...addressValue, city: city.name })
-                                                setOpenAddress({ ...openAddress, city: false })
-                                            }}
-                                            className={`capitalize font-medium hover:bg-blue-500 px-3 hover:text-white duration-100 cursor-pointer border-b pb-[2px]`}
-                                        >{city.name}</p>
-                                    </div>)}
-                                </div>}
-                        </div>}
-                    <div
-                        onClick={() => setAddressAdd({ addressAdd, city: !addressAdd.city })}
-                        className={`${classes.addBtn} mt-1 text-2xl cursor-pointer text-gray-500 hover:text-white active:text-blue-500 hover:bg-gray-300 border border-gray-300 active:border-white duration-75 select-none rounded-full`}
-                    >
-                        {React.createElement(addressAdd.city ? BiMinus : BiPlus, { size: "18" })}
+                        </form>
                     </div>
                 </div>
             </div>
-            {addressValue.error && <p role="alert" className='pl-4px text-sm -mt-6'>{addressValue.error}</p>}
-        </div>
-    );
-};
-
-export default AddressAddForm;
-
-
+        </>
+    )
+}

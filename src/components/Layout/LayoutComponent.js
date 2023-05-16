@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogoutSet } from '@/app/features/users/userSlice';
 import { ADMIN } from '@/utils/constant';
-import { MdOutlineCampaign, MdOutlineCategory } from 'react-icons/md';
+import { MdFormatListBulletedAdd, MdOutlineAddLocationAlt, MdOutlineCampaign, MdOutlineCategory } from 'react-icons/md';
 import { VscCompassActive, VscHistory } from 'react-icons/vsc';
 import { FiUserPlus } from 'react-icons/fi';
 import { BiListCheck } from 'react-icons/bi';
@@ -59,8 +59,14 @@ export default function LayoutComponent({ children }) {
                 { name: 'Campaign History', icon: VscHistory, href: '' },
             ],
         },
-        // { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
-        { name: 'Our Services', icon: BiListCheck, href: '/all_list_enquiry/our_service_enquiry' },
+        {
+            name: 'Our Services',
+            current: false,
+            children: [
+                { name: 'Services list', icon: MdFormatListBulletedAdd, href: '/all_list_enquiry/our_service/service-list' },
+                { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
+            ],
+        },
         // {
         //     name: 'Facebook Group',
         //     current: false,
@@ -70,6 +76,7 @@ export default function LayoutComponent({ children }) {
         //     ],
         // },
         { name: 'Send Email', icon: FcVoicePresentation, href: '', current: false },
+        { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
         // { name: 'Staff Activity log', icon: TbActivity, href: '/', current: false },
 
         { name: 'Reports', icon: ChartPieIcon, href: '', current: false },
@@ -159,7 +166,7 @@ export default function LayoutComponent({ children }) {
         localStorage.removeItem("tech_token");
         setTimeout(() => router.replace('/'), 100);
     }
-    if(!user.role){
+    if (!user.role) {
         return children
     }
     return (

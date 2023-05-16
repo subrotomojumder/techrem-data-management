@@ -4,6 +4,7 @@ import { apiSlice } from "../api/apiSlice";
 
 const othersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        // category enquiry api
         postCategory: builder.mutation({
             query: (data) => ({
                 method: "POST",
@@ -49,7 +50,8 @@ const othersApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["category"]
         }),
-        getOfferService: builder.query({
+        // we can offer service api
+        getOurService: builder.query({
             query: (url) => ({
                 url: url,
                 headers: {
@@ -57,6 +59,41 @@ const othersApi = apiSlice.injectEndpoints({
                 }
             }),
             providesTags: ["our_service"]
+        }),
+        postOurService: builder.mutation({
+            query: (data) => ({
+                method: "POST",
+                url: "/service_we_offer",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["our_service"]
+        }),
+        deleteOurService: builder.mutation({
+            query: (id) => ({
+                method: "DELETE",
+                url: `service_we_offer/${id}`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["our_service"]
+        }),
+        updateOurService: builder.mutation({
+            query: (data) => ({
+                method: "PUT",
+                data: data,
+                url: `service_we_offer/${data.id}`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["our_service"]
         }),
     })
 })
@@ -66,5 +103,8 @@ export const {
     useGetAllCategoryQuery,
     useUpdateCategoryMutation,
     useDeleteCategoryMutation,
-    useGetOfferServiceQuery
+    useGetOurServiceQuery,
+    usePostOurServiceMutation,
+    useDeleteOurServiceMutation,
+    useUpdateOurServiceMutation
 } = othersApi;

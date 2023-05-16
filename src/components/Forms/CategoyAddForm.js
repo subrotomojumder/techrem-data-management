@@ -28,7 +28,7 @@ export default function CategoryAddForm({ currentCategory, setCurrentCategory })
                 .then(res => {
                     console.log(res);
                     if (res.data?.success) {
-                        successToast("Sub category update successful!")
+                        successToast("Category update successful!")
                         setCurrentCategory(null)
                         form.reset();
                     } else {

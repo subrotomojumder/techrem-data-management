@@ -40,12 +40,12 @@ export default function EntrySubPreview({ isLoading, previewData, setPreviewData
                             {address.city}, {address.state}, {address.country}
                         </dd>
                         <dt className="text-md md:text-base text-gray-900">Google map</dt>
-                        <dd className="mt-1 text-md md:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0">: {address.location_link ? <a className='text-blue-500 hover:text-blue-700 underline-offset-2 underline' href={address.location_link} target='_blank'>{'Address map location link'}</a> : "N/A"}</dd>
+                        <dd className="mt-1 text-md md:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0">: {address.location_link ? <a className='text-blue-500 hover:text-blue-700 underline-offset-2 underline' href={address.location_link} target='_blank'>{'Address map location link'}</a> : " N/A"}</dd>
                     </div>
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-900">Their Websites</dt>
                         <dd className="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                            {!have_website?.website_urls?.length ? "They-don't-have-a-website" : have_website?.website_urls?.map((site, i) => <p key={i} >
+                            {!have_website?.website_urls?.length ? " They-don't-have-a-website" : have_website?.website_urls?.map((site, i) => <p key={i} >
                                 {++i}. <a href={site} target='_blank' className="text-blue-500 hover:underline hover:text-blue-700">
                                     {site.slice(0, 60)}
                                 </a>
@@ -55,7 +55,7 @@ export default function EntrySubPreview({ isLoading, previewData, setPreviewData
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-900">Their branch</dt>
                         <dd className="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 flex flex-wrap justify-start gap-2">:
-                            {!we_offer_service.length ? "We can offer service empty!" : we_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-600/80">
+                            {!we_offer_service.length ? " We can offer service empty!" : we_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-600/80">
                                 {service}
                             </span>)}
                         </dd>
@@ -63,7 +63,7 @@ export default function EntrySubPreview({ isLoading, previewData, setPreviewData
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-900">Their Services</dt>
                         <dd className="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 flex flex-wrap justify-start gap-2">:
-                            {!they_offer_service.length ? "Their offer services N/A " : they_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
+                            {!they_offer_service.length ? " Their offer services N/A " : they_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
                                 {service}
                             </span>)}
                         </dd>
@@ -71,7 +71,7 @@ export default function EntrySubPreview({ isLoading, previewData, setPreviewData
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-900">We offered service</dt>
                         <dd className="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 flex flex-wrap justify-start gap-2">:
-                            {!we_offer_service.length ? "We can offer service empty!" : we_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-600/80">
+                            {!we_offer_service.length ? " We can offer service empty!" : we_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-600/80">
                                 {service}
                             </span>)}
                         </dd>

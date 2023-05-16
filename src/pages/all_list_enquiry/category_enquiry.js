@@ -1,29 +1,26 @@
 import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '@/app/features/others/othersApi';
 import { LargeSpinner } from '@/components/Spinner';
 import React, { useState } from 'react';
-import { Disclosure, Transition } from '@headlessui/react'
-import { PlusSmallIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { BiEditAlt } from 'react-icons/bi';
-import { SlLock, SlLockOpen } from 'react-icons/sl';
+import {TrashIcon } from '@heroicons/react/24/outline'
 import CategoryAddForm from '@/components/Forms/CategoyAddForm';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { IoIosArrowDropdown } from 'react-icons/io';
 import { TbCircleChevronDown } from 'react-icons/tb';
 import { FaEdit } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { Private } from '@/utils/ProtectRoute';
-import { successToast } from '@/utils/neededFun';
+import { errorToast, successToast } from '@/utils/neededFun';
 
 const Category_enquiry = () => {
     const [currentCategory, setCurrentCategory] = useState(null);
     const [toggleMainCtg, setToggleMainCtg] = useState(null);
-    const { data, isLoading, isError, error } = useGetAllCategoryQuery(`/category`);
+    const [queryData, setQueryData] = useState({})
     const [categoryDeleteApi] = useDeleteCategoryMutation();
+    const { data, isLoading, isError, error } = useGetAllCategoryQuery(`/category?keyword=${queryData.keyword || ''}`);
 
     const categoryDelete = (id, property) => {
         Swal.fire({
             title: 'Are you sure?',
-            text: "You won't delete category!",
+            text: "You won't to delete category!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -48,15 +45,15 @@ const Category_enquiry = () => {
     };
     if (isError) {
         if (error.message) {
-            return <div className='w-full h-screen flex justify-center items-center -pt-20'>
+            return <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.message}</p>
             </div>
         } else if (error.error) {
-            return <div className='w-full h-screen flex justify-center items-center -pt-20'>
+            return <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.error}</p>
             </div>
         } else if (error.data.message) {
-            return <div className='w-full h-screen flex justify-center items-center -pt-20'>
+            return <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.dev_err || error.data.message}</p>
             </div>
         }
@@ -64,27 +61,27 @@ const Category_enquiry = () => {
     if (data.success) {
         if (!currentCategory?.openInput) {
             return (
-                <div className="mt-4 flow-root">
+                <div className="mt-4 flow-root min-h-screen">
                     <div className="overflow-x-auto">
-                        <div className="inline-block min-w-full min-h-screen py-2 align-middle sm:px-6 lg:px-8">
-                            <div className="overflow-hidden shadow ring-1 ring-gray-200 bg-white max-w-5xl mx-auto sm:rounded-lg">
+                        <div className="inline-block min-w-full min-h-[60vh] py-2 align-middle sm:px-6 lg:px-8">
+                            <div className="overflow-hidden shadow ring-1 ring-gray-200 bg-white min-w-[600px] max-w-5xl mx-auto sm:rounded-lg">
                                 <div className='flex justify-between items-center mx-auto py-3 md:py-4 px-2 md:px-4'>
                                     <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 tracking-tight text-gray-900">Categories</h2>
                                     <div className='w-full flex justify-end items-center gap-3'>
-                                        {/* <div className="relative">
-                                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <div className="relative">
+                                            <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center pl-3">
                                                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                             </div>
                                             <input
-                                                // onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
-                                                className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                                onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
+                                                className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-3 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                                 type="search" id="search" placeholder="Search"
                                             />
-                                        </div> */}
+                                        </div>
                                         <button
                                             onClick={() => setCurrentCategory({ openInput: true, method: "Add new category" })}
                                             type="button"
-                                            className="rounded-md bg-indigo-600 px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                            className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                         >
                                             + New Category
                                         </button>
@@ -102,8 +99,8 @@ const Category_enquiry = () => {
                                     <div className="bg-white">
                                         {data.data.length < 1 ? <div className='mt-10 md:mt-40 text-red-500 text-lg text-center'><p>Empty Category!</p></div>
                                             : data.data.map((mainCategory, i) => (
-                                                <div key={i}  className={`hover:bg-[#f4f7f7] ${toggleMainCtg === mainCategory.main && "bg-[#f4f7f7] "}`}>
-                                                    <div className={`flex justify-between items-center border-b border-gray-200 `}>
+                                                <div key={i} className={`${toggleMainCtg === mainCategory.main && "bg-[#f1f5f5] "}`}>
+                                                    <div className={`hover:bg-yellow-50 flex justify-between items-center border-b border-gray-200 `}>
                                                         <p onClick={() => setToggleMainCtg(c => (c !== mainCategory.main ? mainCategory.main : null))} className=" flex-1 py-3 pl-4 pr-3 text-md md:text-base font-medium text-gray-900 capitalize cursor-default">
                                                             <TbCircleChevronDown className={`inline-block -mt-1 mr-2 text-gray-400 ${toggleMainCtg !== mainCategory.main ? " -rotate-90" : "text-gray-600 "}`} />{mainCategory.main}
                                                             {/*  <a href={`#main${i}`}>
@@ -135,7 +132,7 @@ const Category_enquiry = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    {toggleMainCtg === mainCategory.main && mainCategory.sub1?.length > 0 && <div className='ml-6 md:ml-8 border border-t-0 border-r-0 rounded-bl-lg border-gray-200'>
+                                                    {(toggleMainCtg === mainCategory.main && mainCategory.sub1?.length > 0 || data.data.length === 1) && <div className='ml-6 md:ml-8 border border-t-0 border-r-0 rounded-bl-lg border-gray-200'>
                                                         {mainCategory.sub1.map((subCategory, i) =>
                                                             <div key={i} className={i !== 0 && 'border-t border-gray-200'}>
                                                                 <div className='flex justify-between items-center hover:bg-yellow-50'>

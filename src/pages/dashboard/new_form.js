@@ -6,18 +6,20 @@ import { errorToast, successToast } from '@/utils/neededFun';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import { Private } from '@/utils/ProtectRoute';
-import CountryInput from '@/components/Forms/Inputs';
+import { CityInput, CountryInput, StateInput } from '@/components/Forms/Inputs';
 import { PhotoIcon } from '@heroicons/react/20/solid';
 import { useForm } from 'react-hook-form';
 import EntrySubPreview from '@/components/EntrySubPreview';
 import CategoryInput from '@/components/Forms/CategoryInput';
+import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
 
-const ourServices = [{ name: "Website design and Development" }, { name: "ERP Solution" }, { name: "App Development" }, { name: "Business Accessories" }, { name: "Digital Marketing" }];
 
 const New_form = () => {
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
     const [inputData, setInputData] = useState({});
     const [selectedCountry, setSelectedCountry] = useState(null);
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
     const [imageLoading, setImageLoading] = useState(false);
     const [count, setCount] = useState({ website: 1, branch: 1 });
     const [website, setWebsite] = useState({});
@@ -27,6 +29,8 @@ const New_form = () => {
     const [selectedCategory, setSelectedCategory] = useState({});
     const [previewData, setPreviewData] = useState(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { data, isLoading: serviceLoading, isError, error } = useGetOurServiceQuery(`/service_we_offer`);
+    const ourServices = data?.data || [];
     const [postData, { isLoading }] = usePostDataMutation();
     useEffect(() => {
         const localStorageEntry = JSON.parse(localStorage.getItem("entire"));
@@ -37,6 +41,8 @@ const New_form = () => {
                 localStorageEntry || {}
             );
             setSelectedCountry(localStorageEntry?.country || null);
+            setSelectedState(localStorageEntry?.state || null);
+            setSelectedCity(localStorageEntry?.city || null);
             setCount(localStorageEntry?.count || {});
             setBranch(localStorageEntry?.branch || {})
             setWebsite(localStorageEntry?.website || {});
@@ -47,9 +53,9 @@ const New_form = () => {
     }, [])
     useEffect(() => {
         setTimeout(() => {
-            localStorage.setItem("entire", JSON.stringify({ ...inputData, country: selectedCountry, website, count, branch, theyService, weCanService, selectedCategory }));
+            localStorage.setItem("entire", JSON.stringify({ ...inputData, country: selectedCountry, state: selectedState, city: selectedCity, website, count, branch, theyService, weCanService, selectedCategory }));
         }, 500);
-    }, [inputData, selectedCountry, website, count, branch, theyService, weCanService, selectedCategory]);
+    }, [inputData, selectedCountry, selectedState, selectedCity, website, count, branch, theyService, weCanService, selectedCategory]);
     const submit = async (data) => {
         if (!selectedCategory.main) {
             return setInputData(c => ({ ...c, categoryErr: "Business category is required!" }));
@@ -66,7 +72,7 @@ const New_form = () => {
             have_website: { needWebsite: inputData?.isWebsite, website_urls: Object.values(website).filter(link => link !== '') },
             // have_branchs: { isBranch: inputData?.isBranch, branch_detalis: branch },
             businessDetails: { category: selectedCategory, businessName, country_code, businessPhone: businessPhone?.toString(), businessEmail },
-            address: { country: selectedCountry.name, state, city, street_address, postCode, location_link }
+            address: { country: selectedCountry.name, state: selectedState.name, city: selectedCity.name, street_address, postCode, location_link }
         }
         try {
             const formData = new FormData();
@@ -107,6 +113,8 @@ const New_form = () => {
                     setWebsite({});
                     setBranch({});
                     setSelectedCountry(null)
+                    setSelectedState(null);
+                    setSelectedCity(null);
                     setTheyService([]);
                     setWeCanService([]);
                     setInputData({});
@@ -120,7 +128,24 @@ const New_form = () => {
     const handleInput = e => {
         setInputData({ ...inputData, [e.target.name]: e.target.value });
     }
-
+    if (serviceLoading) {
+        return <LargeSpinner />;
+    };
+    if (isError) {
+        if (error.message) {
+            return <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{error.message}</p>
+            </div>
+        } else if (error.error) {
+            return <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{error.error}</p>
+            </div>
+        } else if (error.data.message) {
+            return <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{error.data.dev_err || error.data.message}</p>
+            </div>
+        }
+    };
     return (
         <div className='relative'>
             {previewData ? <EntrySubPreview isLoading={isLoading} previewData={previewData} setPreviewData={setPreviewData} handleSubmission={handleSubmission}></EntrySubPreview>
@@ -132,7 +157,7 @@ const New_form = () => {
                         <div className="relative mb-4 mt-2 md:mt-8 grid grid-cols-1 md:grid-cols-7 gap-x-3">
                             <label className="leading-7 font-[600] text-gray-700 col-span-3">Business Category *</label>
                             <div className="col-span-3 w-full">
-                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-12 left-0 ", input: "bg-white rounded border border-gray-300 px-3 py-[6px] flex justify-between items-center text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
+                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[46px] left-0 ", input: "bg-white rounded border border-gray-300 px-3 py-[6px] flex justify-between items-center text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
                             </div>
                             {!selectedCategory.main && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{inputData.categoryErr}</p>}
                         </div>
@@ -194,25 +219,32 @@ const New_form = () => {
                                     />
                                     {errors.street_address?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.street_address.message}</p>}
                                 </div>
-                                <div className='col-span-1 w-full'>
-                                    <input
-                                        {...register("city", { required: "City / Suburb is required!" })}
-                                        onChange={handleInput} name='city'
-                                        placeholder='City / Suburb' type="text"
-                                        className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    />
-                                    {errors.city?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.city.message}</p>}
+                                <div className='col-span-1 w-full '>
+                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} placeHolder={"Country"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
+                                    {/* <input type="" required={inputData.countryErr} className='sr-only ml-[30%]' /> */}
+                                    {!selectedCountry && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{inputData.countryErr}</p>}
                                 </div>
                                 <div className='col-span-1 w-full'>
-                                    <input
+                                    <StateInput country={selectedCountry?.name || ""} selectedState={selectedState} setSelectedState={setSelectedState} placeHolder={"State / Province"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }} />
+                                    {/* <input
                                         {...register("state", { required: "State / Province is required!" })}
                                         onChange={handleInput} name='state'
                                         placeholder='State / Province' type="text"
                                         className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
                                     />
-                                    {errors.state?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.state.message}</p>}
+                                    {errors.state?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.state.message}</p>} */}
                                 </div>
                                 <div className='col-span-1 w-full'>
+                                    <CityInput country={selectedCountry?.name || ""} state={selectedState?.name || ""} selectedCity={selectedCity} setSelectedCity={setSelectedCity} placeHolder={"City / Suburb"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }} />
+                                    {/* <input
+                                        {...register("city", { required: "City / Suburb is required!" })}
+                                        onChange={handleInput} name='city'
+                                        placeholder='City / Suburb' type="text"
+                                        className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    />
+                                    {errors.city?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.city.message}</p>} */}
+                                </div>
+                                <div className='col-span-1 w-full mt-2'>
                                     <input
                                         {...register("postCode", { required: "Postal code is required!" })}
                                         onChange={handleInput} name='postCode'
@@ -220,11 +252,6 @@ const New_form = () => {
                                         className="w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out"
                                     />
                                     {errors.postCode?.type === 'required' && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{errors.postCode.message}</p>}
-                                </div>
-                                <div className='col-span-1 w-full -mt-2'>
-                                    <CountryInput selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} placeHolder={"Country"} wornClass={{ input: "w-full placeholder:text-zinc-900 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 md:py-[6px] px-3 leading-8 transition-colors duration-200 ease-in-out" }}></CountryInput>
-                                    {/* <input type="" required={inputData.countryErr} className='sr-only ml-[30%]' /> */}
-                                    {!selectedCountry && <p role="alert" className='col-span-6 pl-4px text-red-600 animate-pulse text-sm text-right -mb-3'>{inputData.countryErr}</p>}
                                 </div>
                             </div>
                         </div>
@@ -389,6 +416,8 @@ const New_form = () => {
                                 localStorage.removeItem("entire");
                                 setCount({ branch: 1, website: 1 });
                                 setSelectedCountry(null);
+                                setSelectedState(null);
+                                setSelectedCity(null);
                                 setWebsite({});
                                 setBranch({})
                                 setTheyService([]);

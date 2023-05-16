@@ -87,7 +87,7 @@ const Entire_show = ({ data }) => {
                             <h4 className='text-lg font-serif text-indigo-700 mb-2'>They Service offers</h4>
                             {tag.length ? <div className='grid grid-cols-1 gap-y-2'>
                                 {tag.map((item, i) => <p key={i}>{++i}. {item}</p>)}
-                            </div> : <div className='w-full h-screen flex justify-center items-center -pt-20'>
+                            </div> : <div className='w-full min-h-screen flex justify-center items-center -pt-20'>
                                 <p className="text-2xl text-red-500">Entire Tag Empty!</p>
                             </div>}
                         </div>
