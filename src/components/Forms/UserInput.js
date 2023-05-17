@@ -35,7 +35,7 @@ export default function CountryInput({ wornClass, selectedUser, setSelectedUser,
                     }
                     }
                     displayValue={(user) => user?.name}
-                    autoComplete="false"
+                    autoComplete="off"
                     placeholder={placeHolder}
                     required={selectedUser?.name ? false : true}
                 />

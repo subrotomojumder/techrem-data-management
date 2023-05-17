@@ -75,13 +75,19 @@ const Entires_data = () => {
                                     </div>
                                     <input
                                         onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
-                                        className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                        className="block w-full min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                         type="search" id="search" placeholder="Search"
                                     />
                                 </div>
                                 <div className='flex justify-end gap-2'>
                                     <button
-                                        type="button"
+                                        onClick={() => {
+                                            setQueryData({});
+                                            setSelectedCategory({});
+                                            setSelectedAddress({});
+                                            setSelectedUser(null);
+                                            setDateRange([null, null])
+                                        }} type="button"
                                         className="rounded-md h-fit bg-white px-5 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 hover:bg-gray-50"
                                     >
                                         Reset
@@ -94,7 +100,9 @@ const Entires_data = () => {
                                     </button>
 
                                     <button
-                                        type="button"
+                                        type="button" onClick={() => {
+                                            console.log(new Date(new Date().getTime() - 120 * 60 * 60 * 1000))
+                                        }}
                                         className="rounded-md bg-white pl-3 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                     >
                                         Last 30 Days  <AiOutlineDown className={`inline ml-4`} />
@@ -108,11 +116,12 @@ const Entires_data = () => {
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
                                 <input
                                     onChange={(e) => setQueryData(c => ({ ...c, createDate: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
-                                    type="date"
+                                    type="date" value={queryData.createDate || ''}
                                     className="rounded-md bg-white pl-2 pr-2 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 />
                                 <select
                                     onChange={(e) => setQueryData(c => ({ ...c, we_offer: e.target.value }))}
+                                    value={queryData.we_offer || ""}
                                     className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 >
                                     <option value='' selected >We can offer</option>
@@ -120,6 +129,7 @@ const Entires_data = () => {
                                 </select>
                                 <select
                                     onChange={(e) => setQueryData(c => ({ ...c, campaign: e.target.value }))}
+                                    value={queryData.campaign || ''}
                                     className="rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 >
                                     <option value='' selected >Campaign Status</option>
