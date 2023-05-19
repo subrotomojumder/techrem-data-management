@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import { Private } from '@/utils/ProtectRoute';
 import { successToast } from '@/utils/neededFun';
 import { useGetAllAddressQuery } from '@/app/features/address/addressApi';
-import AddressAddForm from '@/components/Forms/addressAddform';
 
 const Address_enquiry = () => {
     const [selectedData, setSelectedData] = useState(null);
@@ -209,7 +208,7 @@ const Address_enquiry = () => {
                 </div >
             )
         } else {
-            return <AddressAddForm selectedData={selectedData} setSelectedData={setSelectedData}></AddressAddForm>
+            return  <div>Create kora hoi nai</div>//<AddressAddForm selectedData={selectedData} setSelectedData={setSelectedData}></AddressAddForm>
         }
     };
 };

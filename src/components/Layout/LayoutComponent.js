@@ -54,9 +54,9 @@ export default function LayoutComponent({ children }) {
             name: 'Campaign Manage',
             current: false,
             children: [
-                { name: 'Create Campaign', icon: MdOutlineCampaign, href: '/dashboard/assign_task' },
-                { name: 'Active Campaign', icon: VscCompassActive, href: '' },
-                { name: 'Campaign History', icon: VscHistory, href: '' },
+                { name: 'Create Campaign', icon: MdOutlineCampaign, href: '/dashboard/campaign/create_campaign' },
+                { name: 'Active Campaign', icon: VscCompassActive, href: '/dashboard/campaign/active_campaign' },
+                { name: 'Campaign History', icon: VscHistory, href: '/dashboard/campaign/campaign_history' },
             ],
         },
         {

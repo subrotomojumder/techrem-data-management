@@ -6,7 +6,7 @@ import { DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from 
 import { errorToast } from '@/utils/neededFun';
 import React, { useEffect, useState } from 'react';
 import AddressAddForm from '@/components/extra/AddressAddForm';
-import DropDown from '@/components/TailwindComponent/DropDown';
+// import DropDown from '@/components/TailwindComponent/DropDown';
 import { MarketerProtect } from '@/utils/ProtectRoute';
 const status = [
     { id: 0, name: 'Tele Complete', value: "complete" },
@@ -44,7 +44,7 @@ const AssignTask = () => {
             <div className='grid grid-cols-1 lg:grid-cols-5 gap-x-14 '>
                 <h2 className="col-span-2 text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase">Assign task</h2>
                 {employee.role === ON_FIELD_MARKETER && <div className='col-span-3 flex justify-between items-center gap-1 bg-indigo-300 p-1'>
-                    <DropDown items={status} selected={dataStatus} setSelected={setDataStatus} />
+                    {/* <DropDown items={status} selected={dataStatus} setSelected={setDataStatus} /> */}
                     <AddressAddForm addressValue={dataQuery} loadingShow={false} setAddressValue={setDataQuery} classes={{ label: "hidden", addBtn: "hidden", contain: 'grid grid-cols-3 gap-x-2' }} />
                 </div>}
             </div>

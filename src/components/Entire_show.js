@@ -8,9 +8,8 @@ const Entire_show = ({ data }) => {
             businessDetails: { businessName, category, businessSize, businessLogo, images },
             onProcess, tag, other_information, createdAt, updatedAt,
             have_branchs: { branch_detalis },
-            address: { country, state, city, street_address, postCode },
+            address: { country, state, city, street_address, postCode, location_link },
             have_website: { website_urls },
-            ownerDetails: { name, email, phone, country_code }
         } = data.data;
         // console.log(onProcess);
         return (
@@ -18,23 +17,23 @@ const Entire_show = ({ data }) => {
                 <div className="flex justify-around mt-2">
                     <button
                         onClick={() => setShowData('overview')}
-                        className={`text-orange-400 font-medium px-3 mb-1  hover:border-b-4 ${showData === "overview" && " border-b-4 "} border-blue-400 `}
+                        className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "overview" && " border-b-4  text-blue-500"} border-blue-400 `}
                     >Overview</button>
                     <button
                         onClick={() => setShowData('menu')}
-                        className={`text-orange-400 font-medium px-3 mb-1  hover:border-b-4 ${showData === "menu" && "border-b-4 "} border-blue-400 `}
+                        className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "menu" && "border-b-4  text-blue-500"} border-blue-400 `}
                     >Menus</button>
                     <button
                         onClick={() => setShowData('other')}
-                        className={`text-orange-400 font-medium px-3 mb-1  hover:border-b-4 ${showData === "other" && " border-b-4 "} border-blue-400 `}
+                        className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "other" && " border-b-4  text-blue-500"} border-blue-400 `}
                     >Others</button>
                     <button
                         onClick={() => setShowData('contact')}
-                        className={`text-orange-400 font-medium px-3 mb-1  hover:border-b-4 ${showData === "contact" && "border-b-4 "} border-blue-400 `}
+                        className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "contact" && "border-b-4  text-blue-500"} border-blue-400 `}
                     >Contact</button>
                     <button
                         onClick={() => setShowData('status')}
-                        className={`text-orange-400 font-medium px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4 "} border-blue-400 `}
+                        className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4  text-blue-500"} border-blue-400 `}
                     >Status</button>
                 </div>
                 <hr className='mb-2' />
@@ -43,7 +42,7 @@ const Entire_show = ({ data }) => {
                         <h4 className='text-lg font-serif text-indigo-700 mb-1'>Entire data Information</h4>
                         <div className='flex justify-start'>
                             <h5 className='w-32'>Category</h5>
-                            <h5 className='flex-1'>: {category}</h5>
+                            <h5 className='flex-1'>: {category.main}</h5>
                         </div>
                         <div className='flex justify-start'>
                             <h5 className='w-32'>Institution</h5>
@@ -61,18 +60,6 @@ const Entire_show = ({ data }) => {
                             <h5 className='w-32'>Local post code</h5>
                             <h5 className='flex-1'>: {postCode || "N/A"} </h5>
                         </div>
-                        {branch_detalis?.length && <div className='flex justify-start font-medium'>
-                            <h5 className='w-32'>Branch</h5>
-                            <div className='flex-1'>: Information
-                                {branch_detalis.map((branch, i) => <div key={i}>
-                                    <p className='text-xs font-medium'>Branch-{++i}</p>
-                                    <p>Name- {branch.name || "N/A"}</p>
-                                    <p>country- {branch.country || "N/A"}</p>
-                                    <p>State- {branch.state || "N/A"}</p>
-                                    <p>Street- {branch.street_address || "N/A"}</p>
-                                </div>)}
-                            </div>
-                        </div>}
                         {website_urls?.length && <div className='flex justify-start'>
                             <h5 className='w-32'>Websites</h5>
                             <div className='flex-1'>: Details
@@ -96,15 +83,15 @@ const Entire_show = ({ data }) => {
                                 <h4 className='text-lg font-serif text-indigo-700 mb-1'>Contact Information</h4>
                                 <div className='flex justify-start'>
                                     <h5 className='w-32'>Owner Name</h5>
-                                    <h5 className='flex-1'>: {name}</h5>
+                                    <h5 className='flex-1'>: {"name"}</h5>
                                 </div>
                                 <div className='flex justify-start'>
                                     <h5 className='w-32'>Owner Email</h5>
-                                    <h5 className='flex-1'>: {email}</h5>
+                                    <h5 className='flex-1'>: {"email"}</h5>
                                 </div>
                                 <div className='flex justify-start'>
                                     <h5 className='w-32'>Phone</h5>
-                                    <h5 className='flex-1'>: {"+" + country_code + " " + phone}</h5>
+                                    {/* <h5 className='flex-1'>: {"+" + country_code + " " + phone}</h5> */}
                                 </div>
                                 <div className='flex justify-start'>
                                     <h5 className='w-32'>Address</h5>
@@ -124,7 +111,7 @@ const Entire_show = ({ data }) => {
                                     </div>
                                     <p><span className='font-medium'>Entire operator Note</span> : <span className='font-normal space-y-2'>{other_information}</span></p>
                                     <p>Company Logo :</p>
-                                    <Image width={75} height={55} src={businessLogo} alt='Company Logo'></Image>
+                                    <img width={75} height={55} src={businessLogo} alt='Company Logo'></img>
                                     {images?.length > 0 && <div>
                                         <p>Other Images:</p>
                                         {images.map((img, i) => <Image key={i} width={300} height={300} src={img} alt='Company Logo'></Image>)}

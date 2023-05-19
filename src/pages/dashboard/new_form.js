@@ -322,7 +322,7 @@ const New_form = () => {
                             <div className={""} >
                                 <TagsInput
                                     className="bg-gray-400"
-                                    value={theyService} onChange={setTheyService} name="tags" placeHolder="enter products"
+                                    value={theyService} onChange={setTheyService} name="tags" placeHolder="Enter Service"
                                 />
                             </div>
                         </div>
@@ -405,11 +405,21 @@ const New_form = () => {
                             </div>
                         </div>
                         <div className={`relative mb-2 w-full`}>
-                            <label className='leading-7 font-[600] text-gray-700 col-span-3' htmlFor="">Suggestion more service</label>
-                            <div className={""} >
+                            <div className='col-span-3'>
+                                <input
+                                    checked={inputData.addNewService || false}
+                                    onClick={(e) => {
+                                        setInputData({ ...inputData, addNewService: inputData.addNewService ? false : true });
+                                        setNewSuggestService([]);
+                                    }} readOnly
+                                    type="checkbox" id=""
+                                />
+                                <label className='leading-7 ml-2 font-[600] text-gray-700 col-span-3' htmlFor="">Suggestion more service</label>
+                            </div>
+                            <div className={`${!inputData.addNewService ? 'hidden' : 'block'}`} >
                                 <TagsInput
                                     className="bg-gray-400"
-                                    value={newSuggestService} onChange={setNewSuggestService} name="tags" placeHolder="enter products"
+                                    value={newSuggestService} onChange={setNewSuggestService} name="tags" placeHolder="More service"
                                 />
                             </div>
                         </div>
@@ -429,6 +439,7 @@ const New_form = () => {
                                 localStorage.removeItem("entire");
                                 setCount({ branch: 1, website: 1 });
                                 setSelectedCountry(null);
+                                setNewSuggestService([])
                                 setSelectedState(null);
                                 setSelectedCity(null);
                                 setWebsite({});

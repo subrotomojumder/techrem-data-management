@@ -16,6 +16,7 @@ import { updateConfirm } from '@/utils/neededFun';
 import { TbFilter, TbFilterOff } from 'react-icons/tb';
 import AddressInput from '@/components/Forms/AddressInput';
 import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
+import PaginationBar from '@/components/PaginationBar';
 
 const Entires_data = () => {
     const [updateEntry, setUpdateEntry] = useState(null)
@@ -26,14 +27,13 @@ const Entires_data = () => {
     const [selectedUser, setSelectedUser] = useState({});
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
+    const [stockLimit, setStockLimit] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
     // ${queryData.createDate && `&create_date[eq]=${queryData.createDate}`} main=&sub1=&country=&state=&city=&keyword=&account_id=&we_offer=&create_date=&sort=&create_date[gte]=&create_date[lte]=
-    const searchQuery = `main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaignStatus=${queryData.campaign || ""}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaignStatus=${queryData.campaign || ""}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
-
-    // console.log(allData, allDataLoading, allIsError, AllError);
-    // console.log(data?.data, isLoading, isError, error);
-    console.log(searchQuery)
+    // console.log(searchQuery)
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
@@ -100,9 +100,7 @@ const Entires_data = () => {
                                     </button>
 
                                     <button
-                                        type="button" onClick={() => {
-                                            console.log(new Date(new Date().getTime() - 120 * 60 * 60 * 1000))
-                                        }}
+                                        type="button" onClick={() => setDateRange([new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), new Date()])}
                                         className="rounded-md bg-white pl-3 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                     >
                                         Last 30 Days  <AiOutlineDown className={`inline ml-4`} />
@@ -143,20 +141,20 @@ const Entires_data = () => {
                                         <th scope="col" className="pl-5 py-3.5 text-left text-md font-semibold text-gray-900">
                                             Business
                                         </th>
-                                        <th scope="col" className="py-3.5 pl-4 pr-4 text-md font-semibold text-gray-900 sm:pl-6">
-                                            Category
+                                        <th scope="col" className="py-3.5 px-1 text-md font-semibold text-gray-900 sm:pl-6">
+                                            Category <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "category1" ? "category1" : "category-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
                                             className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
                                         >
-                                            Entry
+                                            Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
                                             className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell whitespace-pre"
                                         >
-                                            Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort === "fast" ? "last" : "fast" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl  text-green-500 duration-500`} /></button>
+                                            Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
@@ -277,6 +275,7 @@ const Entires_data = () => {
                             </table>
                         </div>
                     </div >
+                    <PaginationBar totalDataLength={data.totalData} stockLimit={stockLimit} setStockLimit={setStockLimit} currentPage={currentPage} setCurrentPage={setCurrentPage}></PaginationBar>
                 </div>
             </div >
         } else {

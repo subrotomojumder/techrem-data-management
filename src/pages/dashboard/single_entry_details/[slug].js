@@ -34,181 +34,211 @@ const Single_Entry_show = () => {
     };
 
     if (data?.success) {
-        const { businessDetails: { businessName, businessEmail, businessPhone, category, businessSize, businessLogo, images }, onProcess, tag, other_information, have_branchs: { branch_detalis }, createdAt, updatedAt, address: { country, state, city, street_address, postCode }, have_website: { website_urls } } = data.data;
+        const { businessDetails: { businessName, businessEmail, businessPhone, country_code, category, businessLogo },
+            we_offer_service, they_offer_service, onProcess, other_information, createdAt, updatedAt, suggestions, data_entry_operator,
+            address: { country, state, city, street_address, postCode, location_link }, have_website: { website_urls } } = data.data;
         return (
             <div className='capitalize w-full min-h-screen'>
-                <div className="flex justify-around mt-2">
-                    <button
-                        onClick={() => setShowData("overview")}
-                        className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "overview" && " border-b-4 "} border-blue-400 `}
-                    >Overview</button>
-                    <button
-                        onClick={() => setShowData("menu")}
-                        className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "menu" && "border-b-4 "} border-blue-400 `}
-                    >Menus</button>
-                    <button
-                        onClick={() => setShowData("other")}
-                        className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "other" && " border-b-4 "} border-blue-400 `}
-                    >Others</button>
-                    <button
-                        onClick={() => setShowData("owners")}
-                        className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "owners" && "border-b-4 "} border-blue-400 `}
-                    >Owners</button>
-                    {user.role !== DATA_ENTRY_OPERATOR && <button
-                        onClick={() => setShowData("status")}
-                        className={`text-sm md:text-lg text-orange-400 font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4 "} border-blue-400 `}
-                    >Status</button>}
+                <div className="w-full bg-indigo-100">
+                    <div className='w-full flex justify-around py-2 px-2 md:px-4 max-w-6xl mx-auto'>
+                        <button
+                            onClick={() => setShowData("overview")}
+                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "overview" && " border-b-4 "} border-blue-500 `}
+                        >Overview</button>
+                        <button
+                            onClick={() => setShowData("service")}
+                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "service" && "border-b-4 "} border-blue-500`}
+                        >Services</button>
+                        <button
+                            onClick={() => setShowData("other")}
+                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "other" && " border-b-4 "} border-blue-500 `}
+                        >Entry By</button>
+                        {user.role !== DATA_ENTRY_OPERATOR && <button
+                            onClick={() => setShowData("status")}
+                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4 "} border-blue-500`}
+                        >Status</button>}
+                    </div>
                 </div>
-                {showData === "overview"
-                    // ? <div className='h-full bg-indigo-100 px-6 pb-8 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
-                    //     <h4 className='text-lg font-serif text-indigo-700 mb-1'>Entire data Information</h4>
-                    //     <div className='flex justify-start'>
-                    //         <h5 className='w-32'>Category</h5>
-                    //         <h5 className='flex-1'>: {category}</h5>
-                    //     </div>
-                    //     <div className='flex justify-start'>
-                    //         <h5 className='w-32'>Institution</h5>
-                    //         <h5 className='flex-1'>: {businessName}</h5>
-                    //     </div>
-                    //     <div className='flex justify-start'>
-                    //         <h5 className='w-32'>Size</h5>
-                    //         <h5 className='flex-1'>: {businessSize}</h5>
-                    //     </div>
-                    //     <div className='flex justify-start'>
-                    //         <h5 className='w-32'>Address</h5>
-                    //         <h5 className='flex-1'>: {country}, {state}, {city}, {street_address && street_address} </h5>
-                    //     </div>
-                    //     <div className='flex justify-start'>
-                    //         <h5 className='w-32'>Local post code</h5>
-                    //         <h5 className='flex-1'>: {postCode || "N/A"} </h5>
-                    //     </div>
-                    //     {branch_detalis?.length && <div className='flex justify-start font-medium'>
-                    //         <h5 className='w-32'>Branch</h5>
-                    //         <div className='flex-1'>: Information
-                    //             {branch_detalis.map((branch, i) => <div key={i}>
-                    //                 <p className='text-xs font-medium'>Branch-{++i}</p>
-                    //                 <p>Name- {branch.name || "N/A"}</p>
-                    //                 <p>country- {branch.country || "N/A"}</p>
-                    //                 <p>State- {branch.state || "N/A"}</p>
-                    //                 <p>Street- {branch.street_address || "N/A"}</p>
-                    //             </div>)}
-                    //         </div>
-                    //     </div>}
-                    //     {website_urls?.length && <div className='flex justify-start'>
-                    //         <h5 className='w-32'>Websites</h5>
-                    //         <div className='flex-1'>: Details
-                    //             {website_urls.map((site, i) => <ol key={i} >
-                    //                 <li>{++i}. <a className='text-blue-500 hover:underline hover:text-indigo-700' href={site} target="_blank" rel="noopener noreferrer">{site}</a></li>
-                    //             </ol>)}
-                    //         </div>
-                    //     </div>}
-                    // </div>
-                    // : showData === "status"
-                    //     ? <div className='h-full bg-yellow-100 px-6 pb-8 pt-3 font-medium'>
-                    //         <h4 className='text-xl text-center font-serif text-indigo-700 mb-2 underline underline-offset-4'>Work info details</h4>
-                    //         {onProcess ? <div className='grid grid-cols-12 gap-y-6 divide-y-2 lg:divide-y-0 lg:divide-x-2'>
-                    //             {onProcess.teleMarketer &&
-                    //                 <div className='col-span-12 lg:col-span-6 space-y-3'>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Telemarketer </h5>
-                    //                         <h5 className='flex-1'>: {onProcess.teleMarketer?.name}</h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Work process</h5>
-                    //                         <h5 className='flex-1'>: {onProcess.teleMarketer?.process}</h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Employee Email</h5>
-                    //                         <h5 className='flex-1 lowercase'>: {onProcess.teleMarketer?.account_id?.email}</h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Employee Phone</h5>
-                    //                         <h5 className='flex-1'>: {"+" + " " + onProcess.teleMarketer?.account_id?.country_code + " " + onProcess.teleMarketer?.account_id?.phone} </h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Address</h5>
-                    //                         <h5 className='flex-1'>: {onProcess.teleMarketer?.account_id?.address?.country + "," + " " + onProcess.teleMarketer?.account_id?.address?.state + "," + " " + onProcess.teleMarketer?.account_id?.address?.city} </h5>
-                    //                     </div>
-                    //                 </div>
-                    //             }
-                    //             {onProcess.onfieldMarketer &&
-                    //                 <div className='col-span-12 lg:col-span-6 space-y-3 pt-4 lg:pt-0 lg:pl-6'>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>On Field Marketer </h5>
-                    //                         <h5 className='flex-1'>: {onProcess.onfieldMarketer?.name}</h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Work process</h5>
-                    //                         <h5 className='flex-1'>: {onProcess.onfieldMarketer?.process}</h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Employee Email</h5>
-                    //                         <h5 className='flex-1 lowercase'>: {onProcess.onfieldMarketer?.account_id?.email}</h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Employee Phone</h5>
-                    //                         <h5 className='flex-1'>: {"+" + " " + onProcess.onfieldMarketer?.account_id?.country_code + " " + onProcess.teleMarketer?.account_id?.phone} </h5>
-                    //                     </div>
-                    //                     <div className='flex justify-start'>
-                    //                         <h5 className='w-32'>Address</h5>
-                    //                         <h5 className='flex-1'>: {onProcess.onfieldMarketer?.account_id?.address?.country + "," + " " + onProcess.teleMarketer?.account_id?.address?.state + "," + " " + onProcess.teleMarketer?.account_id?.address?.city} </h5>
-                    //                     </div>
-                    //                 </div>
-                    //             }
-                    //         </div> : <div className='text-center my-20 md:my-52'>
-                    //             <p className="text-2xl text-red-500">New Entire!</p>
-                    //         </div>}
-                    //     </div>
-                    //     : showData === "menu"
-                    //         ? <div className='h-full bg-yellow-100 px-6 pb-8 pt-3 font-medium'>
-                    //             <h4 className='text-lg font-serif text-indigo-700 mb-2'>They Service offers</h4>
-                    //             {tag.length ? <div className='grid grid-cols-1 gap-y-2'>
-                    //                 {tag.map((item, i) => <p key={i}>{++i}. {item}</p>)}
-                    //             </div> : <div className='text-center my-20 md:my-52'>
-                    //                 <p className="text-2xl text-red-500">Entire Tag Empty!</p>
-                    //             </div>}
-                    //         </div>
-                    //         : showData === "owners"
-                    //             ? <div className='h-full bg-yellow-50 px-6 pb-8 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
-                    //                 <h4 className='text-lg font-serif text-indigo-700 mb-1'>Owners Information</h4>
-                    //                 <div className='flex justify-start'>
-                    //                     <h5 className='w-32'>Owner Name</h5>
-                    //                     <h5 className='flex-1'>: {name}</h5>
-                    //                 </div>
-                    //                 <div className='flex justify-start'>
-                    //                     <h5 className='w-32'>Owner Email</h5>
-                    //                     <h5 className='flex-1'>: {email}</h5>
-                    //                 </div>
-                    //                 <div className='flex justify-start'>
-                    //                     <h5 className='w-32'>Phone</h5>
-                    //                     <h5 className='flex-1'>: {"+" + country_code + " " + phone}</h5>
-                    //                 </div>
-                    //                 <div className='flex justify-start'>
-                    //                     <h5 className='w-32'>Address</h5>
-                    //                     <h5 className='flex-1'>: {country}, {state}, {city}, {street_address && street_address} </h5>
-                    //                 </div>
-                    //             </div>
-                    //             : <div className='h-full bg-gray-100 px-6 pb-8 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
-                    //                 <h4 className='text-lg font-serif text-indigo-700 mb-1'>Relative Info</h4>
-                    //                 <div className='flex justify-start'>
-                    //                     <h5 className='w-32'>Entire Date</h5>
-                    //                     <h5 className='flex-1'>: {new Date(createdAt).toLocaleString()}</h5>
-                    //                 </div>
-                    //                 <div className='flex justify-start'>
-                    //                     <h5 className='w-32'>Last Update</h5>
-                    //                     <h5 className='flex-1'>: {new Date(updatedAt).toLocaleString()}</h5>
-                    //                 </div>
-                    //                 <p><span className='font-medium'>Entire operator Note</span> : <span className='font-normal space-y-2'>{other_information}</span></p>
-                    //                 <p>Company Logo :</p>
-                    //                 <Image width={75} height={55} src={businessLogo} alt='Company Logo'></Image>
-                    //                 {images?.length > 0 && <div>
-                    //                     <p>Other Images:</p>
-                    //                     {images.map((img, i) => <Image key={i} width={300} height={300} src={img} alt='Company Logo'></Image>)}
-                    //                 </div>
-                    //                 }
-                    //             </div>
-                }
-            </ div>
+                <div className='mt-2 w-full px-3 md:px-10 xl:px-0'>
+                    <div className='w-full max-w-6xl min-h-[90vh] mx-auto bg-white rounded-lg shadow py-2'>
+                        {showData === "overview"
+                            ? <div className='h-full px-6 lg:px-10 pb-8 pt-3 grid grid-cols-1 gap-y-2 lg:gap-y-4 font-medium'>
+                                <h4 className='text-lg xl:text-xl font-serif text-indigo-700 mb-1'>Entire data Information</h4>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Business name</h5>
+                                    <h5 className='flex-1'>: {businessName}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Category</h5>
+                                    <h5 className='flex-1 capitalize'>: {category.main}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Sub Category</h5>
+                                    <h5 className='flex-1 capitalize'>: {category.sub1 || "N/A"}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Email</h5>
+                                    <h5 className='flex-1 lowercase'>: {businessEmail || "N/A"}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Phone</h5>
+                                    <h5 className='flex-1 capitalize'>: + {country_code || "N/A"} {businessPhone || "N/A"}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Local post code</h5>
+                                    <h5 className='flex-1'>: {postCode || "N/A"} </h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Address </h5>
+                                    <h5 className='flex-1'>: {city}, {state}, {country}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Street address</h5>
+                                    <h5 className='flex-1'>: {street_address || "N/A"} </h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Map Link</h5>
+                                    <h5 className='flex-1'>: {location_link ? <a className='font-normal text-blue-500 hover:underline hover:text-indigo-700' href={location_link} target='_blank'>Google map location link</a> : "N/A"} </h5>
+                                </div>
+                                {website_urls?.length > 0 && <div className='flex justify-start'>
+                                    <h5 className='w-32'>Websites</h5>
+                                    <div className='flex-1'>: Site link
+                                        {website_urls.map((site, i) => <ol key={i} >
+                                            <li>{++i}. <a className='font-normal text-blue-500 hover:underline hover:text-indigo-700' href={site} target="_blank" rel="noopener noreferrer">{site}</a></li>
+                                        </ol>)}
+                                    </div>
+                                </div>}
+                                <div className='flex justify-start mt-2'>
+                                    <h5 className='w-32'>Business Logo</h5>
+                                    <h5 className='flex-1'>
+                                        <Image width={150} height={70} className='rounded mt-2' src={businessLogo} alt='Company Logo'></Image></h5>
+                                </div>
+                            </div>
+                            : showData === "service"
+                                ? <div className='h-full space-y-2 px-6  pb-8 pt-3 font-medium'>
+                                    <div className=' bg-gray-100 py-5 px-5 rounded'>
+                                        <h5 className='font-[400] mb-2 underline underline-offset-4'>We offer Service :</h5>
+                                        <div className='flex-1 capitalize'>
+                                            {we_offer_service?.length ?
+                                                <div className='grid grid-cols-1 gap-y-2 text-md'>
+                                                    {we_offer_service.map((item, i) => <p className='' key={i}>{++i}. {item}</p>)}
+                                                </div>
+                                                : <p className="text-md text-red-500">Service Empty!</p>
+                                            }</div>
+                                    </div>
+                                    <div className='bg-gray-100 py-5 px-5 rounded'>
+                                        <h5 className='font-[400] mb-2 underline underline-offset-4'>They offer Service :</h5>
+                                        <div className='flex-1 capitalize'>
+                                            {they_offer_service?.length ?
+                                                <div className='grid grid-cols-1 gap-y-2 text-md'>
+                                                    {they_offer_service.map((item, i) => <p className='' key={i}>{++i}. {item}</p>)}
+                                                </div>
+                                                : <p className="text-md text-red-500">Service Empty!</p>
+                                            }</div>
+                                    </div>
+                                    <div className=' bg-gray-100 py-5  px-5 rounded'>
+                                        <h5 className='font-[400] mb-2 underline underline-offset-4'>Add more Service :</h5>
+                                        <div className='flex-1 capitalize'>
+                                            {suggestions?.length ?
+                                                <div className='grid grid-cols-1 gap-y-2 text-md'>
+                                                    {suggestions.map((item, i) => <p className='' key={i}>{++i}. {item}</p>)}
+                                                </div>
+                                                : <p className="text-md text-red-500">Service Empty!</p>
+                                            }</div>
+                                    </div>
+
+                                </div>
+                                : showData === "status"
+                                    ? <div className='h-full bg-yellow-100 px-6 pb-8 pt-3 font-medium'>
+                                        <h4 className='text-xl text-center font-serif text-indigo-700 mb-2 underline underline-offset-4'>Work info details</h4>
+                                        {/* {onProcess ? <div className='grid grid-cols-12 gap-y-6 divide-y-2 lg:divide-y-0 lg:divide-x-2'>
+                                        {onProcess.teleMarketer &&
+                                            <div className='col-span-12 lg:col-span-6 space-y-3'>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Telemarketer </h5>
+                                                    <h5 className='flex-1'>: {onProcess.teleMarketer?.name}</h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Work process</h5>
+                                                    <h5 className='flex-1'>: {onProcess.teleMarketer?.process}</h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Employee Email</h5>
+                                                    <h5 className='flex-1 lowercase'>: {onProcess.teleMarketer?.account_id?.email}</h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Employee Phone</h5>
+                                                    <h5 className='flex-1'>: {"+" + " " + onProcess.teleMarketer?.account_id?.country_code + " " + onProcess.teleMarketer?.account_id?.phone} </h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Address</h5>
+                                                    <h5 className='flex-1'>: {onProcess.teleMarketer?.account_id?.address?.country + "," + " " + onProcess.teleMarketer?.account_id?.address?.state + "," + " " + onProcess.teleMarketer?.account_id?.address?.city} </h5>
+                                                </div>
+                                            </div>
+                                        }
+                                        {onProcess.onfieldMarketer &&
+                                            <div className='col-span-12 lg:col-span-6 space-y-3 pt-4 lg:pt-0 lg:pl-6'>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>On Field Marketer </h5>
+                                                    <h5 className='flex-1'>: {onProcess.onfieldMarketer?.name}</h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Work process</h5>
+                                                    <h5 className='flex-1'>: {onProcess.onfieldMarketer?.process}</h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Employee Email</h5>
+                                                    <h5 className='flex-1 lowercase'>: {onProcess.onfieldMarketer?.account_id?.email}</h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Employee Phone</h5>
+                                                    <h5 className='flex-1'>: {"+" + " " + onProcess.onfieldMarketer?.account_id?.country_code + " " + onProcess.teleMarketer?.account_id?.phone} </h5>
+                                                </div>
+                                                <div className='flex justify-start'>
+                                                    <h5 className='w-32'>Address</h5>
+                                                    <h5 className='flex-1'>: {onProcess.onfieldMarketer?.account_id?.address?.country + "," + " " + onProcess.teleMarketer?.account_id?.address?.state + "," + " " + onProcess.teleMarketer?.account_id?.address?.city} </h5>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div> : <div className='text-center my-20 md:my-52'>
+                                        <p className="text-2xl text-red-500">New Entire!</p>
+                                    </div>} */}
+                                    </div>
+                                    : <div className='h-full px-6 pb-8 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
+                                        <h4 className='text-lg font-serif text-indigo-700 mb-1'>Entry operator Info</h4>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-32'>Entire By</h5>
+                                            <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.fast_name} {data_entry_operator?.account_id?.last_name}</h5>
+                                        </div>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-32'>Position</h5>
+                                            <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.role}</h5>
+                                        </div>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-32'>Email</h5>
+                                            <h5 className='flex-1 lowercase'>: {data_entry_operator?.account_id?.email}</h5>
+                                        </div>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-32'>Phone</h5>
+                                            <h5 className='flex-1 '>: +{data_entry_operator?.account_id?.country_code} {data_entry_operator?.account_id?.phone}</h5>
+                                        </div>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-32'>Entire Date</h5>
+                                            <h5 className='flex-1'>: {new Date(createdAt).toLocaleString()}</h5>
+                                        </div>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-32'>Last Update</h5>
+                                            <h5 className='flex-1'>: {new Date(updatedAt).toLocaleString()}</h5>
+                                        </div>
+                                        <div className='bg-gray-50 p-2 space-y-1'>
+                                            <p><span className='font-medium'>Entire operator Note</span> : </p>
+                                            <p className='font-normal space-y-2'>{other_information}</p>
+                                        </div>
+                                    </div>
+                        }
+                    </div>
+                </div>
+            </ div >
         )
     }
 };

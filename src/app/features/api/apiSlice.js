@@ -6,7 +6,7 @@ export const apiSlice = createApi({
         baseUrl: process.env.NEXT_PUBLIC_SERVER_DEV,
     }),
     tagTypes: [
-        "user", "data", "groups", "tasks", "address", "taskManageApi","singleData","submission","category","our_service"
+        "user", "data", "groups", "tasks", "address", "taskManageApi","singleData","submission","category","our_service","campaignData"
     ],
     endpoints: (builder) => ({}),
 })
