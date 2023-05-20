@@ -29,11 +29,11 @@ const Entires_data = () => {
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    // ${queryData.createDate && `&create_date[eq]=${queryData.createDate}`} main=&sub1=&country=&state=&city=&keyword=&account_id=&we_offer=&create_date=&sort=&create_date[gte]=&create_date[lte]=
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaignStatus=${queryData.campaign || ""}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
+    console.log(searchQuery)
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
-    // console.log(searchQuery)
+    // console.log(data?.data)
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
@@ -65,7 +65,7 @@ const Entires_data = () => {
         if (!updateEntry) {
             return <div className='w-full max-w-[1940px] mx-auto'>
                 <div className="px-4 sm:px-4 xl:px-8 py-4 sm:py-6 xl:py-6">
-                    <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-serif'>All Entire data list</h1>
+                    <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-serif'>All business data list</h1>
                     <div className='overflow-x-auto p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
                         <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
                             <div className='bg-indigo-100 shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
@@ -108,7 +108,7 @@ const Entires_data = () => {
                                 </div>
                             </div>
                             <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-100 drop-shadow-md px-3 py-2`}>
-                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-500" }}></CategoryInput>
+                                <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-700" }}></CategoryInput>
                                 <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
                                 <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
@@ -182,12 +182,12 @@ const Entires_data = () => {
                                 <tbody className=''>
                                     {data?.data?.length === 0 ?
                                         <tr className='w-full text-center'><div className='w-full text-center mt-11 text-2xl text-green-500'>Empty Entire data !</div></tr>
-                                        : data?.data.map(({ businessDetails, _id, createdAt, address, data_entry_operator, we_offer_service, }, planIdx) => (
+                                        : data?.data.map(({ businessDetails, _id, campaign, createdAt, address, data_entry_operator, we_offer_service, }, planIdx) => (
                                             <tr key={_id}>
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-2 py-3.5 text-sm text-gray-500 lg:table-cell'
+                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
                                                     )}
                                                 >
                                                     <Link href={`/dashboard/single_entry_details/${_id}`}>
@@ -213,7 +213,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-2 py-3.5 text-sm text-gray-500 lg:table-cell'
+                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
                                                     )}
                                                 >
                                                     <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.fast_name + ' ' + data_entry_operator?.account_id?.last_name || ""}</span> <br />
@@ -222,7 +222,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-center text-sm text-gray-500'
+                                                        'px-3 py-3.5 text-center text-sm text-gray-700'
                                                     )}
                                                 >
                                                     <div className="text-gray-900">{new Date(createdAt).toLocaleDateString()}</div>
@@ -230,7 +230,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-500 lg:table-cell text-center'
+                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell text-center'
                                                     )}
                                                 >
                                                     <span className="text-gray-900 whitespace-pre">{address?.street_address}</span> <br />
@@ -239,20 +239,26 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-500'
+                                                        'px-3 py-3.5 text-sm text-gray-700'
                                                     )}
                                                 >
-                                                    <button
+                                                    {campaign ? <button
                                                         type="button"
-                                                        className="items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-green-500  shadow bg-gray-100"
+                                                        className="items-center rounded-md px-3 py-1.5 text-sm font-semibold text-green-500  shadow bg-gray-100"
                                                     >
                                                         Active
                                                     </button>
+                                                        : <button
+                                                            type="button"
+                                                            className="items-center rounded-md px-3 py-1.5 text-sm font-semibold whitespace-pre shadow bg-gray-50"
+                                                        >
+                                                            Not yet
+                                                        </button>}
                                                 </td>
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-500 lg:table-cell'
+                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
@@ -260,12 +266,12 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-500 lg:table-cell'
+                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
                                                     )}
                                                 >
                                                     <button
                                                         onClick={() => updateConfirm(_id, setUpdateEntry)}
-                                                        className="flex justify-center items-center gap-2 hover:bg-slate-100 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75">
+                                                        className="flex justify-center items-center gap-2 hover:bg-slate-100 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-700 active:text-gray-700 duration-75">
                                                         <FaEdit /> Edit
                                                     </button>
                                                 </td>

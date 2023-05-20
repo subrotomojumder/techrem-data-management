@@ -6,6 +6,8 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { TbFilter, TbFilterOff } from 'react-icons/tb';
 import AddressInput from '@/components/Forms/AddressInput';
+import { useGetCampaignQuery } from '@/app/features/dataEntire/campaignManageApi';
+import { LargeSpinner } from '@/components/Spinner';
 
 const Active_campaign = () => {
     const [openFilter, setOpenFilter] = useState(false);
@@ -15,6 +17,22 @@ const Active_campaign = () => {
     const [selectedUser, setSelectedUser] = useState({});
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`active=true&`)
+
+    if (isLoading) {
+        return <LargeSpinner />;
+    };
+    if (isError) {
+        if (error.error) {
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{error.error}</p>
+            </div>
+        } else {
+            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+                <p className="text-2xl text-red-500">{error.data.message}</p>
+            </div>
+        }
+    }
     return (
         <div className='w-full max-w-[1400px] mx-auto mdd:px-8'>
             <div className="px-2 smm:px-6 mdd:px-6 xl:px-8 py-4 sm:py-6 xl:py-6 my-2 smm:my-6 bg-white shadow-sm rounded-lg min-h-screen">
@@ -61,14 +79,19 @@ const Active_campaign = () => {
                 </div>
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
                 <div className='grid sm:grid-cols-1 smm:grid-cols-2 mdd:grid-cols-3 xl:grid-cols-4 gap-6'>
-                    {[{ _id: 2 }, { _id: 1 }, { _id: 1 }, { _id: 1 }, { _id: 1 }].map((camp) => <div key={camp._id} className='rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-2 outline-indigo-500 sm:mx-4 smm:mx-0'>
+                    {data?.data?.map((camp) => <div key={camp._id} className='rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-2 outline-indigo-500 sm:mx-4 smm:mx-0'>
+                        {console.log(camp)}
                         <div className='flex sm:flex-row sm:justify-start smm:flex-col smm:gap-2 smm:pb-2'>
                             <img className='min-h-[10%] max-h-[120px] smm:max-h-full smm:w-full md:max-h-[150px]' src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfD9Nty-7-7Cg5zAe67qSrGk8HkTKbmbqZdg&usqp=CAU'} alt={"name"} />
                             <div className='ml-2 sm:ml-4 smm:ml-0 flex flex-col justify-center items-center gap-2'>
                                 <div className='smm:text-center smm:mt-2'>
-                                    <h5 className='text-md font-semibold text-gray-800'><span>{"Noakhali Robin Campaign"}</span></h5>
-                                    <p className='text-md font-semibold text-green-600'>{"New Campaign"}</p>
-                                    <p className='text-sm font-semibold my-2'>{"Noakhali, Bangladesh, Sonapur"}</p>
+                                    <p className='text-md font-semibold text-green-600 capitalize'>{camp?.campaign_objective}</p>
+                                    <h5 className='text-md font-semibold text-gray-800 mb-1'><span>{camp?.campaign_name}</span></h5>
+                                    <p className='text-sm'>{new Date(camp.assign_date?.start).toLocaleDateString()} To {new Date(camp.assign_date?.end).toLocaleDateString()}</p>
+                                    {camp.campaign_objective === "marketing" ?
+                                        <p className='text-md font-semibold my-2 capitalize'>{}</p>
+                                        : <p className='text-md font-semibold my-2 capitalize'>{camp?.area?.city && camp?.area?.city + ','} {camp?.area?.state && camp?.area?.city + ','} {camp?.area?.country}</p>
+                                    }
                                 </div>
                             </div>
                         </div>

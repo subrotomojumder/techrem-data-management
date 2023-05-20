@@ -1,41 +1,25 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import Link from 'next/link';
 import React, { useState, Fragment } from 'react';
 import { FiEdit, FiFilter } from 'react-icons/fi';
 import { GoPrimitiveDot } from 'react-icons/go';
 import { TbArrowsDownUp } from 'react-icons/tb';
 import { useGetEmployeeByQueQuery } from '@/app/features/users/userApi';
-import { CustomLoader, LargeSpinner } from '../Spinner';
+import { LargeSpinner } from '../Spinner';
 import AddressInput from '../Forms/AddressInput';
 import { ADMIN, BILLING_TEAM, DATA_ENTRY_OPERATOR, MARKETER, ON_FIELD_MARKETER, TELE_MARKETER } from '@/utils/constant';
 import PaginationBar from '../PaginationBar';
 import { IoMdCheckmark } from 'react-icons/io';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import Swal from 'sweetalert2';
-import { usePostCampaignMutation } from '@/app/features/dataEntire/campaignManageApi';
-import { errorSweetAlert, successToast } from '@/utils/neededFun';
 
-const AllUserForCampaign = ({ setTogglePage, campaignData, setCampaignData , setCampaignAddress,setStartDate, setEndDate }) => {
+const AllUserForCampaign = ({ setTogglePage, campaignData, createCampaignFunc }) => {
     const [openFilter, setOpenFilter] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState({});
     const [queryData, setQueryData] = useState({});
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
     const { data, isLoading, isError, error } = useGetEmployeeByQueQuery(`skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&role=${queryData.role || ''}&keyword=${queryData.keyword || ''}&country=${selectedAddress.country || ""}&state=${selectedAddress.state || ""}&city=${selectedAddress.city || ""}&sort=${queryData?.sort || ''}&active=true`);
-    const [createCampaignPost, { isLoading: postLoading }] = usePostCampaignMutation();
     const handleSelectUser = (user) => {
-        const newData = {
-            campaign_name: campaignData?.campaign_name,
-            campaign_objective: campaignData?.objective,
-            staff_info: {
-                fast_name: user.fast_name,
-                last_name: user.last_name,
-                role: user.role,
-                account_id: user._id
-            },
-            assign_date: campaignData?.duration,
-            area: campaignData?.selectedAddress,
-        }
         Swal.fire({
             title: user.fast_name + ' ' + user.last_name,
             text: "Do you want to select the Staff?",
@@ -46,36 +30,21 @@ const AllUserForCampaign = ({ setTogglePage, campaignData, setCampaignData , set
             confirmButtonText: 'Confirm Assign!'
         }).then((result) => {
             if (result.isConfirmed) {
-                createCampaignPost(newData)
-                    .then(res => {
-                        if (res.data?.success) {
-                            Swal.fire(
-                                'Complete!',
-                                'Campaign create successful.',
-                                'success'
-                            )
-                            setCampaignData(null);
-                            setCampaignAddress(null);
-                            setStartDate(null)
-                            setEndDate(null)
-                            setTogglePage(1);
-                        } else {
-                            console.log(res);
-                            if (res.error) {
-                                if (res.error?.message) {
-                                    return errorSweetAlert(res.error.message);
-                                }
-                                if (res?.error?.data?.message) {
-                                    return errorSweetAlert(res.error?.data.dev_error || res.error?.data.message);
-                                }
-                                if (res.error?.error) {
-                                    return errorSweetAlert(res.error.error);
-                                }
-                            } else if (res.data?.message) {
-                                errorSweetAlert(res?.data.message);
-                            }
-                        }
-                    });
+                const newData = {
+                    campaign_name: campaignData?.campaign_name,
+                    campaign_objective: campaignData?.objective,
+                    staff_info: {
+                        fast_name: user.fast_name,
+                        last_name: user.last_name,
+                        role: user.role,
+                        account_id: user._id
+                    },
+                    dataIds: campaignData?.dataIds || [],
+                    assign_date: campaignData?.duration,
+                    area: campaignData?.selectedAddress,
+                }
+                // return console.log(newData);
+                createCampaignFunc(newData);
             }
         })
     }
@@ -84,9 +53,6 @@ const AllUserForCampaign = ({ setTogglePage, campaignData, setCampaignData , set
         return classes.filter(Boolean).join(' ')
     }
     let content;
-    if (postLoading) {
-        return <CustomLoader></CustomLoader>
-    }
     if (isLoading) {
         content = <LargeSpinner></LargeSpinner>
     };
@@ -226,7 +192,7 @@ const AllUserForCampaign = ({ setTogglePage, campaignData, setCampaignData , set
             <div className="w-full flex justify-between items-center gap-2 my-4 md:px-2 mdd:px-4">
                 <div className="sm:flex-auto">
                     <button
-                        onClick={() => setTogglePage(1)}
+                        onClick={() => setTogglePage(campaignData?.objective === 'data_entry' ? 1 : 2)}
                         className="rounded-md bg-white pl-3 pr-3 py-1 text-md text-gray-900 ring-1 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                     >
                         <BsArrowLeftShort size={18} className='inline-block mb-1' /> Previews
@@ -265,7 +231,6 @@ const AllUserForCampaign = ({ setTogglePage, campaignData, setCampaignData , set
                         className="text-sm bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-1 py-1 lg:py-1.5 leading-8 transition-colors duration-200 ease-in-out"
                     >
                         <option value='' selected >Select Role</option>
-                        <option value={ADMIN}>Admin</option>
                         <option value={MARKETER}>Marketer</option>
                         <option value={DATA_ENTRY_OPERATOR}>Data Entire</option>
                         <option value={ON_FIELD_MARKETER}>Field Marketer</option>

@@ -2,15 +2,15 @@ import { apiSlice } from "../api/apiSlice";
 
 const campaignManageApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getEmployeeTask: builder.query({
-            query: (url) => ({
-                url: url,
+        getCampaign: builder.query({
+            query: (query) => ({
+                url: `/campaign?${query}`,
                 headers: {
                     'content-type': 'application/json',
                     authorization: localStorage.getItem("tech_token"),
                 }
             }),
-            providesTags: ["tasks"]
+            providesTags: ["campaignData"]
         }),
         postCampaign: builder.mutation({
             query: (data) => ({
@@ -28,5 +28,6 @@ const campaignManageApi = apiSlice.injectEndpoints({
 })
 
 export const {
+    useGetCampaignQuery,
     usePostCampaignMutation,
 } = campaignManageApi;

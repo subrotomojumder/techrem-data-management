@@ -10,7 +10,7 @@ export const DateRangeInput = ({ dateRange, setDateRange }) => {
   return (
     <div className="">
       <DatePicker
-        className="rounded-md placeholder:text-gray-600 bg-white pl-3 pr-5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+        className="rounded-md placeholder:text-gray-600 bg-white pl-3 pr-5 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
         selectsRange={true}
         startDate={startDate}
         endDate={endDate}
