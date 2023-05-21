@@ -101,7 +101,7 @@ const Profile = () => {
                             </div>}
                         </div>
                         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                            {['All Entry', 'Pending Data','Current Campaign', ].map((item) => (
+                            {['All Entry', 'Pending Data', 'Current Campaign', 'Up Caming Data', "Reported Data", 'hellliid'].map((item) => (
                                 <div key={item.name} className="overflow-hidden rounded-lg border bg-white px-6 py-5 shadow">
                                     <dt className="truncate text-sm font-medium text-gray-500">{item}</dt>
                                     <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{115} Data</dd>

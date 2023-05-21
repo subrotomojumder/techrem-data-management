@@ -50,6 +50,15 @@ const othersApi = apiSlice.injectEndpoints({
             }),
             providesTags: ["category"]
         }),
+        getDeshbordData: builder.query({
+            query: (url) => ({
+                url: url,
+                headers: {
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["dashboard"]
+        }),
         // we can offer service api
         getOurService: builder.query({
             query: (url) => ({
@@ -106,5 +115,6 @@ export const {
     useGetOurServiceQuery,
     usePostOurServiceMutation,
     useDeleteOurServiceMutation,
-    useUpdateOurServiceMutation
+    useUpdateOurServiceMutation,
+    useGetDeshbordDataQuery
 } = othersApi;

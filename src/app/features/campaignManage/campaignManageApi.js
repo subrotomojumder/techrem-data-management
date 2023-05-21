@@ -4,7 +4,7 @@ const campaignManageApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getCampaign: builder.query({
             query: (query) => ({
-                url: `/campaign?${query}`,
+                url: `/campaign${query}`,
                 headers: {
                     'content-type': 'application/json',
                     authorization: localStorage.getItem("tech_token"),

@@ -3,91 +3,25 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
     BellIcon,
-    ChartPieIcon,
-    HomeIcon,
-    UsersIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link';
 import Footer from '../Footer';
-import { BsPencilSquare } from 'react-icons/bs';
-import { FaUsersCog } from 'react-icons/fa';
-import { FcVoicePresentation } from 'react-icons/fc';
-import { TbActivity, TbListDetails } from 'react-icons/tb';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogoutSet } from '@/app/features/users/userSlice';
-import { ADMIN } from '@/utils/constant';
-import { MdFormatListBulletedAdd, MdOutlineAddLocationAlt, MdOutlineCampaign, MdOutlineCategory } from 'react-icons/md';
-import { VscCompassActive, VscHistory } from 'react-icons/vsc';
-import { FiUserPlus } from 'react-icons/fi';
-import { BiListCheck } from 'react-icons/bi';
+import { ADMIN, MARKETER } from '@/utils/constant';
 import techLogo from '../../assets/images/tech-logo.png';
 import Image from 'next/image';
+import { adminDashboardItems, marketerDashboardItems, teleMarketerDashboardItems } from '@/utils/dashboardItems';
 
 export default function LayoutComponent({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const router = useRouter();
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-    const navigation = [
-        { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
-        {
-            name: 'Staff Management',
-            current: false,
-            children: [
-                { name: 'Create New User', icon: FiUserPlus, href: '/authentication/ac_register' },
-                { name: 'Employee List', icon: ChartPieIcon, href: '/authentication/employee_list' },
-            ],
-        },
-        {
-            name: 'Data Management',
-            current: false,
-            children: [
-                { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
-                { name: 'Business Data List', icon: TbListDetails, href: '/dashboard/entires_data_list' },
-                { name: 'Category Enquiry', icon: MdOutlineCategory, href: '/all_list_enquiry/category_enquiry' },
-            ],
-        },
-        {
-            name: 'Campaign Manage',
-            current: false,
-            children: [
-                { name: 'Create Campaign', icon: MdOutlineCampaign, href: '/dashboard/campaign/create_campaign' },
-                { name: 'Active Campaign', icon: VscCompassActive, href: '/dashboard/campaign/active_campaign' },
-                { name: 'Campaign History', icon: VscHistory, href: '/dashboard/campaign/campaign_history' },
-            ],
-        },
-        {
-            name: 'Our Services',
-            current: false,
-            children: [
-                { name: 'Services list', icon: MdFormatListBulletedAdd, href: '/all_list_enquiry/our_service/service-list' },
-                { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
-            ],
-        },
-        // {
-        //     name: 'Facebook Group',
-        //     current: false,
-        //     children: [
-        //         { name: 'Entire Group', icon: UsersIcon, href: '/dashboard/group_entire' },
-        //         { name: 'Group Data List', icon: FaUsersCog, href: '/dashboard/group_data_list' },
-        //     ],
-        // },
-        { name: 'Send Email', icon: FcVoicePresentation, href: '', current: false },
-        { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
-        // { name: 'Staff Activity log', icon: TbActivity, href: '/', current: false },
-
-        { name: 'Reports', icon: ChartPieIcon, href: '', current: false },
-    ]
-
-    const teams = [
-        { id: 1, name: 'Heroicons', href: '', initial: 'H', current: false },
-        { id: 2, name: 'Tailwind Labs', href: '', initial: 'T', current: false },
-        { id: 3, name: 'Workcation', href: '', initial: 'W', current: false },
-    ]
-
+    let navigation = user?.role === ADMIN ? adminDashboardItems : user?.role === MARKETER ? marketerDashboardItems : teleMarketerDashboardItems;
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
@@ -229,30 +163,6 @@ export default function LayoutComponent({ children }) {
                                                         {allItems}
                                                     </ul>
                                                 </li>
-                                                <li>
-                                                    <div className="text-xs font-semibold leading-6 text-indigo-200">Your teams</div>
-                                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                                        {teams.map((team) => (
-                                                            <li key={team.name}>
-                                                                <a
-                                                                    href={team.href}
-                                                                    className={classNames(
-                                                                        team.current
-                                                                            ? 'bg-indigo-700 text-white'
-                                                                            : 'text-indigo-200 hover:text-white hover:bg-indigo-700',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-indigo-400 bg-indigo-500 text-[0.625rem] font-medium text-white">
-                                                                        {team.initial}
-                                                                    </span>
-                                                                    <span className="truncate">{team.name}</span>
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
-
                                             </ul>
                                         </nav>
                                     </div>
@@ -280,29 +190,6 @@ export default function LayoutComponent({ children }) {
                                         {allItems}
                                     </ul>
                                 </li>
-                                <li>
-                                    <div className="text-xs font-semibold leading-6 text-indigo-200">Your teams</div>
-                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                        {teams.map((team) => (
-                                            <li key={team.name}>
-                                                <a
-                                                    href={team.href}
-                                                    className={classNames(
-                                                        team.current
-                                                            ? 'bg-indigo-700 text-white'
-                                                            : 'text-indigo-200 hover:text-white hover:bg-indigo-700',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-indigo-400 bg-indigo-500 text-[0.625rem] font-medium text-white">
-                                                        {team.initial}
-                                                    </span>
-                                                    <span className="truncate">{team.name}</span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -321,7 +208,7 @@ export default function LayoutComponent({ children }) {
 
                         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
                             <form className="relative flex flex-1" action="#" method="GET">
-                                <label htmlFor="search-field" className="sr-only">
+                                {/* <label htmlFor="search-field" className="sr-only">
                                     Search
                                 </label>
                                 <MagnifyingGlassIcon
@@ -334,7 +221,7 @@ export default function LayoutComponent({ children }) {
                                     placeholder="Search..."
                                     type="search"
                                     name="search"
-                                />
+                                /> */}
                             </form>
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
                                 <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
@@ -381,13 +268,6 @@ export default function LayoutComponent({ children }) {
                                                     >Profile</button>
                                                 </Link>
                                             </Menu.Item>
-                                            {user.role !== ADMIN && <Menu.Item >
-                                                <Link href={`/dashboard/tasks_list`}>
-                                                    <button
-                                                        className={`w-full px-3 py-1 text-md leading-6 text-gray-700 hover:bg-gray-200 font-medium`}
-                                                    >Task-List</button>
-                                                </Link>
-                                            </Menu.Item>}
                                             <Menu.Item >
                                                 <button
                                                     onClick={signOut}

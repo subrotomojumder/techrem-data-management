@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { SmallSpinner } from './Spinner';
 
 export default function EntrySubPreview({ isLoading, previewData, setPreviewData, handleSubmission }) {
-    const { address, businessDetails, have_branchs, have_website, other_information, they_offer_service, we_offer_service } = previewData;
+    const { address, businessDetails, suggestions, have_website, other_information, they_offer_service, we_offer_service } = previewData;
     return (
         <div className='relative max-w-full smm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto px-6 md:px-8 lg:px-16 xl:px-20 py-4 md:py-6 lg:py-8 md:my-5 bg-white rounded drop-shadow-md'>
             <button
@@ -53,7 +53,7 @@ export default function EntrySubPreview({ isLoading, previewData, setPreviewData
                         </dd>
                     </div>
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-900">Their branch</dt>
+                        <dt className="text-sm font-medium text-gray-900">We offered service</dt>
                         <dd className="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 flex flex-wrap justify-start gap-2">:
                             {!we_offer_service.length ? " We can offer service empty!" : we_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-600/80">
                                 {service}
@@ -69,9 +69,9 @@ export default function EntrySubPreview({ isLoading, previewData, setPreviewData
                         </dd>
                     </div>
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-900">We offered service</dt>
+                        <dt className="text-sm font-medium text-gray-900">Suggestions</dt>
                         <dd className="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 flex flex-wrap justify-start gap-2">:
-                            {!we_offer_service.length ? " We can offer service empty!" : we_offer_service.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-600/80">
+                            {!suggestions.length ? " suggestions empty!" : suggestions.map((service, i) => <span key={i} className="inline-flex items-center rounded-md bg-[#FCF4F4] px-2 py-1 text-sm font-medium text-blue-500 ring-1 ring-inset ring-blue-400">
                                 {service}
                             </span>)}
                         </dd>

@@ -68,7 +68,7 @@ const Category_enquiry = () => {
                                 <div className='flex justify-between items-center mx-auto py-3 md:py-4 px-2 md:px-4'>
                                     <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 tracking-tight text-gray-900">Categories</h2>
                                     <div className='w-full flex justify-end items-center gap-3'>
-                                        <div className="relative">
+                                        {/* <div className="relative">
                                             <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center pl-3">
                                                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                             </div>
@@ -77,7 +77,7 @@ const Category_enquiry = () => {
                                                 className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-3 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                                 type="search" id="search" placeholder="Search"
                                             />
-                                        </div>
+                                        </div> */}
                                         <button
                                             onClick={() => setCurrentCategory({ openInput: true, method: "Add new category" })}
                                             type="button"

@@ -220,7 +220,7 @@ const EmployeeList = () => {
                             setQueryData({});
                             setSelectedAddress({});
                         }}
-                        className="rounded-md bg-white pl-3 pr-3 py-1 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                        className="rounded-md bg-white pl-3 pr-3 py-1 lg:py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                     >
                         Reset
                     </button>

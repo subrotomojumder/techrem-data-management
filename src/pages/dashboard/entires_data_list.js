@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
 import { LargeSpinner } from '@/components/Spinner';
-import { AdminProtect } from '@/utils/ProtectRoute';
+import { AdminProtect, Private } from '@/utils/ProtectRoute';
 import { FaEdit } from 'react-icons/fa';
 import { CgArrowsExchangeV } from 'react-icons/cg';
 import Link from 'next/link';
@@ -25,14 +25,14 @@ const Entires_data = () => {
     const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedCategory, setSelectedCategory] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
-    const [dateRange, setDateRange] = useState([null, null]);
+    const [dateRange, setDateRange] = useState([new Date(new Date().getTime() - 9 * 24 * 60 * 60 * 1000), new Date()]);
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
-    console.log(searchQuery)
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
+    // console.log(startDate, endDate)
     // console.log(data?.data)
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
@@ -98,13 +98,17 @@ const Entires_data = () => {
                                     >
                                         Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
                                     </button>
-
-                                    <button
-                                        type="button" onClick={() => setDateRange([new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), new Date()])}
-                                        className="rounded-md bg-white pl-3 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                    <select
+                                        onChange={(e) => setDateRange([new Date(new Date().getTime() - Number(e.target.value) * 24 * 60 * 60 * 1000), new Date()])}
+                                        // value={queryData.campaign || ''}
+                                        className="rounded-md bg-white pl-3 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                     >
-                                        Last 30 Days  <AiOutlineDown className={`inline ml-4`} />
-                                    </button>
+                                        <option value={30} selected>Last 30 Days</option>
+                                        <option value={15}>Last 15 Days</option>
+                                        <option value={7}>Last 07 Days</option>
+                                        <option value={5}>Last 05 Days</option>
+                                        <option value={1}>Last 01 Days</option>
+                                    </select>
                                 </div>
                             </div>
                             <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-100 drop-shadow-md px-3 py-2`}>
@@ -112,11 +116,11 @@ const Entires_data = () => {
                                 <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
                                 <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
-                                <input
+                                {/* <input
                                     onChange={(e) => setQueryData(c => ({ ...c, createDate: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
                                     type="date" value={queryData.createDate || ''}
                                     className="rounded-md bg-white pl-2 pr-2 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                                />
+                                /> */}
                                 <select
                                     onChange={(e) => setQueryData(c => ({ ...c, we_offer: e.target.value }))}
                                     value={queryData.we_offer || ""}
@@ -128,7 +132,7 @@ const Entires_data = () => {
                                 <select
                                     onChange={(e) => setQueryData(c => ({ ...c, campaign: e.target.value }))}
                                     value={queryData.campaign || ''}
-                                    className="rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                    className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 >
                                     <option value='' selected >Campaign Status</option>
                                     <option value={true}>Active</option>
@@ -141,7 +145,7 @@ const Entires_data = () => {
                                         <th scope="col" className="pl-5 py-3.5 text-left text-md font-semibold text-gray-900">
                                             Business
                                         </th>
-                                        <th scope="col" className="py-3.5 px-1 text-md font-semibold text-gray-900 sm:pl-6">
+                                        <th scope="col" className="py-3.5 px-1 min-w-[150px] text-md font-semibold text-gray-900 sm:pl-6">
                                             Category <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "category1" ? "category1" : "category-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
@@ -170,7 +174,7 @@ const Entires_data = () => {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
+                                            className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
                                         >
                                             We-can-offer
                                         </th>
@@ -258,7 +262,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                        'px-3 py-3.5 text-sm text-center text-gray-700 lg:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
@@ -290,4 +294,4 @@ const Entires_data = () => {
     };
 };
 
-export default AdminProtect(Entires_data);
+export default Private(Entires_data);

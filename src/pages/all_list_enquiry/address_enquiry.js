@@ -1,22 +1,23 @@
-import { useDeleteCategoryMutation, } from '@/app/features/others/othersApi';
 import { LargeSpinner } from '@/components/Spinner';
 import React, { useState } from 'react';
-import {TrashIcon } from '@heroicons/react/24/outline'
+import { TrashIcon } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { TbCircleChevronDown } from 'react-icons/tb';
 import { FaEdit } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { Private } from '@/utils/ProtectRoute';
-import { successToast } from '@/utils/neededFun';
-import { useGetAllAddressQuery } from '@/app/features/address/addressApi';
+import { useDeleteAddressMutation, useGetAllAddressQuery } from '@/app/features/address/addressApi';
+import AddressAddForm from '@/components/Forms/AddressAddFrom';
+import { errorToast, successToast } from '@/utils/neededFun';
 
 const Address_enquiry = () => {
     const [selectedData, setSelectedData] = useState(null);
     const [toggleState, setToggleState] = useState({});
     const [queryData, setQueryData] = useState({})
     const { data, isLoading, isError, error } = useGetAllAddressQuery(`/address?keyword=${queryData.keyword || ''}`);
-    console.log(data)
-    const categoryDelete = (id, property) => {
+    const [addressDeleteApi] = useDeleteAddressMutation();
+    // console.log(data)
+    const addressDelete = (id, property) => {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't delete category!",
@@ -27,14 +28,15 @@ const Address_enquiry = () => {
             confirmButtonText: 'Delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                // .then(res => {
-                //     console.log(res);
-                //     if (res.data?.success) {
-                //         successToast("Category delete successful!");
-                //     } else {
-                //         errorToast("Something went wrong!")
-                //     }
-                // });
+                addressDeleteApi({[property]: id})
+                .then(res => {
+                    console.log(res);
+                    if (res.data?.success) {
+                        successToast("Delete successful!");
+                    } else {
+                        errorToast("Something went wrong!")
+                    }
+                });
             }
         })
     }
@@ -66,7 +68,7 @@ const Address_enquiry = () => {
                                 <div className='flex justify-between items-center mx-auto py-3 md:py-4 px-2 md:px-4'>
                                     <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 tracking-tight text-gray-900">Address</h2>
                                     <div className='w-full flex justify-end items-center gap-3'>
-                                        <div className="relative">
+                                        {/* <div className="relative">
                                             <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center pl-3">
                                                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                             </div>
@@ -75,14 +77,14 @@ const Address_enquiry = () => {
                                                 className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-3 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                                 type="search" id="search" placeholder="Search"
                                             />
-                                        </div>
-                                        {/* <button
-                                            onClick={() => setCurrentCategory({ openInput: true, method: "Add new category" })}
+                                        </div> */}
+                                        <button
+                                            onClick={() => setSelectedData({ openInput: true, method: "Add new country" })}
                                             type="button"
                                             className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                         >
-                                            + New Category
-                                        </button> */}
+                                            + New Country
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="min-w-full divide-y divide-gray-200">
@@ -107,22 +109,22 @@ const Address_enquiry = () => {
                                                         <div className='w-52 grid grid-cols-3'>
                                                             <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                 <button
-                                                                    onClick={() => setSelectedData({ openInput: true, country: country, method: "Add new state" })}
+                                                                    onClick={() => setSelectedData({ openInput: true, country: country, countryDis: true, method: "Add new state" })}
                                                                     className="flex justify-center items-center gap-2 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75"
                                                                 >
                                                                     + New
                                                                 </button>
                                                             </div>
                                                             <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                                                                <button   
-                                                                    onClick={() => setSelectedData({ openInput: true, mainCtg: country, method: "Update main category" })}
+                                                                <button
+                                                                    onClick={() => setSelectedData({ openInput: true, country: country, method: "Update country" })}
                                                                     className="flex justify-center items-center gap-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75">
                                                                     <FaEdit /> Edit
                                                                 </button>
                                                             </div>
                                                             <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                 <button
-                                                                    onClick={() => categoryDelete(country.id, "main")} type="button"
+                                                                    onClick={() => addressDelete(country.id, "country")} type="button"
                                                                     className="rounded px-2 py-1.5 text-sm font-semibold text-gray-900 hover:shadow bg-slate-100 hover:bg-slate-200"
                                                                 >
                                                                     <TrashIcon className='w-4 h-4'></TrashIcon>
@@ -140,7 +142,7 @@ const Address_enquiry = () => {
                                                                     <div className='w-52 grid grid-cols-3'>
                                                                         <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                             <button
-                                                                                onClick={() => setSelectedData({ openInput: true, mainCtg: country, mainDis: true, method: "Add new sub category" })}
+                                                                                onClick={() => setSelectedData({ openInput: true, country: country, state: state, countryDis: true, stateDis: true, method: "Add new city" })}
                                                                                 className="flex justify-center items-center gap-2 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75"
                                                                             >
                                                                                 + New
@@ -148,14 +150,14 @@ const Address_enquiry = () => {
                                                                         </div>
                                                                         <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                             <button
-                                                                                onClick={() => setSelectedData({ openInput: true, subCtg: state, mainCtg: country, mainDis: true, method: "Update Sub category" })}
+                                                                                onClick={() => setSelectedData({ openInput: true, state: state, country: country, countryDis: true, method: "Update state" })}
                                                                                 className="flex justify-center items-center gap-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75">
                                                                                 <FaEdit /> Edit
                                                                             </button>
                                                                         </div>
                                                                         <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                             <button
-                                                                                onClick={() => categoryDelete(state.id, "sub1")} type="button"
+                                                                                onClick={() => addressDelete(state.id, "state")} type="button"
                                                                                 className="rounded px-2 py-1.5 text-sm font-semibold text-gray-900 hover:shadow bg-slate-100 hover:bg-slate-200"
                                                                             >
                                                                                 <TrashIcon className='w-4 h-4'></TrashIcon>
@@ -176,14 +178,14 @@ const Address_enquiry = () => {
                                                                                     </div>
                                                                                     <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                                         <button
-                                                                                            onClick={() => setSelectedData({ openInput: true, subCtg: city, mainCtg: country, mainDis: true, method: "Update Sub category" })}
+                                                                                            onClick={() => setSelectedData({ openInput: true, state: state, city:city, country: country, countryDis: true, stateDis:true, method: "Update City" })}
                                                                                             className="flex justify-center items-center gap-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-500 active:text-gray-700 duration-75">
                                                                                             <FaEdit /> Edit
                                                                                         </button>
                                                                                     </div>
                                                                                     <div className="col-span-1 whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                                                                                         <button
-                                                                                            onClick={() => categoryDelete(city.id, "sub1")} type="button"
+                                                                                            onClick={() => addressDelete(city.id, "city")} type="button"
                                                                                             className="rounded px-2 py-1.5 text-sm font-semibold text-gray-900 hover:shadow bg-slate-100 hover:bg-slate-200"
                                                                                         >
                                                                                             <TrashIcon className='w-4 h-4'></TrashIcon>
@@ -208,7 +210,7 @@ const Address_enquiry = () => {
                 </div >
             )
         } else {
-            return  <div>Create kora hoi nai</div> //<AddressAddForm selectedData={selectedData} setSelectedData={setSelectedData}></AddressAddForm>
+            return <AddressAddForm selectedData={selectedData} setSelectedData={setSelectedData}></AddressAddForm>
         }
     };
 };

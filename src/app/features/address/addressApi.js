@@ -15,6 +15,30 @@ const addressApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["address","state","city"]
         }),
+        updateAddress: builder.mutation({
+            query: (data) => ({
+                method: "PUT",
+                url: "/address",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["address"]
+        }),
+        deleteAddress: builder.mutation({
+            query: (data) => ({
+                method: "DELETE",
+                url: "/address",
+                body: data,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            invalidatesTags: ["address"]
+        }),
         getAllAddress: builder.query({
             query: (url) => ({
                 url: url,
@@ -30,5 +54,7 @@ const addressApi = apiSlice.injectEndpoints({
 export const {
    usePostAddressMutation,
    useGetAllAddressQuery,
+   useDeleteAddressMutation,
+   useUpdateAddressMutation
    
 } = addressApi;

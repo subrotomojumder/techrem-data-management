@@ -78,8 +78,8 @@ const navigation = {
 
 const Footer = () => {
     return (
-        <footer className="pt-10 sm:pt-12">
-            <div className="mx-auto max-w-7xl overflow-hidden px-6 py-10 sm:py-12 lg:px-8 bg-gray-50 border-t border-b">
+        <footer className="mt-10 sm:mt-12 bg-gray-50 border-t border-b">
+            <div className="mx-auto max-w-7xl overflow-hidden px-6 py-10 sm:py-12 lg:px-8 ">
                 <nav className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
                     {navigation.main.map((item) => (
                         <div key={item.name} className="pb-6">

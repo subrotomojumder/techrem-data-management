@@ -35,12 +35,12 @@ export default function CategoryAddForm({ currentCategory, setCurrentCategory })
                         errorToast("Something went wrong!")
                     }
                 });
-        } else if (currentCategory?.method === "Add new sub category") {
+        } else {
             postNewCategory({ main: form.main?.value, sub1: form.sub1?.value })
                 .then(res => {
                     console.log(res);
                     if (res.data?.success) {
-                        successToast("New category add successful!")
+                        successToast("New add successful!")
                         setCurrentCategory(null)
                         form.reset();
                     } else {
@@ -53,7 +53,7 @@ export default function CategoryAddForm({ currentCategory, setCurrentCategory })
     return (
         <>
             <div className="flex min-h-screen flex-1 flex-col justify-start items-center px-6 py-12 lg:px-8">
-                <div className="w-full max-w-2xl h-fit py-6 mdd:py-10 bg-white rounded-lg drop-shadow-sm relative">
+                <div className="w-full max-w-2xl h-fit py-6 mdd:py-10 bg-white rounded-lg shadow relative">
                     <button
                         onClick={() => setCurrentCategory(null)} type="button"
                         className="absolute top-8 right-8 rounded-full bg-indigo-50 px-3.5 py-2 text-sm font-semibold text-red-500 shadow-sm hover:bg-indigo-200"

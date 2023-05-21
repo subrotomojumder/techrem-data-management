@@ -13,7 +13,7 @@ const Single_Entry_show = () => {
     const [showData, setShowData] = useState('overview');
     const { user } = useSelector((state) => state.auth);
     const { data, isLoading, isError, error } = useGetEntireDataByIdQuery(slug);
-    console.log(data, isLoading, isError, error);
+    // console.log(data, isLoading, isError, error);
     if (isLoading) {
         return <LargeSpinner />;
     };
@@ -59,8 +59,8 @@ const Single_Entry_show = () => {
                         >Status</button>}
                     </div>
                 </div>
-                <div className='mt-2 w-full px-3 md:px-10 xl:px-0'>
-                    <div className='w-full max-w-6xl min-h-[90vh] mx-auto bg-white rounded-lg shadow py-2'>
+                <div className='my-4 w-full px-3 md:px-10 xl:px-0'>
+                    <div className='w-full lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-[90vh] mx-auto bg-white rounded-lg shadow py-2'>
                         {showData === "overview"
                             ? <div className='h-full px-6 lg:px-10 pb-8 pt-3 grid grid-cols-1 gap-y-2 lg:gap-y-4 font-medium'>
                                 <h4 className='text-lg xl:text-xl font-serif text-indigo-700 mb-1'>Entire data Information</h4>
@@ -111,7 +111,7 @@ const Single_Entry_show = () => {
                                 <div className='flex justify-start mt-2'>
                                     <h5 className='w-32'>Business Logo</h5>
                                     <h5 className='flex-1'>
-                                        <Image width={150} height={70} className='rounded mt-2' src={businessLogo} alt='Company Logo'></Image></h5>
+                                        <img className='rounded mt-2 w-[180px] h-[120px]' src={businessLogo} alt='Company Logo'/></h5>
                                 </div>
                             </div>
                             : showData === "service"

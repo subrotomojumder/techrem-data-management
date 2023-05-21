@@ -54,13 +54,6 @@ const Contact_manage = () => {
     const handleInput = e => {
         setInputData({ ...inputData, [e.target.name]: e.target.value });
     };
-    const handleDemoSite = (value) => {
-        if (demoSite.includes(value)) {
-            setDemoSite(demoSite.filter(link => link !== value));
-        } else {
-            setDemoSite(c => ([...c, value]));
-        }
-    };
     const handleUpdate = (e) => {
         e.preventDefault();
         if (inputData.talk_later && !inputData.talk_later_time) {
@@ -103,20 +96,6 @@ const Contact_manage = () => {
                 });
         }
     };
-
-    const demoWebsites = [
-        { ctg: "development", name: "Food service", link: "http://www.dgfood.gov.bd/1" },
-        { ctg: "development", name: "Uniform", link: "http://www.dgfood.gov.bd/2" },
-        { ctg: "development", name: "Electric", link: "http://www.dgfood.gov.bd/3" },
-        { ctg: "development", name: "Light fare", link: "http://www.dgfood.gov.bd/4" },
-        { ctg: "erp", name: "ERP solution", link: "http://www.dgfood.gov.bd/5" },
-        { ctg: "erp", name: "JAngo part", link: "http://www.dgfood.gov.bd/6" },
-        { ctg: "app", name: "Honda Service", link: "http://www.dgfood.gov.bd/7" },
-        { ctg: "business", name: "E-airlines service", link: "http://www.dgfood.gov.bd/8" },
-        { ctg: "business", name: "Airport Service", link: "http://www.dgfood.gov.bd/9" },
-        { ctg: "marketing", name: "Hlekjdkljfjj", link: "http://www.dgfood.gov.bd/10" },
-        { ctg: "marketing", name: "Photography Zoom", link: "http://www.dgfood.gov.bd/11" }
-    ]
     if (!router.query?.slug || dataLoading) {
         return <LargeSpinner />;
     };
@@ -136,14 +115,14 @@ const Contact_manage = () => {
         }
     };
     return (
-        <div className='grid grid-cols-1 md:grid-cols-5 gap-4 lg:max-w-5xl lggg:max-w-6xl xl:max-w-7xl mx-4 smm:mx-16 md:mx-4 lg:mx-auto'>
-            <div className='col-span-3 px-2'>
+        <div className='grid grid-cols-1 lgg:grid-cols-9 gap-4 lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 lgg:divide-x-2'>
+            <div className='col-span-5 px-2'>
                 {/* <img className='w-full max-h-[250px]' src={"https://st2.depositphotos.com/4035913/6124/i/600/depositphotos_61243831-stock-photo-letter-s-logo.jpg"} alt="" /> */}
                 <div className='h-fit capitalize'>
                     <Entire_show data={data} />
                 </div>
             </div>
-            <div className='col-span-2 h-fit px-6 md:px-8 lg:px-10 py-4 md:py-6 lg:py-8 md:my-5 bg-yellow-50 rounded-sm drop-shadow'>
+            <div className='col-span-4 h-fit px-6 md:px-8 lg:px-10 py-4 md:py-6 lg:py-8 md:my-5 rounded-sm'>
                 <h2 className="text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase text-center"><BsTelephoneOutbound className='inline' /> Communication report</h2>
                 <p className='text-center mb-2'>Write your contact data</p>
                 <hr />
@@ -176,19 +155,14 @@ const Contact_manage = () => {
                             </div>
                         </div>
                         <div className="relative mb-2 mt-1">
-                            <label className="leading-7 font-[600] text-gray-700">Website service offers</label>
+                            <label className="leading-7 font-[600] text-gray-700">Customer</label>
                             <select
-                                value={inputData.category || ''}
-                                onChange={(e) => {
-                                    setInputData(c => ({ ...c, category: e.target.value, include_app: false }))
-                                    setDemoSite([]);
-                                }} className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out" >
-                                <option value='' selected >Select site type</option>
-                                <option value="development"> Website Development</option>
-                                <option value="erp">ERP Solution</option>
-                                <option value="app">App development</option>
-                                <option value="business">Business Accessories</option>
-                                <option value="marketing">Digital Marketing</option>
+                               className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out" >
+                                <option value='' selected >Response</option>
+                                <option value="erp">Interested Customer</option>
+                                <option value="app">Not Interested Customer</option>
+                                <option value="business">Not Sure Customer</option>
+                                <option value="marketing">Order Completed</option>
                             </select>
                         </div>
                         {inputData.category && <ol className='list-decimal pl-4'>

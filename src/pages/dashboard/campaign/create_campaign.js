@@ -10,8 +10,8 @@ import lightImage from '../../../assets/images/campaign_create.png'
 import BusinessDataForCampaign from '@/components/CampaignCom/BusinessDataForCampaign';
 import AllUserForCampaign from '@/components/CampaignCom/AllUserForCampaign';
 import Swal from 'sweetalert2';
-import { usePostCampaignMutation } from '@/app/features/dataEntire/campaignManageApi';
 import { errorSweetAlert } from '@/utils/neededFun';
+import { usePostCampaignMutation } from '@/app/features/campaignManage/campaignManageApi';
 
 const Create_campaign = () => {
     const [campaignData, setCampaignData] = useState(null);

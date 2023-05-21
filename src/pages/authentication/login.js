@@ -6,7 +6,7 @@ import { SmallSpinner } from '@/components/Spinner';
 import Image from 'next/image';
 import { getUser, loginUserSet } from '@/app/features/users/userSlice';
 import { useRouter } from 'next/router';
-import { errorToast, successToast } from '@/utils/neededFun';
+import { errorSweetAlert, errorToast, successToast } from '@/utils/neededFun';
 import { useUserLoginMutation } from '@/app/features/users/userApi';
 import { useDispatch } from 'react-redux';
 
@@ -24,14 +24,18 @@ const Login = () => {
                 router.asPath === "/authentication/login" && router.push('/');
                 localStorage.setItem("tech_token", res.data.jwtToken);
                 reset();
+                console.log(res);
             } else {
-                // console.log(res);
+                console.log(res);
                 if (res.error) {
                     if (res.error?.message) {
                         return errorToast(res.error.message);
                     }
                     if (res.error?.error) {
                         return errorToast(res.error.error);
+                    }
+                    if (res?.error?.data?.deactive_massage) {
+                        return errorSweetAlert(res?.error?.data?.deactive_massage);
                     }
                     if (res?.error?.data?.message) {
                         return errorToast(res.error?.data.dev_error || res.error?.data.message);
@@ -45,10 +49,10 @@ const Login = () => {
     return (
         <div className='min-h-[90vh] flex flex-col-reverse md:flex-row justify-center items-center'>
             <Image width={200} height={70} className='mx-auto' src={registerImg} alt="" />
-            <div className='shadow-2xl border rounded-md w-full max-w-md md:-ml-20 lg:-ml-40 mt-4 mx-auto px-10 pt-6 pb-8 h-fit'>
+            <div className='shadow-2xl border rounded-md w-full max-w-md md:-ml-20 lg:-ml-40 mt-4 mx-auto px-10 pt-10 pb-12 h-fit'>
                 <h2 className='font-bold text-2xl mdd:text-3xl text-blue-600 mb-4'>Please Login</h2>
                 <form onSubmit={handleSubmit(handleLogin)}>
-                    <div className="w-full mb-3">
+                    {/* <div className="w-full mb-3">
                         <label htmlFor='email' className="font-semibold">Your email </label>
                         <input
                             {...register("email", {
@@ -60,9 +64,9 @@ const Login = () => {
                             placeholder="Enter your email" type="email" id='email'
                             className="w-full text-lg text-gray-800 bg-slate-200 py-2 px-3 mt-1 border focus:outline-blue-700 border-blue-500 rounded-md"
                         />
-                        {/* {errors.email?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
-                        {errors.email?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>} */}
-                    </div>
+                        {errors.email?.type === 'required' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
+                        {errors.email?.type === 'pattern' && <p role="alert" className='pl-4px text-red-500 text-sm -mb-3'>{errors.email?.message}</p>}
+                    </div> */}
                     <div className="w-full mb-3">
                         <label htmlFor='id' className="font-semibold">Account Id *</label>
                         <input

@@ -1,25 +1,26 @@
 import { DateRangeInput } from '@/components/Forms/Inputs';
 import UserInput from '../../../components/Forms/UserInput';
-import { MarketerProtect } from '@/utils/ProtectRoute';
+import {  Private } from '@/utils/ProtectRoute';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { TbFilter, TbFilterOff } from 'react-icons/tb';
 import AddressInput from '@/components/Forms/AddressInput';
 import { LargeSpinner } from '@/components/Spinner';
-import PaginationBar from '@/components/PaginationBar';
 import { useGetCampaignQuery } from '@/app/features/campaignManage/campaignManageApi';
+import { useSelector } from 'react-redux';
+import { ADMIN, MARKETER } from '@/utils/constant';
 
-const Campaign_history = () => {
+const My_task_list = () => {
     const [openFilter, setOpenFilter] = useState(false);
     const [queryData, setQueryData] = useState({});
     const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
-    const [stockLimit, setStockLimit] = useState(20);
-    const [currentPage, setCurrentPage] = useState(1);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}`);
+    const { user } = useSelector((state) => state.auth)
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`?active=true&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}`);
+    const isAdminOrMarketer = (user.role === ADMIN || user.role === MARKETER) ? true : false;
     if (isLoading) {
         return <LargeSpinner />;
     };
@@ -35,10 +36,10 @@ const Campaign_history = () => {
         }
     }
     return (
-        <div className='w-full max-w-[1400px] mx-auto mdd:px-8'>
+        <div className='w-full  max-w-[1400px] mx-auto mdd:px-8'>
             <div className="px-2 smm:px-6 mdd:px-6 xl:px-8 py-4 sm:py-4 my-2 smm:my-6 bg-white shadow-sm rounded-lg min-h-screen">
                 <div className='flex justify-between items-center px-2 md:px-4 mb-1'>
-                    <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 text-gray-900">Campaign History</h2>
+                    <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 text-gray-900">{isAdminOrMarketer ? "Active Campaign" : "Current Tasks"}</h2>
                     <div className='flex-1 flex justify-end items-center gap-3'>
                         <button
                             onClick={() => setOpenFilter(c => (!c))} type="button"
@@ -46,14 +47,14 @@ const Campaign_history = () => {
                         >
                             Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
                         </button>
-                        {/* <Link href={`/dashboard/campaign/create_campaign`}>
+                        {isAdminOrMarketer && <Link href={`/dashboard/campaign/create_campaign`}>
                             <button
                                 type="button"
                                 className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 + Create Campaign
                             </button>
-                        </Link> */}
+                        </Link>}
                     </div>
                 </div>
                 <div className={`w-full flex justify-between items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-slate-100 shadow-sm px-3 py-2 `}>
@@ -84,14 +85,6 @@ const Campaign_history = () => {
                             <option value={'data_entry'}>Data Entry</option>
                             <option value={'marketing'}>Marketing</option>
                         </select>
-                        <select
-                            onChange={(e) => setQueryData(c => ({ ...c, status: e.target.value }))}
-                            className="text-sm bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none text-gray-800 pl-1 py-1 lg:py-1.5 leading-8 transition-colors duration-200 ease-in-out"
-                        >
-                            <option value='' selected >Status</option>
-                            <option value={true}>Active</option>
-                            <option value={false}>Not Yet</option>
-                        </select>
                         <button
                             onClick={() => {
                                 setQueryData({});
@@ -104,11 +97,11 @@ const Campaign_history = () => {
                     </div>
                 </div>
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
-                <div className='flex flex-wrap gap-4 xl:gap-8'>
+                <div className='flex flex-wrap gap-6 xl:gap-10'>
                     {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}`}>
-                        <div className='smm:min-h-[17.5rem]  min-w-[280px] rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0'>
+                        <div className={`${isAdminOrMarketer ? "smm:min-h-[17.2rem]" : "smm:min-h-[16.5rem]"}  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-x-100 hover:bg-slate-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0`}>
                             <div className='w-full h-full flex sm:flex-row sm:justify-start smm:flex-col smm:justify-between smm:items-center smm:gap-2 smm:pb-2'>
-                                <div className="h-[80px] w-[80px]">
+                                <div className="h-[90px] w-[90px]">
                                     <img
                                         className="h-full w-full rounded-full"
                                         src={camp.staff_info?.account_id?.userImage} alt={"user image"}
@@ -116,14 +109,14 @@ const Campaign_history = () => {
                                 </div>
                                 <div className='h-full flex flex-col justify-center items-center smm:items-start gap-2'>
                                     <ul className=' ml-5 smm:ml-0 smm:mt-2 list-disc space-y-1'>
-                                        <li className='text-md font-semibold text-green-600 capitalize'>{camp?.campaign_objective}</li>
-                                        <li className='text-md font-semibold text-gray-900 mb-1'><span>{camp?.campaign_name}</span></li>
+                                        <li className='text-sm font-semibold text-green-600 capitalize'>{camp?.campaign_objective}</li>
+                                        <li className='text-sm font-semibold text-gray-900 mb-1'><span>{camp?.campaign_name}</span></li>
                                         {camp.campaign_objective === "marketing" &&
-                                            <li className='text-md capitalize'>Business Data - {camp.dataIds.length}</li>
+                                            <li className='text-sm capitalize'>Business Data - {camp.dataIds.length}</li>
                                         }
-                                        <li className='text-md '>Staff {camp.staff_info?.name}</li>
-                                        <li className='text-md '>{new Date(camp.assign_date?.start).toLocaleDateString()} To {new Date(camp.assign_date?.end).toLocaleDateString()}</li>
-                                        <li className='text-md  capitalize'>{camp?.area?.city && camp?.area?.city + ','} {camp?.area?.state && camp?.area?.state + ','} {camp?.area?.country}</li>
+                                        {isAdminOrMarketer && <li className='text-sm '>Staff {camp.staff_info?.name}</li>}
+                                        <li className='text-sm '>{new Date(camp.assign_date?.start).toLocaleDateString()} To {new Date(camp.assign_date?.end).toLocaleDateString()}</li>
+                                        <li className='text-sm  capitalize'>{camp?.area?.city && camp?.area?.city + ','} {camp?.area?.state && camp?.area?.state + ','} {camp?.area?.country}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -131,11 +124,8 @@ const Campaign_history = () => {
                     </Link>)}
                 </div>
             </div>
-            <div className='w-full px-4 lg:px-6 py-2'>
-                <PaginationBar totalDataLength={data.totalData} stockLimit={stockLimit} setStockLimit={setStockLimit} currentPage={currentPage} setCurrentPage={setCurrentPage}></PaginationBar>
-            </div>
         </div>
     );
 };
 
-export default MarketerProtect(Campaign_history);
+export default Private(My_task_list);

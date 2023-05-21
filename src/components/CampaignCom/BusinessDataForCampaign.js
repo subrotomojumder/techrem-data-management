@@ -162,7 +162,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                 <th scope="col" className="pl-5 py-3.5 text-left text-md font-semibold text-gray-900">
                                     Business
                                 </th>
-                                <th scope="col" className="py-3.5 px-1 text-md font-semibold text-gray-900 sm:pl-6">
+                                <th scope="col" className="py-3.5 px-1 min-w-[150px] text-md font-semibold text-gray-900 sm:pl-6">
                                     Category <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "category1" ? "category1" : "category-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                 </th>
                                 <th
@@ -185,7 +185,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
+                                    className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
                                 >
                                     We-can-offer
                                 </th>
@@ -245,7 +245,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                         <td
                                             className={classNames(
                                                 planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                'px-3 py-3.5 text-sm text-center text-gray-700 lg:table-cell'
                                             )}
                                         >
                                             <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
