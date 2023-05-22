@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Combobox } from '@headlessui/react'
 import DatePicker from "react-datepicker";
-import Countries from 'countries-list';
+// import Countries from 'countries-list';
 import { useGetAllAddressQuery } from '@/app/features/address/addressApi';
 
 export const DateRangeInput = ({ dateRange, setDateRange }) => {
@@ -28,7 +28,10 @@ export const DateRangeInput = ({ dateRange, setDateRange }) => {
 
 export function CountryInput({ wornClass, selectedCountry, setSelectedCountry, disabled = false, placeHolder = '' }) {
   const [query, setQuery] = useState('')
-  const countries = Object.values(Countries.countries);
+  const { data, isLoading, isError, error } = useGetAllAddressQuery(`/address/country`);
+
+  console.log(selectedCountry);
+  const countries = data?.data || [];
   // console.log(countries);
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')

@@ -193,7 +193,7 @@ const AllUserForCampaign = ({ setTogglePage, campaignData, createCampaignFunc })
                 <div className="sm:flex-auto">
                     <button
                         onClick={() => setTogglePage(campaignData?.objective === 'data_entry' ? 1 : 2)}
-                        className="rounded-md bg-white pl-3 pr-3 py-1 text-md text-gray-900 ring-1 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                        className="rounded-md bg-blue-500 pl-4 pr-3 py-1.5 text-md font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                     >
                         <BsArrowLeftShort size={18} className='inline-block mb-1' /> Previews
                     </button>

@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { BsBagPlus, BsBookmarkCheck, BsJournalBookmarkFill, BsPencilSquare } from 'react-icons/bs';
-import { BiBarChartAlt2 } from 'react-icons/bi';
-import { TbCurrencyTaka } from 'react-icons/tb';
+import { BiBarChartAlt2, BiListPlus } from 'react-icons/bi';
+import { TbCurrencyTaka, TbNotesOff } from 'react-icons/tb';
 import { GoPrimitiveDot } from 'react-icons/go';
 import Chart from './Chart';
 import { FaUsers } from 'react-icons/fa';
 import { LargeSpinner } from '../Spinner';
-import { MdGroupOff } from 'react-icons/md';
+import { MdGroupOff, MdOutlineDoNotDisturbOff, MdWorkOutline } from 'react-icons/md';
 import { Private } from '@/utils/ProtectRoute';
 import { useSelector } from 'react-redux';
 import { useGetDeshbordDataQuery } from '@/app/features/others/othersApi';
+import { useRouter } from 'next/router';
+import { ADMIN } from '@/utils/constant';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { VscSymbolInterface } from 'react-icons/vsc';
 
 const HomePage = () => {
-
+    const router = useRouter()
     const { user, isLoading } = useSelector((state) => state.auth);
 
     const { data, isLoading: isLoading2, isError, error } = useGetDeshbordDataQuery(`/dashbord`);
-    console.log(data?.data)
+    console.log(data)
     /*  const { data, isLoading, isError, error } = { role: "user", keyword: "" }
      const { data: bookingData, isLoading: isLoading1, isError: isError1, error: error1 } = { keyword: "" } */
     if (isLoading2 || isLoading) {
@@ -42,7 +46,7 @@ const HomePage = () => {
                 {/* <Chart></Chart> */}
                 <section className="grid grid-cols-1 smm:grid-cols-2 mdd:grid-cols-3 lg:grid-cols-4  gap-4 xl:gap-6 text-[30px]">
                     <div className="border text-white bg-[#4e36e2] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BsPencilSquare className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1'><BiListPlus className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
                             <div className='flex justify-between text-base'>
                                 <p className=''>Total Business Data</p>
@@ -53,8 +57,8 @@ const HomePage = () => {
 
                         </div >
                     </div>
-                    <div className="border text-white bg-[#48a9f8] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BsPencilSquare className='text-2xl text-white' /></p>
+                    {user.role === ADMIN && <div className="border text-white bg-[#48a9f8] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
+                        <p className='border-2 border-white rounded-md p-1'><AiOutlineUsergroupAdd className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
                             <div className='flex justify-between text-base'>
                                 <p className=''>Total staff</p>
@@ -64,60 +68,56 @@ const HomePage = () => {
                             </div>
 
                         </div >
-                    </div>
+                    </div>}
                     <div className="border text-white bg-[#1ad588] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BsPencilSquare className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1'><MdWorkOutline className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
                             <div className='flex justify-between text-base'>
-                                <p className=''>Total Active Campaing</p>
+                                <p className=''>{user.role === ADMIN ? 'Total Active Campaign' : "Accepted Campaign"}</p>
                             </div>
                             <div className='font-bold font-sans text-end text-2xl'>
-                                <span >{data?.data?.totalActiveCampaing}</span>
+                                <span >{user.role === ADMIN ? data?.data?.totalActiveCampaign : data.data.totalAcceptingCampaing}</span>
                             </div>
-
                         </div >
                     </div>
                     <div className="border text-white bg-[#60803b] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BsPencilSquare className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1'><VscSymbolInterface className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
                             <div className='flex justify-between text-sm font-bold lgg:text-base'>
                                 <p className=''>Total Interested customer</p>
                             </div>
                             <div className='font-bold font-sans text-end text-xl lgg:text-2xl'>
-                                <span >{data?.data?.totalInterested}</span>
+                                <span >{user.role === ADMIN ? data?.data?.totalInterested : data?.data?.myProcessDataCount?.totalInterestedData}</span>
                             </div>
 
                         </div >
                     </div>
                     <div className="border text-white bg-[#508baa] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BsPencilSquare className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1'><MdOutlineDoNotDisturbOff className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
                             <div className='flex justify-between text-sm font-bold lgg:text-base'>
                                 <p className=''>Not Interested customer</p>
                             </div>
                             <div className='font-bold font-sans text-end text-xl lgg:text-2xl'>
-                                <span >{data?.data?.totalNot_interested}</span>
+                                <span >{user.role === ADMIN ? data?.data?.totalNot_interested : data?.data?.myProcessDataCount?.totalNot_interestedData}</span>
                             </div>
 
                         </div >
                     </div>
                     <div className="border text-white bg-[#1d7ca5] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BsPencilSquare className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1'><TbNotesOff className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
                             <div className='flex justify-between text-sm font-bold lgg:text-base'>
                                 <p className=''>Not sure customer</p>
                             </div>
                             <div className='font-bold font-sans text-end text-xl lgg:text-2xl'>
-                                <span >{data?.data?.totalNot_sure}</span>
+                                <span >{user.role === ADMIN ? data?.data?.totalNot_sure : data?.data?.myProcessDataCount?.totalNot_sureData}</span>
                             </div>
 
                         </div >
                     </div>
-
-
-
                 </section>
-                <section className='flex gap-5 py-3'>
+                {/* <section className='flex gap-5 py-3'>
                     <div className='max-w-sm min-w-min h-fit  pt-8 pb-4 mdd:pb-10 bg-white border rounded-md px-0 xl:px-10'>
                         <div className='text-center relative'>
                             <figure className='relative'>
@@ -133,12 +133,122 @@ const HomePage = () => {
                             </div>}
                         </div>
                     </div>
-                </section>
+                </section> */}
+                <dl className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
+                    <div className="overflow-x-auto rounded-lg bg-white min-h-[40vh] px-4 py-5 shadow">
+                        <div className="inline-block min-w-full py-2 align-middle px-4">
+                            <h3 className='text-base font-medium underline underline-offset-2'>Recent Interested</h3>
+                            <table className="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                    <tr className=''>
+                                        <th scope="col" className="py-3.5 pl-3 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Business
+                                        </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Address
+                                        </th>
 
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {data?.data?.recentData?.recentInterestedData?.length ?
+                                        data?.data?.recentData?.recentInterestedData?.map(({ businessDetails, address, _id }, i) => (
+                                            <tr key={_id} className='hover:bg-slate-50 w-full'>
+                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                                    <div className="flex items-center gap-x-4 group" onClick={() => router.push(`/dashboard/campaign/contact_manage/${_id}`)}>
+                                                        <img src={businessDetails?.businessLogo} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
+                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{businessDetails?.businessName}</div>
+                                                    </div>
+                                                </td>
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                                                    <span>{address.country},</span> <br />
+                                                    <span>{address.city}, {address.state}</span>
+                                                </td>
+                                            </tr>
+                                        ))
+                                        : <tr><td className='py-20 w-full text-center text-red-400'>Empty !</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="overflow-x-auto rounded-lg bg-white min-h-[40vh] px-4 py-5 shadow">
+                        <div className="inline-block min-w-full py-2 align-middle px-4">
+                            <h3 className='text-base font-medium underline underline-offset-2'>Recent Not Interested</h3>
+                            <table className="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                    <tr className=''>
+                                        <th scope="col" className="py-3.5 pl-3 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Business
+                                        </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Address
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {data?.data?.recentData?.recentNot_interestedData?.length ?
+                                        data?.data?.recentData?.recentNot_interestedData?.map(({ businessDetails, address, _id }, i) => (
+                                            <tr key={_id} className='hover:bg-slate-50 w-full'>
+                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                                    <div className="flex items-center gap-x-4 group" onClick={() => router.push(`/dashboard/campaign/contact_manage/${_id}`)}>
+                                                        <img src={businessDetails?.businessLogo} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
+                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{businessDetails?.businessName}</div>
+                                                    </div>
+                                                </td>
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                                                    <span>{address.country},</span> <br />
+                                                    <span>{address.city}, {address.state}</span>
+                                                </td>
+                                            </tr>
+                                        ))
+                                        : <tr><td className='py-20 w-full text-center text-red-400'>Empty !</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="overflow-x-auto rounded-lg bg-white min-h-[40vh] px-4 py-5 shadow">
+                        <div className="inline-block min-w-full py-2 align-middle px-4">
+                            <h3 className='text-base font-medium underline underline-offset-2'>Recent Not Sure</h3>
+                            <table className="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                    <tr className=''>
+                                        <th scope="col" className="py-3.5 pl-3 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Business
+                                        </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Address
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {data?.data?.recentData?.recentNot_sureData?.length ?
+                                        data?.data?.recentData?.recentNot_sureData?.map(({ businessDetails, address, _id }, i) => (
+                                            <tr key={_id} className='hover:bg-slate-50 w-full'>
+                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                                    <div className="flex items-center gap-x-4 group" onClick={() => router.push(`/dashboard/campaign/contact_manage/${_id}`)}>
+                                                        <img src={businessDetails?.businessLogo} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
+                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{businessDetails?.businessName}</div>
+                                                    </div>
+                                                </td>
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                                                    <span>{address.country},</span> <br />
+                                                    <span>{address.city}, {address.state}</span>
+                                                </td>
+                                            </tr>
+                                        ))
+                                        : <tr><td className='py-20 w-full text-center text-red-400'>Empty !</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </dl>
             </section>
-            <div className='col-span-4'>
-
-            </div>
         </div>
     );
 };

@@ -1,3 +1,4 @@
+import { INTERESTED, NOTINTERESTED, NOTSURE } from '@/utils/constant';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -6,7 +7,7 @@ const Entire_show = ({ data }) => {
     if (data?.success) {
         const {
             businessDetails: { businessName, category, businessPhone, country_code, businessEmail, businessLogo },
-            onProcess, we_offer_service, they_offer_service, suggestions, other_information, createdAt, updatedAt,data_entry_operator,
+            onProcess, final_process, we_offer_service, they_offer_service, suggestions, other_information, createdAt, updatedAt, data_entry_operator,
             address: { country, state, city, street_address, postCode, location_link },
             have_website: { website_urls },
         } = data.data;
@@ -119,166 +120,62 @@ const Entire_show = ({ data }) => {
                             </div>
 
                         </div>
-                        : showData === "contact"
-                            ? <div className='bg-yellow-50 px-6 pb-4 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
-                                <h4 className='text-lg font-serif text-indigo-700 mb-1'>Contact Information</h4>
+                        : showData === "other" ?
+                            <div className='h-full px-4 pb-4 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
+                                <h4 className='text-lg font-serif text-indigo-700 mb-1'>Entry operator Info</h4>
                                 <div className='flex justify-start'>
-                                    <h5 className='w-32'>Owner Name</h5>
-                                    <h5 className='flex-1'>: {"name"}</h5>
+                                    <h5 className='w-32'>Entire By</h5>
+                                    <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.fast_name} {data_entry_operator?.account_id?.last_name}</h5>
                                 </div>
                                 <div className='flex justify-start'>
-                                    <h5 className='w-32'>Owner Email</h5>
-                                    <h5 className='flex-1'>: {"email"}</h5>
+                                    <h5 className='w-32'>Position</h5>
+                                    <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.role}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Email</h5>
+                                    <h5 className='flex-1 lowercase'>: {data_entry_operator?.account_id?.email}</h5>
                                 </div>
                                 <div className='flex justify-start'>
                                     <h5 className='w-32'>Phone</h5>
-                                    {/* <h5 className='flex-1'>: {"+" + country_code + " " + phone}</h5> */}
+                                    <h5 className='flex-1 '>: +{data_entry_operator?.account_id?.country_code} {data_entry_operator?.account_id?.phone}</h5>
                                 </div>
                                 <div className='flex justify-start'>
-                                    <h5 className='w-32'>Address</h5>
-                                    <h5 className='flex-1'>: {country}, {state}, {city}, {street_address && street_address} </h5>
+                                    <h5 className='w-32'>Entire Date</h5>
+                                    <h5 className='flex-1'>: {new Date(createdAt).toLocaleString()}</h5>
+                                </div>
+                                <div className='flex justify-start'>
+                                    <h5 className='w-32'>Last Update</h5>
+                                    <h5 className='flex-1'>: {new Date(updatedAt).toLocaleString()}</h5>
+                                </div>
+                                <div className='bg-gray-50 p-2 space-y-1'>
+                                    <p><span className='font-medium'>Entire operator Note</span> : </p>
+                                    <p className='font-normal space-y-2'>{other_information}</p>
                                 </div>
                             </div>
-                            : showData === "other" ?
-                                <div className='h-full px-4 pb-4 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
-                                    <h4 className='text-lg font-serif text-indigo-700 mb-1'>Entry operator Info</h4>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-32'>Entire By</h5>
-                                        <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.fast_name} {data_entry_operator?.account_id?.last_name}</h5>
-                                    </div>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-32'>Position</h5>
-                                        <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.role}</h5>
-                                    </div>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-32'>Email</h5>
-                                        <h5 className='flex-1 lowercase'>: {data_entry_operator?.account_id?.email}</h5>
-                                    </div>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-32'>Phone</h5>
-                                        <h5 className='flex-1 '>: +{data_entry_operator?.account_id?.country_code} {data_entry_operator?.account_id?.phone}</h5>
-                                    </div>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-32'>Entire Date</h5>
-                                        <h5 className='flex-1'>: {new Date(createdAt).toLocaleString()}</h5>
-                                    </div>
-                                    <div className='flex justify-start'>
-                                        <h5 className='w-32'>Last Update</h5>
-                                        <h5 className='flex-1'>: {new Date(updatedAt).toLocaleString()}</h5>
-                                    </div>
-                                    <div className='bg-gray-50 p-2 space-y-1'>
-                                        <p><span className='font-medium'>Entire operator Note</span> : </p>
-                                        <p className='font-normal space-y-2'>{other_information}</p>
-                                    </div>
-                                </div>
-                                : showData === "status" && <>
-                                    {onProcess?.teleMarketer?.communicationId &&
-                                        <div className='col-span-12 lg:col-span-6 space-y-1 bg-indigo-100 p-4 text-[14px] font-medium'>
-                                            <h4 className='text-lg font-serif text-indigo-700 mb-2'> Telemarketing work process status</h4>
-                                            <div className='flex justify-start'>
-                                                <h5 className='w-36'>Telemarketer</h5>
-                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.account_id?.name}({onProcess?.teleMarketer?.account_id?.role})</h5>
-                                            </div>
-                                            <div className='flex justify-start'>
-                                                <h5 className='w-36'>Phone</h5>
-                                                <h5 className='flex-1'>: + {onProcess?.teleMarketer?.account_id?.country_code} {onProcess?.teleMarketer?.account_id?.phone}</h5>
-                                            </div>
-                                            <div className='flex justify-start'>
-                                                <h5 className='w-36'>Work process</h5>
-                                                <h5 className='flex-1'>: {onProcess.teleMarketer?.communicationId?.process}</h5>
-                                            </div>
-                                            {onProcess?.teleMarketer?.communicationId?.needWebsite && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Need A Website</h5>
-                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.needWebsite && "Yes!"}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.website_category?.category && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Web Category</h5>
-                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.website_category?.category}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.website_category?.include_app && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Include App</h5>
-                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.website_category?.include_app && "Yes!"}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.website_category?.demo_site?.length > 0 && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Demo Site</h5>
-                                                <h5 className='flex-1'> {onProcess?.teleMarketer?.communicationId?.website_category?.demo_site.map((site, i) => <p key={i}>{++i}. <a href={site} className='text-blue-600 hover:underline mr-2'>{site}</a></p>)}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.talk_later_time && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Talk Later Time</h5>
-                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.talk_later_time}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.communication_note && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Contact Note</h5>
-                                                <h5 className='flex-1'>: {onProcess?.teleMarketer?.communicationId?.communication_note}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.createdAt && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Submit Date</h5>
-                                                <h5 className='flex-1'>: {new Date(onProcess?.teleMarketer?.communicationId?.createdAt).toLocaleString()}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.updatedAt && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Last update</h5>
-                                                <h5 className='flex-1'>: {new Date(onProcess?.teleMarketer?.communicationId?.updatedAt).toLocaleString()}</h5>
-                                            </div>}
-                                            {onProcess?.teleMarketer?.communicationId?.requirement?.length > 0 && <div className=''>
-                                                <h5 className='w-36 underline'>New Requirement</h5>
-                                                {onProcess?.teleMarketer?.communicationId?.requirement.map((require, i) => <p key={i} className=''>{++i}. <span className='font-medium text-blue-500'>{require}</span></p>)}
-                                            </div>}
+                            : showData === "status" && <>
+                                {onProcess?.marketer?.communicationId &&
+                                    <div className='col-span-12 lg:col-span-6 space-y-2 p-4 text-[14px] font-medium'>
+                                        <h4 className='text-lg font-serif text-indigo-700 mb-2'> Telemarketing work process status</h4>
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-36'>Marketer</h5>
+                                            <h5 className='flex-1'>: {onProcess?.marketer?.communicationId?.executor?.name}({onProcess?.marketer?.communicationId?.executor?.role})</h5>
                                         </div>
-                                    }
-                                    {onProcess?.onfieldMarketer?.communicationId &&
-                                        <div className='col-span-12 lg:col-span-6 space-y-1 bg-indigo-100 p-4 text-[14px] font-medium'>
-                                            <h4 className='text-lg font-serif text-indigo-700 mb-2'> Field Marketer work process status</h4>
-                                            <div className='flex justify-start'>
-                                                <h5 className='w-36'>Field Marketer</h5>
-                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.account_id?.name}({onProcess?.onfieldMarketer?.account_id?.role})</h5>
-                                            </div>
-                                            <div className='flex justify-start'>
-                                                <h5 className='w-36'>Phone</h5>
-                                                <h5 className='flex-1'>: + {onProcess?.onfieldMarketer?.account_id?.country_code} {onProcess?.onfieldMarketer?.account_id?.phone}</h5>
-                                            </div>
-                                            <div className='flex justify-start'>
-                                                <h5 className='w-36'>Work process</h5>
-                                                <h5 className='flex-1'>: {onProcess.onfieldMarketer?.communicationId?.process}</h5>
-                                            </div>
-                                            {onProcess?.teleMarketer?.communicationId?.needWebsite && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Need A Website</h5>
-                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.needWebsite && "Yes!"}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.website_category?.category && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Web Category</h5>
-                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.website_category?.category}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.website_category?.include_app && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Include App</h5>
-                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.website_category?.include_app && "Yes!"}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.website_category?.demo_site?.length > 0 && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Demo Site</h5>
-                                                <h5 className='flex-1'> {onProcess?.onfieldMarketer?.communicationId?.website_category?.demo_site.map((site, i) => <p key={i}>{++i}. <a href={site} className='text-blue-600 hover:underline mr-2'>{site}</a></p>)}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.talk_later_time && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Talk Later Time</h5>
-                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.talk_later_time}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.communication_note && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Contact Note</h5>
-                                                <h5 className='flex-1'>: {onProcess?.onfieldMarketer?.communicationId?.communication_note}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.createdAt && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Submit Date</h5>
-                                                <h5 className='flex-1'>: {new Date(onProcess?.onfieldMarketer?.communicationId?.createdAt).toLocaleString()}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.updatedAt && <div className='flex justify-start'>
-                                                <h5 className='w-36'>Last update</h5>
-                                                <h5 className='flex-1'>: {new Date(onProcess?.onfieldMarketer?.communicationId?.updatedAt).toLocaleString()}</h5>
-                                            </div>}
-                                            {onProcess?.onfieldMarketer?.communicationId?.requirement?.length > 0 && <div className=''>
-                                                <h5 className='w-36 underline'>New Requirement</h5>
-                                                {onProcess?.onfieldMarketer?.communicationId?.requirement.map((require, i) => <p key={i} className=''>{++i}. <span className='font-medium text-blue-500'>{require}</span></p>)}
-                                            </div>}
+                                        <div className='flex justify-start'>
+                                            <h5 className='w-36'>Work process</h5>
+                                            <h5 className='flex-1'>:
+                                                <span
+                                                    className={`mx-auto ml-3 gap-2 ${final_process?.process === 'interested' ? "text-green-500" : final_process.process === NOTINTERESTED ? "text-[#efaf47]" : final_process.process === NOTSURE ? "text-[#5ac0de]" : "text-gray-700"} rounded-md my-1.5 text-md font-semibold capitalize`}
+                                                >
+                                                    {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
+                                                </span>
+                                            </h5>
                                         </div>
-                                    }
-                                </>
+                                        {onProcess?.marketer?.communicationId?.communication_note && <div className=''>
+                                            <h5 className='w-full '><span className='underline'>Communication Note</span> : <span className='font-normal'>{onProcess?.marketer?.communicationId?.communication_note}</span></h5>
+                                        </div>}
+                                    </div>
+                                }
+                            </>
                 }
             </div >
         )

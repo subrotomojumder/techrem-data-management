@@ -1,9 +1,9 @@
 import { DateRangeInput } from '@/components/Forms/Inputs';
 import UserInput from '../../../components/Forms/UserInput';
-import {  Private } from '@/utils/ProtectRoute';
+import { Private } from '@/utils/ProtectRoute';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useInsertionEffect, useState } from 'react';
 import { TbFilter, TbFilterOff } from 'react-icons/tb';
 import AddressInput from '@/components/Forms/AddressInput';
 import { LargeSpinner } from '@/components/Spinner';
@@ -11,16 +11,20 @@ import { useGetCampaignQuery } from '@/app/features/campaignManage/campaignManag
 import { useSelector } from 'react-redux';
 import { ADMIN, MARKETER } from '@/utils/constant';
 
-const My_task_list = () => {
+const My_submission_task = () => {
     const [openFilter, setOpenFilter] = useState(false);
     const [queryData, setQueryData] = useState({});
     const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const { user } = useSelector((state) => state.auth)
-    const { data, isLoading, isError, error } = useGetCampaignQuery(`?active=true&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}`);
-    const isAdminOrMarketer = (user.role === ADMIN || user.role === MARKETER) ? true : false;
+    const { user } = useSelector((state) => state.auth);
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`?active=false&account_id=${user?._id}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}`, { skip: !user?._id });
+    // useEffect(() => {
+    //     if (selectedAddress.country) {
+    //         refetch()
+    //     }
+    // }, [selectedAddress])
     if (isLoading) {
         return <LargeSpinner />;
     };
@@ -39,7 +43,7 @@ const My_task_list = () => {
         <div className='w-full  max-w-[1400px] mx-auto mdd:px-8'>
             <div className="px-2 smm:px-6 mdd:px-6 xl:px-8 py-4 sm:py-4 my-2 smm:my-6 bg-white shadow-sm rounded-lg min-h-screen">
                 <div className='flex justify-between items-center px-2 md:px-4 mb-1'>
-                    <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 text-gray-900">{isAdminOrMarketer ? "Active Campaign" : "Current Tasks"}</h2>
+                    <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 text-gray-900">Submission Tasks</h2>
                     <div className='flex-1 flex justify-end items-center gap-3'>
                         <button
                             onClick={() => setOpenFilter(c => (!c))} type="button"
@@ -47,14 +51,6 @@ const My_task_list = () => {
                         >
                             Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
                         </button>
-                        {isAdminOrMarketer && <Link href={`/dashboard/campaign/create_campaign`}>
-                            <button
-                                type="button"
-                                className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >
-                                + Create Campaign
-                            </button>
-                        </Link>}
                     </div>
                 </div>
                 <div className={`w-full flex justify-between items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-slate-100 shadow-sm px-3 py-2 `}>
@@ -99,7 +95,7 @@ const My_task_list = () => {
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
                 <div className='flex flex-wrap gap-6 xl:gap-10'>
                     {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}`}>
-                        <div className={`${isAdminOrMarketer ? "smm:min-h-[17.2rem]" : "smm:min-h-[16.5rem]"}  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-x-100 hover:bg-slate-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0`}>
+                        <div className={`smm:min-h-[16.5rem] min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-x-100 hover:bg-slate-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0`}>
                             <div className='w-full h-full flex sm:flex-row sm:justify-start smm:flex-col smm:justify-between smm:items-center smm:gap-2 smm:pb-2'>
                                 <div className="h-[90px] w-[90px]">
                                     <img
@@ -114,7 +110,6 @@ const My_task_list = () => {
                                         {camp.campaign_objective === "marketing" &&
                                             <li className='text-sm capitalize'>Business Data - {camp.dataIds.length}</li>
                                         }
-                                        {isAdminOrMarketer && <li className='text-sm '>Staff {camp.staff_info?.name}</li>}
                                         <li className='text-sm '>{new Date(camp.assign_date?.start).toLocaleDateString()} To {new Date(camp.assign_date?.end).toLocaleDateString()}</li>
                                         <li className='text-sm  capitalize'>{camp?.area?.city && camp?.area?.city + ','} {camp?.area?.state && camp?.area?.state + ','} {camp?.area?.country}</li>
                                     </ul>
@@ -128,4 +123,10 @@ const My_task_list = () => {
     );
 };
 
-export default Private(My_task_list);
+// export async function getServerSideProps(context) {
+//     // const { user } = useSelector((state) => state.auth)
+//     return {
+//         props: { userId: context.query.id }
+//     }
+// }
+export default Private(My_submission_task);

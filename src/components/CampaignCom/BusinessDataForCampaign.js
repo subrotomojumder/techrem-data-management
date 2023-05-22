@@ -26,9 +26,10 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
     const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
-    const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
+    const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery, { refetchOnMountOrArgChange: true });
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
     useEffect(() => {
+        // setSelectedData([]);
         if (data?.success) {
             for (let i = 0; i < autoSelect; i++) {
                 const newId = data.data[i]._id;

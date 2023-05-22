@@ -7,6 +7,7 @@ import { LargeSpinner } from '@/components/Spinner';
 import Image from 'next/image';
 import { RiEditLine } from 'react-icons/ri';
 import Link from 'next/link';
+import { Private } from '@/utils/ProtectRoute';
 
 const Profile = () => {
     const router = useRouter()
@@ -100,14 +101,14 @@ const Profile = () => {
                                 <p className='col-span-2 lg:col-span-3 capitalize'>{address.address_2}</p>
                             </div>}
                         </div>
-                        <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                        {/* <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
                             {['All Entry', 'Pending Data', 'Current Campaign', 'Up Caming Data', "Reported Data", 'hellliid'].map((item) => (
                                 <div key={item.name} className="overflow-hidden rounded-lg border bg-white px-6 py-5 shadow">
                                     <dt className="truncate text-sm font-medium text-gray-500">{item}</dt>
                                     <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{115} Data</dd>
                                 </div>
                             ))}
-                        </dl>
+                        </dl> */}
                         {!document?.length || <div className='mt-4 pb-8'>
                             <p>Others document:</p>
                             <div className='flex justify-start flex-wrap gap-2'>
@@ -124,4 +125,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default Private(Profile);

@@ -11,7 +11,11 @@ import { MdFormatListBulletedAdd, MdOutlineAddLocationAlt, MdOutlineCampaign, Md
 import { VscCompassActive, VscHistory } from 'react-icons/vsc';
 import { FiUserPlus } from 'react-icons/fi';
 import { BiLineChartDown, BiNetworkChart } from 'react-icons/bi';
-
+import { useSelector } from 'react-redux';
+// const GetUserId = () => {
+//     const { user } = useSelector((state) => state.auth)
+//     return user?._id;
+// }
 export const adminDashboardItems = [
     { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
     {
@@ -100,9 +104,9 @@ export const marketerDashboardItems = [
 
 export const teleMarketerDashboardItems = [
     { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
-    { name: 'My Work List', href: '/dashboard/campaign/active_campaign', icon: BiNetworkChart, current: false },
-    { name: 'My Submission', href: '/dashboard/campaign/campaign_history', icon: ChartPieIcon, current: false },
-    { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
-    { name: 'Entry Data List', icon: TbListDetails, href: '/dashboard/entires_data_list' },
+    { name: 'My Work List', href: `/dashboard/employee_task/my_current_task`, icon: BiNetworkChart, current: false },
+    // { name: 'My Submission', href: '/dashboard/employee_task/my_submission_task', icon: ChartPieIcon, current: false },
+    // { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
+    { name: 'Entry Data List', icon: TbListDetails, href: '/dashboard/employee_task/my_entry_data_list' },
     { name: 'Enumeration', href: '/all_list_enquiry/address_enquiry', icon: BiLineChartDown, current: false },
 ]

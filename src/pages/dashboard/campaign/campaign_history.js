@@ -106,9 +106,9 @@ const Campaign_history = () => {
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
                 <div className='flex flex-wrap gap-4 xl:gap-8'>
                     {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}`}>
-                        <div className='smm:min-h-[17.5rem]  min-w-[280px] rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0'>
+                        <div className='smm:min-h-[17.5rem]  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:bg-indigo-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0'>
                             <div className='w-full h-full flex sm:flex-row sm:justify-start smm:flex-col smm:justify-between smm:items-center smm:gap-2 smm:pb-2'>
-                                <div className="h-[80px] w-[80px]">
+                                <div className="h-[90px] w-[90px]">
                                     <img
                                         className="h-full w-full rounded-full"
                                         src={camp.staff_info?.account_id?.userImage} alt={"user image"}
@@ -116,14 +116,14 @@ const Campaign_history = () => {
                                 </div>
                                 <div className='h-full flex flex-col justify-center items-center smm:items-start gap-2'>
                                     <ul className=' ml-5 smm:ml-0 smm:mt-2 list-disc space-y-1'>
-                                        <li className='text-md font-semibold text-green-600 capitalize'>{camp?.campaign_objective}</li>
-                                        <li className='text-md font-semibold text-gray-900 mb-1'><span>{camp?.campaign_name}</span></li>
+                                        <li className='text-sm font-semibold text-green-600 capitalize'>{camp?.campaign_objective}</li>
+                                        <li className='text-sm font-semibold text-gray-900 mb-1'><span>{camp?.campaign_name}</span></li>
                                         {camp.campaign_objective === "marketing" &&
-                                            <li className='text-md capitalize'>Business Data - {camp.dataIds.length}</li>
+                                            <li className='text-sm capitalize'>Business Data - {camp.dataIds.length}</li>
                                         }
-                                        <li className='text-md '>Staff {camp.staff_info?.name}</li>
-                                        <li className='text-md '>{new Date(camp.assign_date?.start).toLocaleDateString()} To {new Date(camp.assign_date?.end).toLocaleDateString()}</li>
-                                        <li className='text-md  capitalize'>{camp?.area?.city && camp?.area?.city + ','} {camp?.area?.state && camp?.area?.state + ','} {camp?.area?.country}</li>
+                                        <li className='text-sm '>Staff {camp.staff_info?.name}</li>
+                                        <li className='text-sm '>{new Date(camp.assign_date?.start).toLocaleDateString()} To {new Date(camp.assign_date?.end).toLocaleDateString()}</li>
+                                        <li className='text-sm  capitalize'>{camp?.area?.city && camp?.area?.city + ','} {camp?.area?.state && camp?.area?.state + ','} {camp?.area?.country}</li>
                                     </ul>
                                 </div>
                             </div>
