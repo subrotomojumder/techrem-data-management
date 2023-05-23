@@ -9,8 +9,10 @@ import AddressInput from '@/components/Forms/AddressInput';
 import { LargeSpinner } from '@/components/Spinner';
 import PaginationBar from '@/components/PaginationBar';
 import { useGetCampaignQuery } from '@/app/features/campaignManage/campaignManageApi';
+import { useSelector } from 'react-redux';
 
 const Campaign_history = () => {
+    const { user, isLoading: userLoading } = useSelector((state) => state.auth);
     const [openFilter, setOpenFilter] = useState(false);
     const [queryData, setQueryData] = useState({});
     const [selectedAddress, setSelectedAddress] = useState({});
@@ -19,8 +21,8 @@ const Campaign_history = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}`);
-    if (isLoading) {
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}&executor_id=${user._id || ""}`, { skip: !user });
+    if (isLoading || userLoading) {
         return <LargeSpinner />;
     };
     if (isError) {
@@ -104,7 +106,7 @@ const Campaign_history = () => {
                     </div>
                 </div>
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
-                <div className='flex flex-wrap gap-4 xl:gap-8'>
+                {data?.data?.length ? <div className='flex flex-wrap gap-4 xl:gap-8'>
                     {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}`}>
                         <div className='smm:min-h-[17.5rem]  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:bg-indigo-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0'>
                             <div className='w-full h-full flex sm:flex-row sm:justify-start smm:flex-col smm:justify-between smm:items-center smm:gap-2 smm:pb-2'>
@@ -130,6 +132,16 @@ const Campaign_history = () => {
                         </div>
                     </Link>)}
                 </div>
+                    :
+                    <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+                    <div className="text-center">
+                      
+                      <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">No Campaign found</h1>
+                      <p className="mt-6 text-base leading-7 text-gray-600">Sorry, we couldn’t find the Campaign looking for.</p>
+                      
+                    </div>
+                  </main>
+                }
             </div>
             <div className='w-full px-4 lg:px-6 py-2'>
                 <PaginationBar totalDataLength={data.totalData} stockLimit={stockLimit} setStockLimit={setStockLimit} currentPage={currentPage} setCurrentPage={setCurrentPage}></PaginationBar>

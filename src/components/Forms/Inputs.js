@@ -30,7 +30,7 @@ export function CountryInput({ wornClass, selectedCountry, setSelectedCountry, d
   const [query, setQuery] = useState('')
   const { data, isLoading, isError, error } = useGetAllAddressQuery(`/address/country`);
 
-  console.log(selectedCountry);
+  // console.log(selectedCountry);
   const countries = data?.data || [];
   // console.log(countries);
   function classNames(...classes) {

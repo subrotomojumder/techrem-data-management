@@ -52,6 +52,14 @@ export const adminDashboardItems = [
             { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
         ],
     },
+    {
+        name: 'My work List',
+        current: false,
+        children: [
+            { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
+            { name: 'Marketing', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
+        ],
+    },
     { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
     // {
     //     name: 'Facebook Group',

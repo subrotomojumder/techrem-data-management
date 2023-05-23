@@ -58,7 +58,7 @@ function UpdateService() {
         <section className="max-w-[1900px] min-h-screen mx-auto p-5 ">
             <section className="flex justify-center ">
 
-            <form onSubmit={handleSubmite} className="max-w-sm border-2 bg-slate-50 drop-shadow-xl p-5 rounded-xl">
+            <form onSubmit={handleSubmite} className="max-w-sm border-2 bg-slate-50 drop-shadow-xl p-10 rounded-xl h-80">
                 <div className="space-y-12 ">
                     <div className="border-gray-900/10">
                         <h2 className="text-2xl font-semibold leading-7 text-gray-900">
@@ -66,7 +66,7 @@ function UpdateService() {
                         </h2>
 
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                            <div className="sm:col-span-3 ">
+                            <div className="sm:col-span-3 space-y-4">
 
 
                                 <label
@@ -92,7 +92,7 @@ function UpdateService() {
                     </div>
                 </div>
 
-                <div className="mt-6 flex items-center justify-start">
+                <div className="mt-4 flex items-center justify-start">
 
                    
 

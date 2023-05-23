@@ -19,8 +19,8 @@ const HomePage = () => {
     const router = useRouter()
     const { user, isLoading } = useSelector((state) => state.auth);
 
-    const { data, isLoading: isLoading2, isError, error } = useGetDeshbordDataQuery(`/dashbord`);
-    console.log(data)
+    const { data, isLoading: isLoading2, isError, error } = useGetDeshbordDataQuery(`/dashbord`, { skip: !user });
+    console.log(data?.data)
     /*  const { data, isLoading, isError, error } = { role: "user", keyword: "" }
      const { data: bookingData, isLoading: isLoading1, isError: isError1, error: error1 } = { keyword: "" } */
     if (isLoading2 || isLoading) {
@@ -44,13 +44,13 @@ const HomePage = () => {
         <div className='w-full mx-auto p-4 grid grid-cols-12 gap-2 min-h-screen'>
             <section className='col-span-12'>
                 {/* <Chart></Chart> */}
-                <section className="grid grid-cols-1 smm:grid-cols-2 mdd:grid-cols-3 lg:grid-cols-4  gap-4 xl:gap-6 text-[30px]">
-                    <div className="border text-white bg-[#4e36e2] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><BiListPlus className='text-2xl text-white' /></p>
+                <section className="grid grid-cols-1 smm:grid-cols-2 mdd:grid-cols-3   gap-4 xl:gap-6 text-[30px]">
+                    <div className="border text-white bg-[#4e36e2] w-full p-4 shadow rounded-xl flex justify-between items-center h-28 ">
+                        <p className='border-2 border-white rounded-md p-1 w-9 h-9'><BiListPlus className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
-                            <div className='flex justify-between text-base'>
-                                <p className=''>Total Business Data</p>
-                            </div>
+
+                            <p className='text-end font-normal text-base lggg:text-lg'>Total Business Data</p>
+
                             <div className='font-bold font-sans text-end text-2xl'>
                                 <span >{data?.data?.totalDataEntry}</span>
                             </div>
@@ -58,11 +58,11 @@ const HomePage = () => {
                         </div >
                     </div>
                     {user.role === ADMIN && <div className="border text-white bg-[#48a9f8] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><AiOutlineUsergroupAdd className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1 w-9 h-9'><AiOutlineUsergroupAdd className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
-                            <div className='flex justify-between text-base'>
-                                <p className=''>Total staff</p>
-                            </div>
+
+                            <p className='text-end font-normal text-base lggg:text-lg'>Total staff</p>
+
                             <div className='font-bold font-sans text-end text-2xl'>
                                 <span >{data?.data?.totalUser}</span>
                             </div>
@@ -70,22 +70,22 @@ const HomePage = () => {
                         </div >
                     </div>}
                     <div className="border text-white bg-[#1ad588] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><MdWorkOutline className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1 w-9 h-9'><MdWorkOutline className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
-                            <div className='flex justify-between text-base'>
-                                <p className=''>{user.role === ADMIN ? 'Total Active Campaign' : "Accepted Campaign"}</p>
-                            </div>
+
+                            <p className='text-end font-normal text-base lggg:text-lg'>{user.role === ADMIN ? 'Total Active Campaign' : "Accepted Campaign"}</p>
+
                             <div className='font-bold font-sans text-end text-2xl'>
-                                <span >{user.role === ADMIN ? data?.data?.totalActiveCampaign : data.data.totalAcceptingCampaing}</span>
+                                <span >{user.role === ADMIN ? data?.data?.totalActiveCampaing : data.data.totalAcceptingCampaing}</span>
                             </div>
                         </div >
                     </div>
                     <div className="border text-white bg-[#60803b] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><VscSymbolInterface className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1 w-9 h-9'><VscSymbolInterface className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
-                            <div className='flex justify-between text-sm font-bold lgg:text-base'>
-                                <p className=''>Total Interested customer</p>
-                            </div>
+
+                            <p className='text-end font-normal text-base lggg:text-lg'>Total Interested customer</p>
+
                             <div className='font-bold font-sans text-end text-xl lgg:text-2xl'>
                                 <span >{user.role === ADMIN ? data?.data?.totalInterested : data?.data?.myProcessDataCount?.totalInterestedData}</span>
                             </div>
@@ -93,11 +93,11 @@ const HomePage = () => {
                         </div >
                     </div>
                     <div className="border text-white bg-[#508baa] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><MdOutlineDoNotDisturbOff className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1 w-9 h-9'><MdOutlineDoNotDisturbOff className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
-                            <div className='flex justify-between text-sm font-bold lgg:text-base'>
-                                <p className=''>Not Interested customer</p>
-                            </div>
+
+                            <p className='text-end font-normal text-base lggg:text-lg'>Not Interested customer</p>
+
                             <div className='font-bold font-sans text-end text-xl lgg:text-2xl'>
                                 <span >{user.role === ADMIN ? data?.data?.totalNot_interested : data?.data?.myProcessDataCount?.totalNot_interestedData}</span>
                             </div>
@@ -105,11 +105,11 @@ const HomePage = () => {
                         </div >
                     </div>
                     <div className="border text-white bg-[#1d7ca5] w-full p-4 shadow rounded-xl flex justify-between items-center h-28">
-                        <p className='border-2 border-white rounded-md p-1'><TbNotesOff className='text-2xl text-white' /></p>
+                        <p className='border-2 border-white rounded-md p-1 w-9 h-9'><TbNotesOff className='text-2xl text-white' /></p>
                         <div className='space-y-2'>
-                            <div className='flex justify-between text-sm font-bold lgg:text-base'>
-                                <p className=''>Not sure customer</p>
-                            </div>
+
+                            <p className='text-end font-normal text-base lggg:text-lg'>Not sure customer</p>
+
                             <div className='font-bold font-sans text-end text-xl lgg:text-2xl'>
                                 <span >{user.role === ADMIN ? data?.data?.totalNot_sure : data?.data?.myProcessDataCount?.totalNot_sureData}</span>
                             </div>
@@ -134,8 +134,8 @@ const HomePage = () => {
                         </div>
                     </div>
                 </section> */}
-                <dl className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-                    <div className="overflow-x-auto rounded-lg bg-white min-h-[40vh] px-4 py-5 shadow">
+                <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
+                    <div className="overflow-x-auto overflow-y-auto rounded-lg bg-white md:min-h-[40vh] lgg:min-h-[60vh] px-4 py-5 shadow">
                         <div className="inline-block min-w-full py-2 align-middle px-4">
                             <h3 className='text-base font-medium underline underline-offset-2'>Recent Interested</h3>
                             <table className="min-w-full divide-y divide-gray-300">
@@ -152,12 +152,17 @@ const HomePage = () => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {data?.data?.recentData?.recentInterestedData?.length ?
-                                        data?.data?.recentData?.recentInterestedData?.map(({ businessDetails, address, _id }, i) => (
+                                        data?.data?.recentData?.recentInterestedData?.map(({ businessDetails, address, _id, create_date }, i) => (
                                             <tr key={_id} className='hover:bg-slate-50 w-full'>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                     <div className="flex items-center gap-x-4 group" onClick={() => router.push(`/dashboard/campaign/contact_manage/${_id}`)}>
                                                         <img src={businessDetails?.businessLogo} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
-                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{businessDetails?.businessName}</div>
+                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200 ">
+                                                            <p>
+                                                                {businessDetails?.businessName}
+                                                            </p>
+                                                            <p>{new Date(create_date).toLocaleString()}</p>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
@@ -189,12 +194,15 @@ const HomePage = () => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {data?.data?.recentData?.recentNot_interestedData?.length ?
-                                        data?.data?.recentData?.recentNot_interestedData?.map(({ businessDetails, address, _id }, i) => (
+                                        data?.data?.recentData?.recentNot_interestedData?.map(({ businessDetails, address, _id, create_date }, i) => (
                                             <tr key={_id} className='hover:bg-slate-50 w-full'>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                     <div className="flex items-center gap-x-4 group" onClick={() => router.push(`/dashboard/campaign/contact_manage/${_id}`)}>
                                                         <img src={businessDetails?.businessLogo} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
-                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{businessDetails?.businessName}</div>
+                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">
+                                                            <p> {businessDetails?.businessName}</p>
+                                                            <p>{new Date(create_date).toLocaleString()}</p>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
@@ -226,12 +234,15 @@ const HomePage = () => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {data?.data?.recentData?.recentNot_sureData?.length ?
-                                        data?.data?.recentData?.recentNot_sureData?.map(({ businessDetails, address, _id }, i) => (
+                                        data?.data?.recentData?.recentNot_sureData?.map(({ businessDetails, address, _id, create_date }, i) => (
                                             <tr key={_id} className='hover:bg-slate-50 w-full'>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                     <div className="flex items-center gap-x-4 group" onClick={() => router.push(`/dashboard/campaign/contact_manage/${_id}`)}>
                                                         <img src={businessDetails?.businessLogo} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
-                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{businessDetails?.businessName}</div>
+                                                        <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">
+                                                            <p>{businessDetails?.businessName}</p>
+                                                            <p>{new Date(create_date).toLocaleString()}</p>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
@@ -247,7 +258,7 @@ const HomePage = () => {
                         </div>
                     </div>
 
-                </dl>
+                </div>
             </section>
         </div>
     );

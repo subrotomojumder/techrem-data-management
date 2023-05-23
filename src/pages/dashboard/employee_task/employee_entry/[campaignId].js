@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Countries from 'countries-list';
-import { LargeSpinner, SmallSpinner } from '@/components/Spinner';
 import { usePostDataMutation } from '@/app/features/dataEntire/dataEntireApi';
-import { errorToast, successToast } from '@/utils/neededFun';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
-import { Private } from '@/utils/ProtectRoute';
-import { CityInput, CountryInput, StateInput } from '@/components/Forms/Inputs';
 import { PhotoIcon } from '@heroicons/react/20/solid';
 import { useForm } from 'react-hook-form';
+import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
+import { LargeSpinner } from '@/components/Spinner';
 import EntrySubPreview from '@/components/EntrySubPreview';
 import CategoryInput from '@/components/Forms/CategoryInput';
-import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
+import { CityInput, CountryInput, StateInput } from '@/components/Forms/Inputs';
+import { Private } from '@/utils/ProtectRoute';
 
-
-const New_form = () => {
+const New_form = ({campaignId}) => {
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
     const [inputData, setInputData] = useState({});
     const [selectedCountry, setSelectedCountry] = useState(null);
@@ -68,6 +66,7 @@ const New_form = () => {
         setImageLoading(true)
         const { businessName, country_code, businessPhone, businessEmail, street_address, postCode, location_link, other_information, } = data;
         const entireData = {
+            campaign_id: campaignId, 
             other_information,
             suggestions: newSuggestService,
             we_offer_service: weCanService,
@@ -106,6 +105,7 @@ const New_form = () => {
         }
     };
     const handleSubmission = () => {
+        return console.log(previewData);
         postData(previewData)
             .then(res => {
                 if (res.data?.success) {
@@ -398,5 +398,9 @@ const New_form = () => {
         </div>
     );
 };
-
+export async function getServerSideProps(context) {
+    return {
+        props: { campaignId: context.query.campaignId }
+    }
+}
 export default Private(New_form);

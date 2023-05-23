@@ -197,7 +197,7 @@ const UpdateProfile = () => {
                     <div className='col-span-1 h-fit  pt-8 pb-4 mdd:pb-10 bg-gray-200 border rounded-md px-0 xl:px-10'>
                         <div className='text-center'>
                             <figure className='relative'>
-                                <img className='rounded-full w-[50%] max-w-[150px] mx-auto p-[2px]' src={previewImage || userImage || demoUser} alt="" />
+                                <img className='rounded-full w-32 h-32 mx-auto p-[2px]' src={previewImage || userImage || demoUser} alt="" />
                                 <input
                                     onChange={(e) => setPreviewImage(window.URL.createObjectURL(e.target.files[0]))}
                                     onClick={() => setEditField({ ...editField, upBtn: true })}
