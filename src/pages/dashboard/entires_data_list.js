@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
 import { LargeSpinner } from '@/components/Spinner';
-import { AdminProtect, Private } from '@/utils/ProtectRoute';
+import { AdminProtect, MarketerProtect, Private } from '@/utils/ProtectRoute';
 import { FaEdit } from 'react-icons/fa';
 import { CgArrowsExchangeV } from 'react-icons/cg';
 import Link from 'next/link';
@@ -294,4 +294,4 @@ const Entires_data = () => {
     };
 };
 
-export default Private(Entires_data);
+export default MarketerProtect(Entires_data);

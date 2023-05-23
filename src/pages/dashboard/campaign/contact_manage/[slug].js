@@ -8,7 +8,6 @@ import { errorSweetAlert, errorToast, successToast } from '@/utils/neededFun';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { BsTelephoneOutbound } from 'react-icons/bs';
-import { useSelector } from 'react-redux';
 
 const Contact_manage = () => {
     const [inputData, setInputData] = useState({});
@@ -97,7 +96,6 @@ const Contact_manage = () => {
                 </div>
             </div >
         </div >
-
     );
 };
 

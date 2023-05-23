@@ -46,36 +46,39 @@ function Campaign_entry({ campaign_id }) {
                     <div className="mt-6 border-t border-gray-100">
                         <dl className="divide-y divide-gray-100">
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Campaign Objective</dt>
-                                <dd className="mt-1 text-sm lg:text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 capitalize">{campaign_objective}</dd>
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Campaign Objective</dt>
+                                <dd className="mt-1 text-sm lg:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0 capitalize">{campaign_objective}</dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Campaign name</dt>
-                                <dd className="mt-1 text-sm lg:text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{campaign_name}</dd>
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Campaign name</dt>
+                                <dd className="mt-1 text-sm lg:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{campaign_name}</dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Campaign Area</dt>
-                                <dd className="mt-1 text-sm lg:text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0 capitalize"><span>{area.city && area.city + ', '}{area.state && area.state + ', '}{area.country}</span></dd>
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Campaign Area</dt>
+                                <dd className="mt-1 text-sm lg:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0 capitalize"><span>{area.city && area.city + ', '}{area.state && area.state + ', '}{area.country}</span></dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Assign Date</dt>
-                                <dd className="mt-1 text-sm lg:text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{new Date(createdAt).toLocaleString()}</dd>
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Assign Date</dt>
+                                <dd className="mt-1 text-sm lg:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{new Date(createdAt).toLocaleString()}</dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Campaign Duration</dt>
-                                <dd className="mt-1 text-sm lg:text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{new Date(assign_date?.start).toLocaleDateString()} To {new Date(assign_date?.end).toLocaleDateString()} </dd>
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Campaign Duration</dt>
+                                <dd className="mt-1 text-sm lg:text-base leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{new Date(assign_date?.start).toLocaleDateString()} To {new Date(assign_date?.end).toLocaleDateString()} </dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Campaign Status</dt>
-                                <dd className="mt-2 text-sm lg:text-md text-gray-900 sm:col-span-2 sm:mt-0">
-
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Campaign Status</dt>
+                                <dd className="mt-2 text-sm lg:text-base text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <span className='px-2 bg-slate-200 py-1 rounded-sm'>  {"Pending"} </span>
                                 </dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Total Entry</dt>
-                                <dd className="mt-2 text-sm lg:text-md text-gray-900 sm:col-span-2 sm:mt-0">
-                                   <span className='px-2 bg-green-200 py-1'> {dataIds?.length || 0} Business Data</span>
+                                <dt className="text-sm lg:text-base font-medium leading-6 text-gray-900">Total Entry</dt>
+                                <dd className="mt-2 text-sm lg:text-base text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <span className='px-2 bg-green-200 py-1'> {dataIds?.length || 0} Business Data</span>
                                 </dd>
+                            </div>
+                            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                
                             </div>
                         </dl>
                     </div>

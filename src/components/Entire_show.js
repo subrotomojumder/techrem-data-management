@@ -154,7 +154,7 @@ const Entire_show = ({ data }) => {
                             </div>
                             : showData === "status" && <>
                                 {onProcess?.marketer?.communicationId &&
-                                    <div className='col-span-12 lg:col-span-6 space-y-2 p-4 text-[14px] font-medium'>
+                                    <div className='col-span-12 lg:col-span-6 space-y-2 p-4 text-base font-medium'>
                                         <h4 className='text-lg font-serif text-indigo-700 mb-2'> Telemarketing work process status</h4>
                                         <div className='flex justify-start'>
                                             <h5 className='w-36'>Marketer</h5>

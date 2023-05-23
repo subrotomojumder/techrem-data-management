@@ -2,19 +2,37 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useGetEntireDataByIdQuery } from '@/app/features/dataEntire/dataEntireApi';
-import { LargeSpinner } from '@/components/Spinner';
+import { LargeSpinner, SmallSpinner } from '@/components/Spinner';
 import { Private } from '@/utils/ProtectRoute';
 import { useSelector } from 'react-redux';
 import { ADMIN, DATA_ENTRY_OPERATOR, INTERESTED, MARKETER, NOTINTERESTED, NOTSURE } from '@/utils/constant';
+import Entire_show from '@/components/Entire_show';
+import { usePostEmployeeTaskMutation } from '@/app/features/campaignManage/campaignManageApi';
+import { BsTelephoneOutbound } from 'react-icons/bs';
+import { errorSweetAlert, successToast } from '@/utils/neededFun';
 
 const Single_Entry_show = () => {
+    const [inputData, setInputData] = useState({});
     const router = useRouter();
     const { slug } = router.query;
-    const [showData, setShowData] = useState('overview');
-    const { user } = useSelector((state) => state.auth);
-    const { data, isLoading, isError, error } = useGetEntireDataByIdQuery(slug, { skip: !slug });
-    console.log(data, isLoading, isError, error);
-    if (isLoading) {
+    const { data, isLoading: dataLoading, isError, error } = useGetEntireDataByIdQuery(slug, { skip: !slug });
+    const [postTaskSubmission, { isLoading }] = usePostEmployeeTaskMutation();
+    console.log(data)
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        const data = { process: e.target?.customer_response?.value, dataId: slug, communication_note: e.target?.note?.value };
+        postTaskSubmission(data)
+            .then(res => {
+                console.log(res);
+                if (res.data?.success) {
+                    successToast("Submit Successful!")
+                    setInputData({});
+                } else {
+                    errorSweetAlert("Something went wrong!")
+                }
+            })
+    };
+    if (!router.query?.slug || dataLoading) {
         return <LargeSpinner />;
     };
     if (isError) {
@@ -32,185 +50,55 @@ const Single_Entry_show = () => {
             </div>
         }
     };
-
-    if (data?.success) {
-        const { businessDetails: { businessName, businessEmail, businessPhone, country_code, category, businessLogo },
-            final_process, we_offer_service, they_offer_service, onProcess, other_information, createdAt, updatedAt, suggestions, data_entry_operator,
-            address: { country, state, city, street_address, postCode, location_link }, have_website: { website_urls } } = data.data;
-        return (
-            <div className='capitalize w-full min-h-screen'>
-                <div className="w-full bg-indigo-100">
-                    <div className='w-full flex justify-around py-2 px-2 md:px-4 max-w-6xl mx-auto'>
-                        <button
-                            onClick={() => setShowData("overview")}
-                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "overview" && " border-b-4 "} border-blue-500 `}
-                        >Overview</button>
-                        <button
-                            onClick={() => setShowData("service")}
-                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "service" && "border-b-4 "} border-blue-500`}
-                        >Services</button>
-                        <button
-                            onClick={() => setShowData("other")}
-                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "other" && " border-b-4 "} border-blue-500 `}
-                        >Entry By</button>
-                        {user.role !== DATA_ENTRY_OPERATOR && <button
-                            onClick={() => setShowData("status")}
-                            className={`text-sm md:text-lg font-medium px-2 md:px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4 "} border-blue-500`}
-                        >Status</button>}
-                    </div>
+    return (
+        <div className='grid grid-cols-1 lgg:grid-cols-9 gap-4 lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 lgg:divide-x-2'>
+            <div className={`${data?.data?.final_process?.process ? "col-span-9" : "col-span-5"} px-2`}>
+                {/* <img className='w-full max-h-[250px]' src={"https://st2.depositphotos.com/4035913/6124/i/600/depositphotos_61243831-stock-photo-letter-s-logo.jpg"} alt="" /> */}
+                <div className='h-fit capitalize'>
+                    <Entire_show data={data} />
                 </div>
-                <div className='my-4 w-full px-3 md:px-10 xl:px-0'>
-                    <div className='w-full lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-[90vh] mx-auto bg-white rounded-lg shadow py-2'>
-                        {showData === "overview"
-                            ? <div className='h-full px-6 lg:px-10 pb-8 pt-3 grid grid-cols-1 gap-y-2 lg:gap-y-4 font-medium'>
-                                <h4 className='text-lg xl:text-xl font-serif text-indigo-700 mb-1'>Entire data Information</h4>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Business name</h5>
-                                    <h5 className='flex-1'>: {businessName}</h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Category</h5>
-                                    <h5 className='flex-1 capitalize'>: {category.main}</h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Sub Category</h5>
-                                    <h5 className='flex-1 capitalize'>: {category.sub1 || "N/A"}</h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Email</h5>
-                                    <h5 className='flex-1 lowercase'>: {businessEmail || "N/A"}</h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Phone</h5>
-                                    <h5 className='flex-1 capitalize'>: + {country_code || "N/A"} {businessPhone || "N/A"}</h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Local post code</h5>
-                                    <h5 className='flex-1'>: {postCode || "N/A"} </h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Address </h5>
-                                    <h5 className='flex-1'>: {city}, {state}, {country}</h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Street address</h5>
-                                    <h5 className='flex-1'>: {street_address || "N/A"} </h5>
-                                </div>
-                                <div className='flex justify-start'>
-                                    <h5 className='w-32'>Map Link</h5>
-                                    <h5 className='flex-1'>: {location_link ? <a className='font-normal text-blue-500 hover:underline hover:text-indigo-700' href={location_link} target='_blank'>Google map location link</a> : "N/A"} </h5>
-                                </div>
-                                {website_urls?.length > 0 && <div className='flex justify-start'>
-                                    <h5 className='w-32'>Websites</h5>
-                                    <div className='flex-1'>: Site link
-                                        {website_urls.map((site, i) => <ol key={i} >
-                                            <li>{++i}. <a className='font-normal text-blue-500 hover:underline hover:text-indigo-700' href={site} target="_blank" rel="noopener noreferrer">{site}</a></li>
-                                        </ol>)}
-                                    </div>
-                                </div>}
-                                <div className='flex justify-start mt-2'>
-                                    <h5 className='w-32'>Business Logo</h5>
-                                    <h5 className='flex-1'>
-                                        <img className='rounded mt-2 w-[180px] h-[120px]' src={businessLogo} alt='Company Logo' /></h5>
-                                </div>
+            </div>
+            <div className={`${data?.data?.final_process?.process && "hidden"} col-span-4 h-fit px-6 md:px-8 lg:px-10 py-4 md:py-6 lg:py-8 md:my-5 rounded-sm`}>
+                <h2 className="text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase text-center"><BsTelephoneOutbound className='inline' /> Communication report</h2>
+                <p className='text-center mb-2'>Write your contact data</p>
+                <hr />
+                <div>
+                    <form onSubmit={handleUpdate} className='mt-1'>
+                        <div className="relative mb-2 mt-1">
+                            <label className="leading-7 font-[600] text-gray-700">Customer Response</label>
+                            <select
+                                value={inputData.response || ''} required={!inputData?.response}
+                                onChange={(e) => setInputData({ ...inputData, response: e.target.value })}
+                                name='customer_response'
+                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-800 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out" >
+                                <option value={''} selected >Select Response</option>
+                                <option value={INTERESTED}>Interested Customer</option>
+                                <option value={NOTINTERESTED}>Not Interested Customer</option>
+                                <option value={NOTSURE}>Not Sure Customer</option>
+                                {/* <option value="marketing">Order Completed</option> */}
+                            </select>
+                        </div>
+
+                        <div className="relative mb-1 mt-1">
+                            <label htmlFor='details' className="leading-7 font-[600] text-gray-700">Communication details *</label>
+                            <textarea
+                                value={inputData.note || ''} required onChange={(e) => setInputData({ ...inputData, note: e.target.value })} name='note' type="text" id='details' placeholder='Important information.......'
+                                rows="12" cols="50" className="w-full bg-white rounded-sm  border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-md outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                            />
+                        </div>
+                        <div className="relative mb-2 mt-1">
+                            <div className='flex justify-center gap-2 mt-2'>
+                                <button type='reset' onClick={() => setInputData({})} className="text-white font-semibold bg-red-400 border-0 py-2 px-4 focus:outline-none hover:bg-red-500 active:bg-red-600 rounded duration-75">Reset</button>
+                                <button disabled={isLoading} type='submit' className="text-white bg-indigo-500 border-0 w-24 h-10 py-2 px-6 focus:outline-none hover:bg-indigo-600 active:bg-indigo-700 font-semibold disabled:bg-indigo-400 rounded align-middle">
+                                    {(isLoading) ? <SmallSpinner /> : "Submit"}
+                                </button>
                             </div>
-                            : showData === "service"
-                                ? <div className='h-full space-y-2 px-6  pb-8 pt-3 font-medium'>
-                                    <div className=' bg-gray-100 py-5 px-5 rounded'>
-                                        <h5 className='font-[400] mb-2 underline underline-offset-4'>We offer Service :</h5>
-                                        <div className='flex-1 capitalize'>
-                                            {we_offer_service?.length ?
-                                                <div className='grid grid-cols-1 gap-y-2 text-md'>
-                                                    {we_offer_service.map((item, i) => <p className='' key={i}>{++i}. {item}</p>)}
-                                                </div>
-                                                : <p className="text-md text-red-500">Service Empty!</p>
-                                            }</div>
-                                    </div>
-                                    <div className='bg-gray-100 py-5 px-5 rounded'>
-                                        <h5 className='font-[400] mb-2 underline underline-offset-4'>They offer Service :</h5>
-                                        <div className='flex-1 capitalize'>
-                                            {they_offer_service?.length ?
-                                                <div className='grid grid-cols-1 gap-y-2 text-md'>
-                                                    {they_offer_service.map((item, i) => <p className='' key={i}>{++i}. {item}</p>)}
-                                                </div>
-                                                : <p className="text-md text-red-500">Service Empty!</p>
-                                            }</div>
-                                    </div>
-                                    <div className=' bg-gray-100 py-5  px-5 rounded'>
-                                        <h5 className='font-[400] mb-2 underline underline-offset-4'>Add more Service :</h5>
-                                        <div className='flex-1 capitalize'>
-                                            {suggestions?.length ?
-                                                <div className='grid grid-cols-1 gap-y-2 text-md'>
-                                                    {suggestions.map((item, i) => <p className='' key={i}>{++i}. {item}</p>)}
-                                                </div>
-                                                : <p className="text-md text-red-500">Service Empty!</p>
-                                            }</div>
-                                    </div>
-
-                                </div>
-                                : showData === "status"
-                                    ? <div className='h-full px-6 pb-8 pt-3 font-medium'>
-                                        <h4 className='text-xl text-center font-serif text-indigo-700 mb-2 underline underline-offset-4'>Work info details</h4>
-                                        {onProcess?.marketer?.communicationId &&
-                                            <div className='col-span-12 lg:col-span-6 space-y-2 p-4 text-md font-medium'>
-                                                <h4 className='text-lg lg:text-xl font-serif text-indigo-700 mb-2'>Marketing process status</h4>
-                                                <div className='flex justify-start'>
-                                                    <h5 className='w-36'>Marketer</h5>
-                                                    <h5 className='flex-1'>: {onProcess?.marketer?.communicationId?.executor?.name}({onProcess?.marketer?.communicationId?.executor?.role})</h5>
-                                                </div>
-                                                <div className='flex justify-start'>
-                                                    <h5 className='w-36'>Work process</h5>
-                                                    <h5 className='flex-1'>:
-                                                        <span
-                                                            className={`mx-auto ml-3 gap-2 ${final_process?.process === 'interested' ? "text-green-500" : final_process.process === NOTINTERESTED ? "text-[#efaf47]" : final_process.process === NOTSURE ? "text-[#5ac0de]" : "text-gray-700"} rounded-md my-1.5 text-md font-semibold capitalize`}
-                                                        >
-                                                            {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
-                                                        </span>
-                                                    </h5>
-                                                </div>
-                                                {onProcess?.marketer?.communicationId?.communication_note && <div className=''>
-                                                    <h5 className='w-full '><span className='underline'>Communication Note</span> : <span className='font-normal'>{onProcess?.marketer?.communicationId?.communication_note}</span></h5>
-                                                </div>}
-                                            </div>
-                                        }
-                                    </div>
-                                    : <div className='h-full px-6 pb-8 pt-3 grid grid-cols-1 gap-y-3 font-medium'>
-                                        <h4 className='text-lg font-serif text-indigo-700 mb-1'>Entry operator Info</h4>
-                                        <div className='flex justify-start'>
-                                            <h5 className='w-32'>Entire By</h5>
-                                            <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.fast_name} {data_entry_operator?.account_id?.last_name}</h5>
-                                        </div>
-                                        <div className='flex justify-start'>
-                                            <h5 className='w-32'>Position</h5>
-                                            <h5 className='flex-1 capitalize'>: {data_entry_operator?.account_id?.role}</h5>
-                                        </div>
-                                        <div className='flex justify-start'>
-                                            <h5 className='w-32'>Email</h5>
-                                            <h5 className='flex-1 lowercase'>: {data_entry_operator?.account_id?.email}</h5>
-                                        </div>
-                                        <div className='flex justify-start'>
-                                            <h5 className='w-32'>Phone</h5>
-                                            <h5 className='flex-1 '>: +{data_entry_operator?.account_id?.country_code} {data_entry_operator?.account_id?.phone}</h5>
-                                        </div>
-                                        <div className='flex justify-start'>
-                                            <h5 className='w-32'>Entire Date</h5>
-                                            <h5 className='flex-1'>: {new Date(createdAt).toLocaleString()}</h5>
-                                        </div>
-                                        <div className='flex justify-start'>
-                                            <h5 className='w-32'>Last Update</h5>
-                                            <h5 className='flex-1'>: {new Date(updatedAt).toLocaleString()}</h5>
-                                        </div>
-                                        <div className='bg-gray-50 p-2 space-y-1'>
-                                            <p><span className='font-medium'>Entire operator Note</span> : </p>
-                                            <p className='font-normal space-y-2'>{other_information}</p>
-                                        </div>
-                                    </div>
-                        }
-                    </div>
+                        </div>
+                    </form>
                 </div>
-            </ div >
-        )
-    }
+            </div >
+        </div >
+    );
 };
 
 export default Private(Single_Entry_show);
