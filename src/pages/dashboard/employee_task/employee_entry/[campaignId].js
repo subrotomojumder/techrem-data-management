@@ -6,11 +6,12 @@ import axios from 'axios';
 import { PhotoIcon } from '@heroicons/react/20/solid';
 import { useForm } from 'react-hook-form';
 import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
-import { LargeSpinner } from '@/components/Spinner';
+import { LargeSpinner, SmallSpinner } from '@/components/Spinner';
 import EntrySubPreview from '@/components/EntrySubPreview';
 import CategoryInput from '@/components/Forms/CategoryInput';
 import { CityInput, CountryInput, StateInput } from '@/components/Forms/Inputs';
 import { Private } from '@/utils/ProtectRoute';
+import { errorToast, successToast } from '@/utils/neededFun';
 
 const New_form = ({campaignId}) => {
     const [imgFiles, setImgFiles] = useState({}); // ekhane (images: e.target.files, logo: e.target.files[0]) set korte hobe
@@ -66,7 +67,7 @@ const New_form = ({campaignId}) => {
         setImageLoading(true)
         const { businessName, country_code, businessPhone, businessEmail, street_address, postCode, location_link, other_information, } = data;
         const entireData = {
-            campaign_id: campaignId, 
+            dataEntryCampaign_id: campaignId, 
             other_information,
             suggestions: newSuggestService,
             we_offer_service: weCanService,
@@ -105,7 +106,7 @@ const New_form = ({campaignId}) => {
         }
     };
     const handleSubmission = () => {
-        return console.log(previewData);
+        // return console.log(previewData);
         postData(previewData)
             .then(res => {
                 if (res.data?.success) {

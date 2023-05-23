@@ -26,7 +26,7 @@ function Campaign_entry({ campaign_id }) {
             </div>
         }
     } else if (data?.success) {
-        const { campaign_objective, campaign_name, area, createdAt, assign_date, _id } = data.data;
+        const { campaign_objective, campaign_name, area, createdAt, assign_date, _id, dataIds } = data.data;
         return (
             <div>
                 <div className='lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 '>
@@ -72,9 +72,9 @@ function Campaign_entry({ campaign_id }) {
                                 </dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Entry data</dt>
+                                <dt className="text-sm lg:text-md font-medium leading-6 text-gray-900">Total Entry</dt>
                                 <dd className="mt-2 text-sm lg:text-md text-gray-900 sm:col-span-2 sm:mt-0">
-
+                                   <span className='px-2 bg-green-200 py-1'> {dataIds?.length || 0} Business Data</span>
                                 </dd>
                             </div>
                         </dl>
