@@ -124,5 +124,5 @@ export const teleMarketerDashboardItems = [
     // { name: 'My Submission', href: '/dashboard/employee_task/my_submission_task', icon: ChartPieIcon, current: false },
     // { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
     { name: 'Entry Data List', icon: TbListDetails, href: '/dashboard/employee_task/my_entry_data_list' },
-    { name: 'Enumeration', href: '/all_list_enquiry/address_enquiry', icon: BiLineChartDown, current: false },
+    { name: 'Enumeration', href: '/dkjfajjf', icon: BiLineChartDown, current: false },
 ]
