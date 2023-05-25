@@ -10,17 +10,18 @@ import AddressInput from '@/components/Forms/AddressInput';
 import { LargeSpinner } from '@/components/Spinner';
 import { useGetCampaignQuery } from '@/app/features/campaignManage/campaignManageApi';
 import { useSelector } from 'react-redux';
+import { MARKETER } from '@/utils/constant';
 
 const Active_campaign = () => {
     const { user, isLoading: userLoading } = useSelector((state) => state.auth);
-    console.log(user)
     const [openFilter, setOpenFilter] = useState(false);
     const [queryData, setQueryData] = useState({});
     const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const { data, isLoading, isError, error } = useGetCampaignQuery(`?active=true&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}&executor_id=${user._id || ""}`, { skip: !user });
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`?active=true&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}${user.role === MARKETER && `&executor_id=${user._id}`}`, { skip: !user });
+    console.log(data, isLoading, isError, error)
     if (isLoading || userLoading) {
         return <LargeSpinner />;
     };
@@ -45,9 +46,9 @@ const Active_campaign = () => {
                             onClick={() => setOpenFilter(c => (!c))} type="button"
                             className="rounded-md bg-white pl-4 pr-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                         >
-                            Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
+                            Filters {openFilter ? <TbFilterOff className={`inline - block ml - 4`} /> : <TbFilter className={`inline ml - 4`} />}
                         </button>
-                        <Link href={`/dashboard/campaign/create_campaign`}>
+                        <Link href={`/ dashboard / campaign / create_campaign`}>
                             <button
                                 type="button"
                                 className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-sm md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -57,7 +58,7 @@ const Active_campaign = () => {
                         </Link>
                     </div>
                 </div>
-                <div className={`w-full flex justify-between items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-slate-100 shadow-sm px-3 py-2 `}>
+                <div className={`w - full flex justify - between items - center gap - 2 ${openFilter ? "block" : "hidden"} duration - 300 bg - slate - 100 shadow - sm px - 3 py - 2 `}>
                     <div className="relative">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-[6px] pr-1 border-r ">
                             <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -98,8 +99,8 @@ const Active_campaign = () => {
                 </div>
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
                 {data?.data?.length ? <div className='flex flex-wrap gap-4 xl:gap-8'>
-                    {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}`}>
-                        <div className='smm:min-h-[17.5rem]  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:bg-indigo-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0'>
+                    {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/ dashboard / campaign / campaign_view / ${camp.campaign_objective} /${camp._id}`}>
+                        <div div className='smm:min-h-[17.5rem]  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:bg-indigo-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0' >
                             <div className='w-full h-full flex sm:flex-row sm:justify-start smm:flex-col smm:justify-between smm:items-center smm:gap-2 smm:pb-2'>
                                 <div className="h-[90px] w-[90px]">
                                     <img
@@ -121,8 +122,8 @@ const Active_campaign = () => {
                                 </div>
                             </div>
                         </div>
-                    </Link>)}
-                </div> :
+                    </Link >)}
+                </div > :
                     <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
                         <div className="text-center">
 
@@ -132,8 +133,8 @@ const Active_campaign = () => {
                         </div>
                     </main>
                 }
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

@@ -51,7 +51,7 @@ const Single_Entry_show = () => {
         }
     };
     return (
-        <div className='grid grid-cols-1 lgg:grid-cols-9 gap-4 lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 lgg:divide-x-2'>
+        <div className='grid grid-cols-1 lgg:grid-cols-9 gap-4 lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded-lg shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 lgg:divide-x-2'>
             <div className={`${data?.data?.final_process?.process ? "col-span-9" : "col-span-5"} px-2`}>
                 {/* <img className='w-full max-h-[250px]' src={"https://st2.depositphotos.com/4035913/6124/i/600/depositphotos_61243831-stock-photo-letter-s-logo.jpg"} alt="" /> */}
                 <div className='h-fit capitalize'>

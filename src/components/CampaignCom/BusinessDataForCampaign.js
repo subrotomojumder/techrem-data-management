@@ -89,7 +89,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                         <div className='flex justify-start items-center gap-2'>
                             <button
                                 onClick={() => setTogglePage(1)}
-                                className="rounded-md bg-blue-500 pl-4 pr-3 py-1.5 text-md font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                className="rounded-md bg-blue-500 pl-3 pr-3 py-1.5 text-md font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                             >
                                 <BsArrowLeftShort size={18} className='inline-block -mt-1' /> Previews
                             </button>
@@ -120,9 +120,9 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                             </button>
                             <button
                                 onClick={submit} type="button"
-                                className="rounded-md bg-blue-500 pl-4 pr-3 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                className="rounded-md bg-blue-500 pl-4 pr-4 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                             >
-                                Next <BsArrowRightShort size={18} className='inline-block -mt-1' />
+                                Next <BsArrowRightShort size={18} className='inline-block -mt-1 ml-1' />
                             </button>
                         </div>
                     </div>

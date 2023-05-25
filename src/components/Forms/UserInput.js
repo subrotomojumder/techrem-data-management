@@ -3,7 +3,7 @@ import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 
-export default function CountryInput({ wornClass, selectedUser, setSelectedUser, placeHolder = '' }) {
+export default function UserInput({ wornClass, selectedUser, setSelectedUser, placeHolder = '' }) {
     const { data, isError } = useGetAllUserNameQuery();
     const [query, setQuery] = useState('')
     function classNames(...classes) {

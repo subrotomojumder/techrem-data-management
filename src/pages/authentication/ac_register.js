@@ -148,7 +148,7 @@ const Register = () => {
                         <button onClick={() => setCreateSuccess(null)} className='absolute top-2 right-2 px-[10px] pb-1 bg-red-500 rounded-full  text-white text-xl'>x</button>
                         <h2 className="tracking-widest text-sm title-font underline font-medium text-gray-400 mb-2">ACCOUNTS</h2>
                         <p className='text-4xl w-fit mx-auto text-indigo-500'><MdOutlineManageAccounts /></p>
-                        <h1 className="title-font text-base  text-gray-900">Name-{createSuccess?.name}</h1>
+                        <h1 className="title-font text-base  text-gray-900">Name-{createSuccess?.fast_name + " " + createSuccess.last_name}</h1>
                         <h1 className="title-font text-base  text-gray-900 mb-2">Email-{createSuccess?.email}</h1>
                         <h1 className="title-font text-base font-medium text-green-500 mb-1">Id: {createSuccess?.userId}</h1>
                         <h1 className="title-font text-base font-medium text-gray-900 mb-1">Password: {createSuccess?.password}</h1>

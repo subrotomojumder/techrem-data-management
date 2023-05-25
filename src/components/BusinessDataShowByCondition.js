@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
-import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
-import { LargeSpinner } from '@/components/Spinner';
-import { AdminProtect, MarketerProtect, Private } from '@/utils/ProtectRoute';
-import { FaEdit } from 'react-icons/fa';
-import { CgArrowsExchangeV } from 'react-icons/cg';
-import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { DateRangeInput } from '@/components/Forms/Inputs';
-import CategoryInput from '@/components/Forms/CategoryInput';
-import UserInput from '@/components/Forms/UserInput';
-import { format } from 'date-fns';
-import Update_entry_data from '@/components/Update_entry_data';
-import { updateConfirm } from '@/utils/neededFun';
-import { TbFilter, TbFilterOff } from 'react-icons/tb';
-import AddressInput from '@/components/Forms/AddressInput';
+import React, { useState } from 'react';
+import { LargeSpinner } from './Spinner';
 import { useGetOurServiceQuery } from '@/app/features/others/othersApi';
-import PaginationBar from '@/components/PaginationBar';
+import { useGetAllDataQuery } from '@/app/features/dataEntire/dataEntireApi';
+import { TbFilter, TbFilterOff } from 'react-icons/tb';
+import Update_entry_data from './Update_entry_data';
+import PaginationBar from './PaginationBar';
+import { FaEdit } from 'react-icons/fa';
+import Link from 'next/link';
+import { CgArrowsExchangeV } from 'react-icons/cg';
+import { DateRangeInput } from './Forms/Inputs';
+import UserInput from './Forms/UserInput';
+import AddressInput from './Forms/AddressInput';
+import CategoryInput from './Forms/CategoryInput';
+import { ORDER_COMPLETED } from '@/utils/constant';
 
-const Entires_data = () => {
+const BusinessDataShowByCondition = ({ dynamicData }) => {
     const [updateEntry, setUpdateEntry] = useState(null)
     const [openFilter, setOpenFilter] = useState(false);
     const [queryData, setQueryData] = useState({});
@@ -29,7 +26,7 @@ const Entires_data = () => {
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}${dynamicData.finalProcess ? `&final_process=${dynamicData.finalProcess}` : ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${dynamicData.onlyMyData ? dynamicData.onlyMyData : selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     // console.log(searchQuery)
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
@@ -66,7 +63,7 @@ const Entires_data = () => {
         if (!updateEntry) {
             return <div className='w-full max-w-[1940px] mx-auto'>
                 <div className="px-4 sm:px-4 xl:px-8 py-4 sm:py-6 xl:py-6">
-                    <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-serif'>All business data list</h1>
+                    <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-thin'>{dynamicData?.type}</h1>
                     <div className='overflow-x-auto p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
                         <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
                             <div className='bg-indigo-100 shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
@@ -99,7 +96,7 @@ const Entires_data = () => {
                                     >
                                         Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
                                     </button>
-                                    <select
+                                    {!dynamicData.finalProcess && <select
                                         onChange={(e) => setDateRange([new Date(new Date().getTime() - Number(e.target.value) * 24 * 60 * 60 * 1000), new Date()])}
                                         // value={queryData.campaign || ''}
                                         className="rounded-md bg-white pl-3 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
@@ -109,13 +106,15 @@ const Entires_data = () => {
                                         <option value={7}>Last 07 Days</option>
                                         <option value={5}>Last 05 Days</option>
                                         <option value={1}>Last 01 Days</option>
-                                    </select>
+                                    </select>}
                                 </div>
                             </div>
                             <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-100 drop-shadow-md px-3 py-2`}>
                                 <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-700" }}></CategoryInput>
                                 <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
-                                <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
+                                {!dynamicData.onlyMyData &&
+                                    <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
+                                }
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
                                 {/* <input
                                     onChange={(e) => setQueryData(c => ({ ...c, createDate: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
@@ -130,15 +129,16 @@ const Entires_data = () => {
                                     <option value='' selected >We can offer</option>
                                     {ourServiceData?.data?.map((service, i) => <option key={i} value={service.name}>{service.name.slice(0, 15)}</option>)}
                                 </select>
-                                <select
-                                    onChange={(e) => setQueryData(c => ({ ...c, campaign: e.target.value }))}
-                                    value={queryData.campaign || ''}
-                                    className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                                >
-                                    <option value='' selected >Campaign Status</option>
-                                    <option value={true}>Active</option>
-                                    <option value={false}>Not Yet</option>
-                                </select>
+                                {(dynamicData.finalProcess !== ORDER_COMPLETED && !dynamicData.onlyMyData) &&
+                                    <select
+                                        onChange={(e) => setQueryData(c => ({ ...c, campaign: e.target.value }))}
+                                        value={queryData.campaign || ''}
+                                        className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                    >
+                                        <option value='' selected >Campaign Status</option>
+                                        <option value={true}>Active</option>
+                                        <option value={false}>Not Yet</option>
+                                    </select>}
                             </div>
                             <table className="min-w-full divide-y divide-gray-300 lg:px-4">
                                 <thead>
@@ -155,33 +155,36 @@ const Entires_data = () => {
                                         >
                                             Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
-                                        <th
-                                            scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell whitespace-pre"
-                                        >
-                                            Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
-                                        </th>
+                                        {!dynamicData.onlyMyData &&
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell whitespace-pre"
+                                            >
+                                                Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
+                                            </th>}
                                         <th
                                             scope="col"
                                             className="px-3 py-3.5 text-md font-semibold text-gray-900 lg:table-cell text-center"
                                         >
                                             Address
                                         </th>
-                                        <th
-                                            scope="col"
-                                            className="pl-1 pr-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
-                                        >
-                                            Campaign
-                                        </th>
+                                        {(dynamicData.finalProcess !== ORDER_COMPLETED && !dynamicData.onlyMyData) &&
+                                            <th
+                                                scope="col"
+                                                className="pl-1 pr-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
+                                            >
+                                                Campaign
+                                            </th>}
                                         <th
                                             scope="col"
                                             className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
                                         >
                                             We-can-offer
                                         </th>
-                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                            <span className="sr-only">Edit</span>
-                                        </th>
+                                        {(!dynamicData.finalProcess && !dynamicData.onlyMyData) &&
+                                            <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                <span className="sr-only">Edit</span>
+                                            </th>}
                                     </tr>
                                 </thead>
                                 <tbody className=''>
@@ -215,15 +218,17 @@ const Entires_data = () => {
                                                     {businessDetails?.category.main} <br />
                                                     <span className=''>{businessDetails?.category.sub1 || ''}</span>
                                                 </td>
-                                                <td
-                                                    className={classNames(
-                                                        planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
-                                                    )}
-                                                >
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.fast_name + ' ' + data_entry_operator?.account_id?.last_name || ""}</span> <br />
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.email}</span>
-                                                </td>
+                                                {!dynamicData.onlyMyData &&
+                                                    <td
+                                                        className={classNames(
+                                                            planIdx === 0 ? '' : 'border-t border-gray-200',
+                                                            'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                        )}
+                                                    >
+                                                        <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.fast_name + ' ' + data_entry_operator?.account_id?.last_name || ""}</span> <br />
+                                                        <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.email}</span>
+                                                    </td>
+                                                }
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
@@ -241,25 +246,26 @@ const Entires_data = () => {
                                                     <span className="text-gray-900 whitespace-pre">{address?.street_address}</span> <br />
                                                     <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
                                                 </td>
-                                                <td
-                                                    className={classNames(
-                                                        planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-700'
-                                                    )}
-                                                >
-                                                    {campaign ? <button
-                                                        type="button"
-                                                        className="items-center rounded-md px-3 py-1.5 text-sm font-semibold text-green-500  shadow bg-gray-100"
+                                                {(dynamicData.finalProcess !== ORDER_COMPLETED && !dynamicData.onlyMyData) &&
+                                                    <td
+                                                        className={classNames(
+                                                            planIdx === 0 ? '' : 'border-t border-gray-200',
+                                                            'px-3 py-3.5 text-sm text-gray-700'
+                                                        )}
                                                     >
-                                                        Active
-                                                    </button>
-                                                        : <button
+                                                        {campaign ? <button
                                                             type="button"
-                                                            className="items-center rounded-md px-3 py-1.5 text-sm font-semibold whitespace-pre shadow bg-gray-50"
+                                                            className="items-center rounded-md px-3 py-1.5 text-sm font-semibold text-green-500  shadow bg-gray-100"
                                                         >
-                                                            Not yet
-                                                        </button>}
-                                                </td>
+                                                            Active
+                                                        </button>
+                                                            : <button
+                                                                type="button"
+                                                                className="items-center rounded-md px-3 py-1.5 text-sm font-semibold whitespace-pre shadow bg-gray-50"
+                                                            >
+                                                                Not yet
+                                                            </button>}
+                                                    </td>}
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
@@ -268,18 +274,19 @@ const Entires_data = () => {
                                                 >
                                                     <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
                                                 </td>
-                                                <td
-                                                    className={classNames(
-                                                        planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
-                                                    )}
-                                                >
-                                                    <button
-                                                        onClick={() => updateConfirm(_id, setUpdateEntry)}
-                                                        className="flex justify-center items-center gap-2 hover:bg-slate-100 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-700 active:text-gray-700 duration-75">
-                                                        <FaEdit /> Edit
-                                                    </button>
-                                                </td>
+                                                {(!dynamicData.finalProcess && !dynamicData.onlyMyData) &&
+                                                    <td
+                                                        className={classNames(
+                                                            planIdx === 0 ? '' : 'border-t border-gray-200',
+                                                            'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                        )}
+                                                    >
+                                                        <button
+                                                            onClick={() => updateConfirm(_id, setUpdateEntry)}
+                                                            className="flex justify-center items-center gap-2 hover:bg-slate-100 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-700 active:text-gray-700 duration-75">
+                                                            <FaEdit /> Edit
+                                                        </button>
+                                                    </td>}
                                             </tr>
                                         ))}
                                 </tbody>
@@ -295,4 +302,4 @@ const Entires_data = () => {
     };
 };
 
-export default MarketerProtect(Entires_data);
+export default BusinessDataShowByCondition;

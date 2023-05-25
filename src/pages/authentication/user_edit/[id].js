@@ -210,8 +210,8 @@ const UpdateProfile = () => {
                             <h5 className='font-medium text-lg md:text-sm lg:text-lg mb-1 capitalize'>{fast_name + ' ' + last_name}</h5>
                             <div className=' py-2 w-fit mx-auto text-start'>
                                 <h5 className='font-semibold text-sm mb-1'>Status : {status?.active ? "Active" : "Inactive"}</h5>
-                                <h5 className='font-semibold text-sm mb-1'>User Id : {userId}</h5>
                                 <h4 className='font-semibold text-sm mb-1 capitalize'>Position: {role}</h4>
+                                <h5 className='font-semibold text-sm mb-1'>User Id : {userId}</h5>
                             </div>
                             <h5 className='text-sm mb-1'>Last updated: {new Date(updatedAt).toLocaleString()}</h5>
                         </div>

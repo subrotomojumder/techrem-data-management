@@ -21,7 +21,7 @@ const Campaign_history = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}&executor_id=${user._id || ""}`, { skip: !user });
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}${user.role === MARKETER && `&executor_id=${user._id}`}`, { skip: !user });
     if (isLoading || userLoading) {
         return <LargeSpinner />;
     };

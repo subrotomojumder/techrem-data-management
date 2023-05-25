@@ -19,7 +19,7 @@ const HomePage = () => {
     const router = useRouter()
     const { user, isLoading } = useSelector((state) => state.auth);
 
-    const { data, isLoading: isLoading2, isError, error } = useGetDeshbordDataQuery(`/dashbord`, { skip: !user, refetchOnMountOrArgChange: true });
+    const { data, isLoading: isLoading2, isError, error } = useGetDeshbordDataQuery(`/dashboard`, { skip: !user, refetchOnMountOrArgChange: true });
     console.log(data?.data)
     /*  const { data, isLoading, isError, error } = { role: "user", keyword: "" }
      const { data: bookingData, isLoading: isLoading1, isError: isError1, error: error1 } = { keyword: "" } */

@@ -3,15 +3,17 @@ import {
     ChartPieIcon,
     HomeIcon,
 } from '@heroicons/react/24/outline'
-import { BsPencilSquare } from 'react-icons/bs';
+import { BsBagCheck, BsPencilSquare } from 'react-icons/bs';
 import { FaUsersCog } from 'react-icons/fa';
 import { FcVoicePresentation } from 'react-icons/fc';
 import { TbListDetails } from 'react-icons/tb';
-import { MdFormatListBulletedAdd, MdOutlineAddLocationAlt, MdOutlineCampaign, MdOutlineCategory } from 'react-icons/md';
+import { MdFormatListBulletedAdd, MdNotAccessible, MdOutlineAddLocationAlt, MdOutlineCampaign, MdOutlineCategory, MdOutlineDoNotDisturbOff } from 'react-icons/md';
 import { VscCompassActive, VscHistory } from 'react-icons/vsc';
 import { FiUserPlus } from 'react-icons/fi';
 import { BiLineChartDown, BiNetworkChart } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
+import { GiCherish } from 'react-icons/gi';
+import { HiOutlineShieldCheck } from 'react-icons/hi';
 // const GetUserId = () => {
 //     const { user } = useSelector((state) => state.auth)
 //     return user?._id;
@@ -44,6 +46,18 @@ export const adminDashboardItems = [
             { name: 'Campaign History', icon: VscHistory, href: '/dashboard/campaign/campaign_history' },
         ],
     },
+    { name: 'Interested Customer', href: '/dashboard/campaign/business_data_history_process/interested_customer', icon: GiCherish, current: false },
+    { name: 'Not Interested Customer', href: '/dashboard/campaign/business_data_history_process/not_interested_customer', icon: MdNotAccessible, current: false },
+    { name: 'Not Sure Customer', href: '/dashboard/campaign/business_data_history_process/not_sure_customer', icon: MdOutlineDoNotDisturbOff, current: false },
+    { name: 'Order Completed', href: '/dashboard/campaign/business_data_history_process/order_completed', icon: HiOutlineShieldCheck, current: false },
+    {
+        name: 'My work List',
+        current: false,
+        children: [
+            { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
+            { name: 'Marketing', icon: BsBagCheck, href: '/dashboard/employee_task/authority_marketing' },
+        ],
+    },
     {
         name: 'Our Services',
         current: false,
@@ -52,25 +66,8 @@ export const adminDashboardItems = [
             { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
         ],
     },
-    {
-        name: 'My work List',
-        current: false,
-        children: [
-            { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
-            { name: 'Marketing', icon: VscCompassActive, href: '/dashboard/employee_task/authority_marketing' },
-        ],
-    },
     { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
-    // {
-    //     name: 'Facebook Group',
-    //     current: false,
-    //     children: [
-    //         { name: 'Entire Group', icon: UsersIcon, href: '/dashboard/group_entire' },
-    //         { name: 'Group Data List', icon: FaUsersCog, href: '/dashboard/group_data_list' },
-    //     ],
-    // },
-    // { name: 'Send Email', icon: FcVoicePresentation, href: '', current: false },
-    // { name: 'Reports', icon: ChartPieIcon, href: '', current: false },
+
 ];
 export const marketerDashboardItems = [
     { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
@@ -100,19 +97,19 @@ export const marketerDashboardItems = [
         ],
     },
     {
+        name: 'My work List',
+        current: false,
+        children: [
+            { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
+            { name: 'Marketing', icon: BsBagCheck, href: '/dashboard/employee_task/authority_marketing' },
+        ],
+    },
+    {
         name: 'Our Services',
         current: false,
         children: [
             { name: 'Services list', icon: MdFormatListBulletedAdd, href: '/all_list_enquiry/our_service/service-list' },
             { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
-        ],
-    },
-    {
-        name: 'My work List',
-        current: false,
-        children: [
-            { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
-            { name: 'Marketing', icon: VscCompassActive, href: '/dashboard/employee_task/authority_marketing' },
         ],
     },
     { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },

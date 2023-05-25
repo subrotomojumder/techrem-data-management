@@ -34,23 +34,24 @@ const Profile = () => {
         </div>
     }
     // এই কনস্ট্যান্ট এখানে থাকতে হবে না হলে লোডিং হওয়ার আগের ডাটা রিড করতে গেলে এরর আসবে
-    const { email, fast_name, last_name, address, country_code, userId, phone, role, userBio, updatedAt, userImage, document, _id } = data?.data;
+    const { email, fast_name, last_name, address, country_code, userId, phone, role, userBio, updatedAt, userImage, document, status, _id, createdAt } = data?.data;
 
     return (
         <div className='max-w-[1200px] mx-auto min-h-screen'>
-            <div className='w-full grid grid-cols-1 mdd:grid-cols-3 gap-2 lg:p-5 mt-0 xl:mt-5'>
+            <div className='w-full grid grid-cols-1 lg:grid-cols-3 gap-2 lg:p-5 mt-0 xl:mt-5'>
                 <div className='col-span-1 h-fit  pt-8 pb-4 mdd:pb-10 bg-white border rounded-md px-0 xl:px-10'>
                     <div className='text-center relative'>
-                        <figure className='relative'>
-                            <img className='rounded-full w-[50%] max-w-[150px] mx-auto p-[2px]' src={userImage || demoUser} alt="" />
-                        </figure>
+                        <span className="relative inline-block">
+                            <img
+                                className="h-24 w-24 lgg:h-32 lgg:w-32 rounded-full"
+                                src={userImage || demoUser} alt=""
+                            />
+                            {status?.active && <span className="absolute right-0 bottom-0 lgg:bottom-3 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" title='Active' />}
+                        </span>
+                        <h6 className='capitalize text-base text-zinc-500 font-medium mb-1 mt-2'>({role})</h6>
                         <h5 className='font-medium text-lg md:text-md lg:text-lg my-1 capitalize'>{fast_name + " " + last_name}</h5>
-                        <h6 className='capitalize text-base text-zinc-500 font-medium mb-1'>{role}</h6>
                         <p className='capitalize '>{address.city + ', ' + address.state + ', ' + address.country}</p>
-                        <div className='flex justify-center gap-1 mt-5'>
-                            <button className='px-4 py-1 bg-blue-700 active:text-yellow-400 font-semibold text-white rounded-md hover:bg-blue-800'>FOLLOW</button>
-                            <button className='px-4 py-1 border border-yellow-400 font-semibold text-yellow-500 select-none rounded-md hover:text-white hover:bg-yellow-400'>MESSAGE</button>
-                        </div>
+                        <p>Update-{new Date(updatedAt).toLocaleString()}</p>
                         {userBio && <div className='p-4 text-left'>
                             <h5 className='underline underline-offset-2'>Bio</h5>
                             <p className='text-justify'>{userBio}</p>
@@ -87,6 +88,10 @@ const Profile = () => {
                             <div className='grid grid-cols-3 lg:grid-cols-4 gap-2 py-3 text-zinc-500 font-medium'>
                                 <p className='col-span-1'>Phone</p>
                                 <p className='col-span-2 lg:col-span-3 capitalize'>({country_code}) {phone}</p>
+                            </div>
+                            <div className='grid grid-cols-3 lg:grid-cols-4 gap-2 py-3 text-zinc-500 font-medium'>
+                                <p className='col-span-1'>Started At</p>
+                                <p className='col-span-2 lg:col-span-3 capitalize'>{new Date(createdAt).toLocaleString()}</p>
                             </div>
                             <div className='grid grid-cols-3 lg:grid-cols-4 gap-2 py-3 text-zinc-500 font-medium'>
                                 <p className='col-span-1'>Address</p>
