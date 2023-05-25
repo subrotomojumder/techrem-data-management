@@ -7,6 +7,7 @@ import { ADMIN, INTERESTED, MARKETER, NOTINTERESTED, NOTSURE } from '@/utils/con
 import { errorSweetAlert, errorToast, successToast } from '@/utils/neededFun';
 import { PaperClipIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { BsArrowLeftShort, BsPersonCircle, BsSearch } from 'react-icons/bs';
 import { MdOutlineContactless } from 'react-icons/md';
@@ -19,7 +20,6 @@ const Campaign_marketing = ({ campaign_id }) => {
     const { data, isLoading, isError, error } = useGetCampaignQuery(`/${campaign_id}`);
     const { user } = useSelector((state) => state.auth);
     const [campaignUpdateApi] = useUpdateCampaignMutation();
-    console.log(data)
     const handleInactiveCampaign = () => {
         Swal.fire({
             title: 'Are you sure?',
@@ -201,7 +201,7 @@ const Campaign_marketing = ({ campaign_id }) => {
                                                         'px-3 py-3.5 text-center text-sm text-gray-700 lg:table-cell'
                                                     )}
                                                 >
-                                                    <Link href={`/dashboard/campaign/contact_manage/${_id}`}>
+                                                    <Link href={`/dashboard/campaign/contact_manage/${_id}?campaign_id=${campaign_id}`}>
                                                         {final_process?.process ?
                                                             <button
                                                                 className={`mx-auto gap-2 ${final_process?.process === 'interested' ? "bg-green-500 text-white px-5" : final_process?.process === NOTINTERESTED ? "bg-[#efaf47] text-white" : final_process?.process === NOTSURE ? "bg-[#5ac0de] px-6 text-white" : "bg-slate-100"} rounded-md  px-2 py-1.5 text-sm font-semibold text-gray-700 capitalize`}>

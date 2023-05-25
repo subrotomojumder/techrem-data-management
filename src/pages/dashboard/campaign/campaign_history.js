@@ -10,6 +10,7 @@ import { LargeSpinner } from '@/components/Spinner';
 import PaginationBar from '@/components/PaginationBar';
 import { useGetCampaignQuery } from '@/app/features/campaignManage/campaignManageApi';
 import { useSelector } from 'react-redux';
+import { MARKETER } from '@/utils/constant';
 
 const Campaign_history = () => {
     const { user, isLoading: userLoading } = useSelector((state) => state.auth);

@@ -12,13 +12,13 @@ import { BsTelephoneOutbound } from 'react-icons/bs';
 const Contact_manage = () => {
     const [inputData, setInputData] = useState({});
     const router = useRouter();
-    const { slug } = router.query;
+    const { slug, campaign_id } = router.query;
     const { data, isLoading: dataLoading, isError, error } = useGetEntireDataByIdQuery(slug, { skip: !slug });
     const [postTaskSubmission, { isLoading }] = usePostEmployeeTaskMutation();
     console.log(data)
     const handleUpdate = (e) => {
         e.preventDefault();
-        const data = { process: e.target?.customer_response?.value, dataId: slug, communication_note: e.target?.note?.value };
+        const data = { process: e.target?.customer_response?.value, dataId: slug, communication_note: e.target?.note?.value, campaign_id: campaign_id };
         postTaskSubmission(data)
             .then(res => {
                 console.log(res);
