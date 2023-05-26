@@ -19,6 +19,7 @@ const Contact_manage = () => {
     const handleUpdate = (e) => {
         e.preventDefault();
         const data = { process: e.target?.customer_response?.value, dataId: slug, communication_note: e.target?.note?.value, campaign_id: campaign_id };
+        // return console.log(data)
         postTaskSubmission(data)
             .then(res => {
                 console.log(res);

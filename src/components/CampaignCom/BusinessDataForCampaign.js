@@ -26,6 +26,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
     const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+   /*  const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`; */
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery, { refetchOnMountOrArgChange: true });
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
     useEffect(() => {
@@ -223,7 +224,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                                 'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
                                             )}
                                         >
-                                            <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.fast_name + ' ' + data_entry_operator?.account_id?.last_name || ""}</span> <br />
+                                            <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.name}</span> <br />
                                             {/* <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.email}</span> */}
                                         </td>
                                         <td

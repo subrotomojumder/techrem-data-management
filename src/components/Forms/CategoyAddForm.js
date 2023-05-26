@@ -52,8 +52,8 @@ export default function CategoryAddForm({ currentCategory, setCurrentCategory })
 
     return (
         <>
-            <div className="flex min-h-screen flex-1 flex-col justify-start items-center px-6 py-12 lg:px-8">
-                <div className="w-full max-w-2xl h-fit py-6 mdd:py-10 bg-white rounded-lg shadow relative">
+            <div className="w-full">
+                <div className="w-full max-w-2xl mx-auto h-fit py-6 mdd:py-10 bg-white rounded-lg shadow relative">
                     <button
                         onClick={() => setCurrentCategory(null)} type="button"
                         className="absolute top-8 right-8 rounded-full bg-indigo-50 px-3.5 py-2 text-sm font-semibold text-red-500 shadow-sm hover:bg-indigo-200"

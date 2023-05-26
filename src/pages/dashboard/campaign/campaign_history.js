@@ -22,7 +22,7 @@ const Campaign_history = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}${user.role === MARKETER && `&executor_id=${user._id}`}`, { skip: !user });
+    const { data, isLoading, isError, error } = useGetCampaignQuery(`?skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&active=${queryData?.status || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&campaign_objective=${queryData?.campaign_objective || ''}&create_date=${!endDate && startDate ? startDate : ''}&startDate=${startDate && endDate ? startDate : ""}&endDate=${startDate && endDate ? endDate : ""}&keyword=${queryData?.keyword || ''}${user.role === MARKETER ? `&executor_id=${user._id}` : ""}`, { skip: !user });
     if (isLoading || userLoading) {
         return <LargeSpinner />;
     };
@@ -135,13 +135,13 @@ const Campaign_history = () => {
                 </div>
                     :
                     <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
-                    <div className="text-center">
-                      
-                      <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">No Campaign found</h1>
-                      <p className="mt-6 text-base leading-7 text-gray-600">Sorry, we couldn’t find the Campaign looking for.</p>
-                      
-                    </div>
-                  </main>
+                        <div className="text-center">
+
+                            <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">No Campaign found</h1>
+                            <p className="mt-6 text-base leading-7 text-gray-600">Sorry, we couldn’t find the Campaign looking for.</p>
+
+                        </div>
+                    </main>
                 }
             </div>
             <div className='w-full px-4 lg:px-6 py-2'>

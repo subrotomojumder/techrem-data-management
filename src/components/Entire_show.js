@@ -205,27 +205,30 @@ const Entire_show = ({ data }) => {
                                         </div>
                                     </div>
                                     : showData === "status" && <>
-                                        {onProcess?.marketer?.communicationId &&
-                                            <div className='col-span-12 lg:col-span-6 space-y-2 p-4 text-base font-medium'>
-                                                <h4 className='text-lg font-serif text-indigo-700 mb-2'> Telemarketing work process status</h4>
-                                                <div className='flex justify-start'>
-                                                    <h5 className='w-36'>Marketer</h5>
-                                                    <h5 className='flex-1'>: {onProcess?.marketer?.communicationId?.executor?.name}({onProcess?.marketer?.communicationId?.executor?.role})</h5>
+                                        {onProcess?.length ?
+                                            <div className='space-y-2 p-4 text-base font-medium'>
+                                                <h4 className='text-lg font-serif text-indigo-700 mb-2'> Works process status</h4>
+                                                <div>
+                                                    <div className='flex justify-start'>
+                                                        <h5 className='w-36'>Marketer</h5>
+                                                        <h5 className='flex-1'>: {'sub'}({'role'})</h5>
+                                                    </div>
+                                                    <div className='flex justify-start'>
+                                                        <h5 className='w-36'>Work process</h5>
+                                                        <h5 className='flex-1'>:
+                                                            <span
+                                                                className={`mx-auto ml-3 gap-2 ${final_process?.process === 'interested' ? "text-green-500" : final_process?.process === NOTINTERESTED ? "text-[#efaf47]" : final_process?.process === NOTSURE ? "text-[#5ac0de]" : "text-gray-700"} rounded-md my-1.5 text-md font-semibold capitalize`}
+                                                            >
+                                                                {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
+                                                            </span>
+                                                        </h5>
+                                                    </div>
+                                                    {onProcess?.marketer?.communicationId?.communication_note && <div className=''>
+                                                        <h5 className='w-full '><span className='underline'>Communication Note</span> : <span className='font-normal'>{onProcess?.marketer?.communicationId?.communication_note}</span></h5>
+                                                    </div>}
                                                 </div>
-                                                <div className='flex justify-start'>
-                                                    <h5 className='w-36'>Work process</h5>
-                                                    <h5 className='flex-1'>:
-                                                        <span
-                                                            className={`mx-auto ml-3 gap-2 ${final_process?.process === 'interested' ? "text-green-500" : final_process.process === NOTINTERESTED ? "text-[#efaf47]" : final_process.process === NOTSURE ? "text-[#5ac0de]" : "text-gray-700"} rounded-md my-1.5 text-md font-semibold capitalize`}
-                                                        >
-                                                            {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
-                                                        </span>
-                                                    </h5>
-                                                </div>
-                                                {onProcess?.marketer?.communicationId?.communication_note && <div className=''>
-                                                    <h5 className='w-full '><span className='underline'>Communication Note</span> : <span className='font-normal'>{onProcess?.marketer?.communicationId?.communication_note}</span></h5>
-                                                </div>}
                                             </div>
+                                            : <div className='my-40 text-center'><p>Business Data Status Empty!</p></div>
                                         }
                                     </>
                     }

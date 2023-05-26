@@ -22,7 +22,8 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
     const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedCategory, setSelectedCategory] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
-    const [dateRange, setDateRange] = useState([new Date(new Date().getTime() - 9 * 24 * 60 * 60 * 1000), new Date()]);
+    const [dateRange, setDateRange] = useState([null, null]);
+    // const [dateRange, setDateRange] = useState([new Date(new Date().getTime() - 9 * 24 * 60 * 60 * 1000), new Date()]);
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
@@ -225,8 +226,8 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                             'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
                                                         )}
                                                     >
-                                                        <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.fast_name + ' ' + data_entry_operator?.account_id?.last_name || ""}</span> <br />
-                                                        <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.email}</span>
+                                                        <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.role}</span><br />
+                                                        <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.name}</span>
                                                     </td>
                                                 }
                                                 <td

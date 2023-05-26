@@ -14,6 +14,7 @@ import { BiLineChartDown, BiNetworkChart } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import { GiCherish } from 'react-icons/gi';
 import { HiOutlineShieldCheck } from 'react-icons/hi';
+import { RiListSettingsLine } from 'react-icons/ri';
 // const GetUserId = () => {
 //     const { user } = useSelector((state) => state.auth)
 //     return user?._id;
@@ -34,7 +35,7 @@ export const adminDashboardItems = [
         children: [
             { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
             { name: 'Business Data List', icon: TbListDetails, href: '/dashboard/entires_data_list' },
-            { name: 'Category Enquiry', icon: MdOutlineCategory, href: '/all_list_enquiry/category_enquiry' },
+            // { name: 'Category Enquiry', icon: MdOutlineCategory, href: '/all_list_enquiry/category_enquiry' },
         ],
     },
     {
@@ -66,8 +67,8 @@ export const adminDashboardItems = [
             { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
         ],
     },
-    { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
-
+    // { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
+    { name: 'Address & Category List', href: '/all_list_enquiry/all_the_list', icon: RiListSettingsLine, current: false },
 ];
 export const marketerDashboardItems = [
     { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
@@ -84,7 +85,7 @@ export const marketerDashboardItems = [
         children: [
             { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
             { name: 'Business Data List', icon: TbListDetails, href: '/dashboard/entires_data_list' },
-            { name: 'Category Enquiry', icon: MdOutlineCategory, href: '/all_list_enquiry/category_enquiry' },
+            // { name: 'Category Enquiry', icon: MdOutlineCategory, href: '/all_list_enquiry/category_enquiry' },
         ],
     },
     {
@@ -112,7 +113,8 @@ export const marketerDashboardItems = [
             { name: 'Service Create', icon: VscCompassActive, href: '/all_list_enquiry/our_service/create-service' },
         ],
     },
-    { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
+    { name: 'Address & Category List', href: '/all_list_enquiry/all_the_list', icon: RiListSettingsLine, current: false },
+    // { name: 'Address', href: '/all_list_enquiry/address_enquiry', icon: MdOutlineAddLocationAlt, current: false },
 ];
 
 export const teleMarketerDashboardItems = [

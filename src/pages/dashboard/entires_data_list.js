@@ -25,16 +25,18 @@ const Entires_data = () => {
     const [selectedAddress, setSelectedAddress] = useState({});
     const [selectedCategory, setSelectedCategory] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
-    const [dateRange, setDateRange] = useState([new Date(new Date().getTime() - 9 * 24 * 60 * 60 * 1000), new Date()]);
+    const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
+    // date query pathale problem hoi
     const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    // const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     // console.log(searchQuery)
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
     const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
     // console.log(startDate, endDate)
-    // console.log(data?.data)
+    console.log(data?.data)
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
@@ -221,8 +223,8 @@ const Entires_data = () => {
                                                         'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
                                                     )}
                                                 >
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.fast_name + ' ' + data_entry_operator?.account_id?.last_name || ""}</span> <br />
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.account_id?.email}</span>
+                                                    <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.role}</span><br />
+                                                    <span className="text-gray-900 font-medium0 capitalize whitespace-pre">{data_entry_operator?.name}</span> 
                                                 </td>
                                                 <td
                                                     className={classNames(

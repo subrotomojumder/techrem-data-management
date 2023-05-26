@@ -17,6 +17,7 @@ const Single_Entry_show = () => {
     const { slug } = router.query;
     const { data, isLoading: dataLoading, isError, error } = useGetEntireDataByIdQuery(slug, { skip: !slug });
     const [postTaskSubmission, { isLoading }] = usePostEmployeeTaskMutation();
+    console.log(data?.data)
 
     if (!router.query?.slug || dataLoading) {
         return <LargeSpinner />;
