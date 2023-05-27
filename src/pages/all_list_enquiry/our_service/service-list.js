@@ -2,6 +2,7 @@ import { useDeleteOurServiceMutation, useGetOurServiceQuery } from "@/app/featur
 import { LargeSpinner } from "@/components/Spinner"
 import { Private } from "@/utils/ProtectRoute"
 import { errorToast, successToast } from "@/utils/neededFun"
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { useState } from "react"
@@ -12,6 +13,7 @@ function classNames(...classes) {
 }
 
 function ServiceList() {
+    const [search, setsearch] = useState('')
     const { data, isLoading, isError, error } = useGetOurServiceQuery(`/service_we_offer?active=all`);
     const [deleteService] = useDeleteOurServiceMutation();
     console.log(data);
@@ -70,7 +72,17 @@ function ServiceList() {
                             </p> */}
 
                         </div>
-                        <div className=" sm:ml-16 sm:mt-0 sm:flex-none -mr-5 lgg:-mr-0">
+                        <div className=" sm:ml-16 sm:mt-0 sm:flex-none -mr-5 lgg:-mr-0 flex gap-2">
+                            <div className="relative">
+                                <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center pl-3">
+                                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                </div>
+                                <input
+                                    onChange={(e) => setsearch(e.target.value)}
+                                    className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-3 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                    type="search" id="search" placeholder="Search"
+                                />
+                            </div>
                             <Link href={`/all_list_enquiry/our_service/create-service`}>
                                 <button
                                     type="button"
@@ -106,7 +118,7 @@ function ServiceList() {
                                                 Actions
                                             </th>
 
-                                           {/*  <th
+                                            {/*  <th
                                                 scope="col"
                                                 className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                                             >
@@ -115,7 +127,7 @@ function ServiceList() {
                                         </tr>
                                     </thead>
                                     <tbody >
-                                        {data.data.map((service, serviceIdx) => (
+                                        {data.data.filter(weOffer => !!search.toLowerCase() ? weOffer.name.toLowerCase().includes(search.toLowerCase()) : weOffer).map((service, serviceIdx) => (
                                             <tr key={serviceIdx} >
                                                 <td
                                                     className={classNames(

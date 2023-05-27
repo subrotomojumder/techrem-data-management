@@ -160,13 +160,13 @@ const Entires_data = () => {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
+                                            className="px-2 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell"
                                         >
                                             Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell whitespace-pre"
+                                            className="px-1 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
                                         >
                                             Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
@@ -184,7 +184,7 @@ const Entires_data = () => {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
+                                            className=" px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre hidden lg:table-cell"
                                         >
                                             We-can-offer
                                         </th>
@@ -205,13 +205,11 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     <Link href={`/dashboard/single_entry_details/${_id}`}>
-                                                        <div className="flex items-center min-w-[90px]">
-                                                            <div className="w-full flex flex-col justify-center mb-2">
+                                                        <div className="h-full flex items-center lg:min-w-[80px]">
+                                                            <div className="w-full h flex flex-col justify-center">
                                                                 <img className="h-11 w-14 mx-auto rounded-md" src={businessDetails?.businessLogo || "http://localhost:5000/image/no_image-1682919865051.png"} alt="" />
-                                                                <div className="font-bold text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName}{/* .length > 15 ? businessDetails?.businessName.slice(0, 15) + '...' : businessDetails?.businessName */}</div>
+                                                                <div className="font-bold text-md xl:text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName.length > 23 ? businessDetails?.businessName.slice(0, 23) + '...' : businessDetails?.businessName}</div>
                                                             </div>
-                                                            {/* <div className="ml-4">
-                                                            </div> */}
                                                         </div>
                                                     </Link>
                                                 </td>
@@ -227,7 +225,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                        'px-1 py-3.5 text-sm text-gray-700 hidden xl:table-cell'
                                                     )}
                                                 >
                                                     <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.role}</span><br />
@@ -236,7 +234,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-center text-sm text-gray-700'
+                                                        'pl-3 pr-2 py-3.5 text-sm text-gray-700 hidden xl:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900">{new Date(createdAt).toLocaleDateString()}</div>
@@ -244,10 +242,10 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell text-center'
+                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell text-center'
                                                     )}
                                                 >
-                                                    <span className="text-gray-900 whitespace-pre">{address?.street_address}</span> <br />
+                                                    <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 23 ? address?.street_address.slice(0, 23) + '...' : address?.street_address}</span> <br />
                                                     <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
                                                 </td>
                                                 <td
@@ -272,7 +270,7 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-center text-gray-700 lg:table-cell'
+                                                        'px-1 py-3.5 text-sm text-center text-gray-700 hidden lg:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>

@@ -95,7 +95,7 @@ const EmployeeList = () => {
                                     >
                                         <Link href={`/authentication/view_profile/${user._id}`}>
                                             <div className="flex items-center gap-x-4 group">
-                                                <img src={user.userImage} alt="Image" className="h-9 w-9 rounded-full bg-gray-800" />
+                                                <img src={user.userImage} alt="Image" className="h-7 w-7 md:h-9 md:w-9 rounded-full bg-gray-800" />
                                                 <div className="truncate font-medium leading-6 text-gray-700 group-hover:text-gray-900 capitalize duration-200">{user.fast_name + " " + user.last_name}</div>
                                             </div>
                                         </Link>
@@ -187,7 +187,7 @@ const EmployeeList = () => {
                         <input
                             onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
                             id="search" name="search"
-                            className="block w-full min-w-[200px] rounded-md bg-white py-1 lg:py-1.5 pl-10 pr-3 text-gray-900 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none placeholder:text-gray-400  sm:text-sm sm:leading-6 leading-8 transition-colors duration-200 ease-in-out"
+                            className=" block w-full min-w-[200px] rounded-md bg-white py-1 lg:py-1.5 pl-10 pr-3 text-gray-900 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200  outline-none placeholder:text-gray-400  text-sm leading-6 transition-colors duration-200 ease-in-out"
                             placeholder="Email or name..."
                             type="search"
                         />

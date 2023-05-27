@@ -60,7 +60,7 @@ const Active_campaign = () => {
                         </Link>
                     </div>
                 </div>
-                <div className={`w - full flex justify - between items - center gap - 2 ${openFilter ? "block" : "hidden"} duration - 300 bg - slate - 100 shadow - sm px - 3 py - 2 `}>
+                <div className={`w-full flex justify-between items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-slate-100 shadow-sm px-3 py-2 `}>
                     <div className="relative">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-[6px] pr-1 border-r ">
                             <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />

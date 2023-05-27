@@ -66,7 +66,7 @@ const Campaign_marketing = ({ campaign_id }) => {
                 <div className='overflow-x-auto'>
                     <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
                         <div className='bg-indigo-100 rounded-t shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
-                            <h2 className="text-lg md:text-xl  font-medium smm:font-semibold leading-5 lg:leading-10 text-gray-900">Assigned Data <span className='bg-green-200 rounded-md px-2'>{data?.data?.dataIds.length}</span></h2>
+                            <h2 className="text-lg md:text-xl  font-medium smm:font-semibold leading-5 lg:leading-10 text-gray-900">Assigned Data <span className='bg-green-200 rounded-md px-2'>{data?.data?.dataIds?.length}</span></h2>
                             <div className='flex justify-end gap-2'>
                                 {(user.role === ADMIN || user.role === MARKETER) &&
                                     <button onClick={() => handleInactiveCampaign()} className="text-white font-semibold bg-red-300 border-0 py-1.5 px-4 focus:outline-none hover:bg-red-400 active:bg-red-500 rounded duration-75">Inactive</button>
@@ -127,9 +127,9 @@ const Campaign_marketing = ({ campaign_id }) => {
                                 </tr>
                             </thead>
                             <tbody className=''>
-                                {data?.data?.dataIds.length === 0 ?
+                                {data?.data?.businessdatas?.length === 0 ?
                                     <tr className='w-full text-center'><div className='w-full text-center mt-11 text-2xl text-green-500'>Empty Entire data !</div></tr>
-                                    : data?.data?.businessdatas.map(({ businessDetails, _id, address, final_process, we_offer_service, }, planIdx) => (
+                                    : data?.data?.businessdatas?.map(({ businessDetails, _id, address, final_process, onProcess, we_offer_service, }, planIdx) => (
                                         <tr key={_id}>
                                             <td
                                                 className={classNames(
@@ -184,6 +184,7 @@ const Campaign_marketing = ({ campaign_id }) => {
                                                 {!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}
                                             </td>
                                             {!(user.role === ADMIN || user.role === MARKETER) &&
+                                            // onProcess.map((status, i) =>
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
