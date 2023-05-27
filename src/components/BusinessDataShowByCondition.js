@@ -39,17 +39,6 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
     if (isLoading) {
         return <LargeSpinner />;
     };
-    // if (serviceIsError) {
-    //     if (serviceError.error) {
-    //         return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-    //             <p className="text-2xl text-red-500">{serviceError.error}</p>
-    //         </div>
-    //     } else {
-    //         return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-    //             <p className="text-2xl text-red-500">{serviceError.data.message}</p>
-    //         </div>
-    //     }
-    // }
     if (isError) {
         if (error.error) {
             return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
@@ -114,7 +103,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                 <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-700" }}></CategoryInput>
                                 <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
                                 {!dynamicData.onlyMyData &&
-                                    <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
+                                    <UserInput  usersData={data?.uniqueFilter?.entryBy} selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                                 }
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
                                 <select

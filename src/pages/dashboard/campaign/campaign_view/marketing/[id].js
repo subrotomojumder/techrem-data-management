@@ -16,8 +16,8 @@ import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
 const Campaign_marketing = ({ campaign_id }) => {
-    const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
     const { data, isLoading, isError, error } = useGetCampaignQuery(`/${campaign_id}`);
+    console.log(data)
     const { user } = useSelector((state) => state.auth);
     const [campaignUpdateApi] = useUpdateCampaignMutation();
     const handleInactiveCampaign = () => {
@@ -57,17 +57,6 @@ const Campaign_marketing = ({ campaign_id }) => {
         } else {
             return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
                 <p className="text-2xl text-red-500">{error.data.message}</p>
-            </div>
-        }
-    }
-    if (serviceIsError) {
-        if (serviceError.error) {
-            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.error}</p>
-            </div>
-        } else {
-            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.data.message}</p>
             </div>
         }
     }
@@ -140,7 +129,7 @@ const Campaign_marketing = ({ campaign_id }) => {
                             <tbody className=''>
                                 {data?.data?.dataIds.length === 0 ?
                                     <tr className='w-full text-center'><div className='w-full text-center mt-11 text-2xl text-green-500'>Empty Entire data !</div></tr>
-                                    : data?.data?.dataIds.map(({ businessDetails, _id, address, final_process, we_offer_service, }, planIdx) => (
+                                    : data?.data?.businessdatas.map(({ businessDetails, _id, address, final_process, we_offer_service, }, planIdx) => (
                                         <tr key={_id}>
                                             <td
                                                 className={classNames(
@@ -202,7 +191,7 @@ const Campaign_marketing = ({ campaign_id }) => {
                                                     )}
                                                 >
                                                     <Link href={`/dashboard/campaign/contact_manage/${_id}?campaign_id=${campaign_id}`}>
-                                                        {final_process?.process ?
+                                                        {final_process?.process !== "pending" ?
                                                             <button
                                                                 className={`mx-auto gap-2 ${final_process?.process === 'interested' ? "bg-green-500 text-white px-5" : final_process?.process === NOTINTERESTED ? "bg-[#efaf47] text-white" : final_process?.process === NOTSURE ? "bg-[#5ac0de] px-6 text-white" : "bg-slate-100"} rounded-md  px-2 py-1.5 text-sm font-semibold text-gray-700 capitalize`}>
                                                                 {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}

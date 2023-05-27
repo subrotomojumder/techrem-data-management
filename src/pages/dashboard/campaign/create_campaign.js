@@ -94,8 +94,8 @@ const Create_campaign = () => {
         setEndDate(end);
     };
     return (
-        <div className='min-h-screen py-2 mb-10'>
-            <div className='bg-white max-w-5xl xl:max-w-6xl mx-auto rounded-lg drop-shadow'>
+        <div className='min-h-screen py-2 md:px-2 mb-10'>
+            <div className='bg-white max-w-6xl xl:max-w-7xl mx-auto rounded-lg drop-shadow'>
                 {isLoading ? <CustomLoader></CustomLoader> :
                     togglePage === 1 ?
                         <div className='w-full grid grid-cols-3 justify-start items-center'>

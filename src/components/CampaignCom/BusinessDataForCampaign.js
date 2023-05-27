@@ -12,6 +12,7 @@ import UserInput from '../../components/Forms/UserInput';
 import { CgArrowsExchangeV } from 'react-icons/cg';
 import PaginationBar from '../PaginationBar';
 import { errorToast } from '@/utils/neededFun';
+import { INTERESTED, NOTINTERESTED, NOTSURE } from '@/utils/constant';
 
 const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
     const [selectedData, setSelectedData] = useState([]);
@@ -25,10 +26,10 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&they_offer=${queryData.they_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&they_offer=${queryData.they_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}&final_process=${queryData.process_status || ""}`;
     /*  const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`; */
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery, { refetchOnMountOrArgChange: true });
-    // const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
+    console.log(data)
     useEffect(() => {
         // setSelectedData([]);
         if (data?.success) {
@@ -71,17 +72,6 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
             </div>
         }
     }
-    // if (serviceIsError) {
-    //     if (serviceError.error) {
-    //         return <div className='text-center w-full min-h-[50vh] flex justify-center items-center -pt-20'>
-    //             <p className="text-2xl text-red-500">{serviceError.error}</p>
-    //         </div>
-    //     } else {
-    //         return <div className='text-center w-full min-h-[50vh] flex justify-center items-center -pt-20'>
-    //             <p className="text-2xl text-red-500">{serviceError.data.message}</p>
-    //         </div>
-    //     }
-    // }
     return (
         <div className='w-full'>
             <div className='overflow-x-auto'>
@@ -119,6 +109,16 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                             >
                                 Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
                             </button>
+                            <select
+                                onChange={(e) => setQueryData(c => ({ ...c, process_status: e.target.value }))}
+                                value={queryData.process_status || ""}
+                                className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                            >
+                                <option value='' selected >Campaign Status</option>
+                                <option value={INTERESTED}>Interested Customer</option>
+                                <option value={NOTINTERESTED}>Not Interested Customer</option>
+                                <option value={NOTSURE}>Not Sure Customer</option>
+                            </select>
                             <button
                                 onClick={submit} type="button"
                                 className="rounded-md bg-blue-500 pl-4 pr-4 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
@@ -130,13 +130,8 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                     <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-50 shadow-md px-3 py-2`}>
                         <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-700" }}></CategoryInput>
                         <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
-                        <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
+                        <UserInput usersData={data?.uniqueFilter?.entryBy} selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                         <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
-                        {/* <input
-                    onChange={(e) => setQueryData(c => ({ ...c, createDate: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
-                    type="date" value={queryData.createDate || ''}
-                    className="rounded-md bg-white pl-2 pr-2 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                /> */}
                         <select
                             onChange={(e) => setQueryData(c => ({ ...c, we_offer: e.target.value }))}
                             value={queryData.we_offer || ""}

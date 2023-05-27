@@ -74,12 +74,10 @@ const Entire_show = ({ data }) => {
                         onClick={() => setShowData('other')}
                         className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "other" && " border-b-4  text-blue-500"} border-blue-400 `}
                     >Entry By</button>
-                    {(user.role === ADMIN || user.role === MARKETER) &&
-                        <button
-                            onClick={() => setShowData('status')}
-                            className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4  text-blue-500"} border-blue-400 `}
-                        >Status</button>
-                    }
+                    <button
+                        onClick={() => setShowData('status')}
+                        className={`font-medium px-3 mb-1  hover:border-b-4 ${showData === "status" && "border-b-4  text-blue-500"} border-blue-400 `}
+                    >Status</button>
                 </div>
                 <hr className='mb-2' />
                 <div className='w-full min-h-screen'>
@@ -207,28 +205,32 @@ const Entire_show = ({ data }) => {
                                     : showData === "status" && <>
                                         {onProcess?.length ?
                                             <div className='space-y-2 p-4 text-base font-medium'>
-                                                <h4 className='text-lg font-serif text-indigo-700 mb-2'> Works process status</h4>
-                                                <div>
-                                                    <div className='flex justify-start'>
-                                                        <h5 className='w-36'>Marketer</h5>
-                                                        <h5 className='flex-1'>: {'sub'}({'role'})</h5>
+                                                <h4 className='text-lg font-serif text-indigo-700 mb-2'>Marketing Works process status</h4>
+                                                {onProcess.map((status, i) =>
+                                                    <div key={i} className='space-y-1 border-b pb-3'>
+                                                        <div className='flex justify-start'>
+                                                            <h5 className='w-36'>Marketer</h5>
+                                                            <h5 className='flex-1'>: {status.executor?.name}({status.executor.role})</h5>
+                                                        </div>
+                                                        <div className='flex justify-start'>
+                                                            <h5 className='w-36'>Work process</h5>
+                                                            <h5 className='flex-1'>:
+                                                                <span
+                                                                    className={`mx-auto ml-1 gap-2 ${status?.process === 'interested' ? "text-green-500 " : status?.process === NOTINTERESTED ? "text-[#efaf47]" : status?.process === NOTSURE ? "text-[#5ac0de]" : "text-gray-700"} rounded-md my-1.5 text-md font-semibold capitalize`}
+                                                                >
+                                                                    {status?.process === INTERESTED ? "Interested" : status?.process === NOTINTERESTED ? "Not Interested" : status?.process === NOTSURE ? "Not Sure" : "Pending"}
+                                                                </span>
+                                                            </h5>
+                                                        </div>
+                                                        <div className='flex justify-start'>
+                                                            <h5 className='w-36'>Update Date</h5>
+                                                            <h5 className='flex-1'>: {new Date(status.createdAt).toLocaleString()}</h5>
+                                                        </div>
+                                                        <h5 className='w-full '><span className='underline'>Communicate Note</span> : <br /> <span className='font-normal'>{status?.communication_note}</span></h5>
                                                     </div>
-                                                    <div className='flex justify-start'>
-                                                        <h5 className='w-36'>Work process</h5>
-                                                        <h5 className='flex-1'>:
-                                                            <span
-                                                                className={`mx-auto ml-3 gap-2 ${final_process?.process === 'interested' ? "text-green-500" : final_process?.process === NOTINTERESTED ? "text-[#efaf47]" : final_process?.process === NOTSURE ? "text-[#5ac0de]" : "text-gray-700"} rounded-md my-1.5 text-md font-semibold capitalize`}
-                                                            >
-                                                                {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
-                                                            </span>
-                                                        </h5>
-                                                    </div>
-                                                    {onProcess?.marketer?.communicationId?.communication_note && <div className=''>
-                                                        <h5 className='w-full '><span className='underline'>Communication Note</span> : <span className='font-normal'>{onProcess?.marketer?.communicationId?.communication_note}</span></h5>
-                                                    </div>}
-                                                </div>
+                                                )}
                                             </div>
-                                            : <div className='my-40 text-center'><p>Business Data Status Empty!</p></div>
+                                            : <div className='my-40 text-center'><p>Marketing Status Empty!</p></div>
                                         }
                                     </>
                     }

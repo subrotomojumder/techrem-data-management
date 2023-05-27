@@ -1,21 +1,28 @@
-import { useGetAllUserNameQuery } from "@/app/features/users/userApi";
+// import { useGetAllUserNameQuery } from "@/app/features/users/userApi";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 
-export default function UserInput({ wornClass, selectedUser, setSelectedUser, placeHolder = '' }) {
-    const { data, isError } = useGetAllUserNameQuery();
+export default function UserInput({ usersData = [], wornClass, selectedUser, setSelectedUser, placeHolder = '' }) {
+    // const { data, isError } = useGetAllUserNameQuery();
     const [query, setQuery] = useState('')
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
-    const users = data?.data ? data.data.map(user => {
+    // const users = data?.data ? data.data.map(user => {
+    //     return {
+    //         _id: user._id,
+    //         name: user.fast_name + " " + user.last_name,
+    //         email: user.email
+    //     }
+    // }) : [];
+    const users = usersData.map(user => {
         return {
-            _id: user._id,
-            name: user.fast_name + " " + user.last_name,
-            email: user.email
+            _id: user.account_id,
+            name: user.name,
+            // email: user.email
         }
-    }) : [];
+    });
 
     const filteredCountry =
         query === ''
