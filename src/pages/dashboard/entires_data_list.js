@@ -30,30 +30,29 @@ const Entires_data = () => {
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
     // date query pathale problem hoi
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&they_offer=${queryData.they_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? format(new Date(startDate), 'yyyy-MM-dd') : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     // const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
-    // console.log(searchQuery)
+    console.log(searchQuery)
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
-    const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
-    // console.log(startDate, endDate)
-    console.log(data?.data)
+    // const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
+    // console.log(error)
     function classNames(...classes) {
         return classes.filter(Boolean).join(' ')
     }
     if (isLoading) {
         return <LargeSpinner />;
     };
-    if (serviceIsError) {
-        if (serviceError.error) {
-            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.error}</p>
-            </div>
-        } else {
-            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.data.message}</p>
-            </div>
-        }
-    }
+    // if (serviceIsError) {
+    //     if (serviceError.error) {
+    //         return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+    //             <p className="text-2xl text-red-500">{serviceError.error}</p>
+    //         </div>
+    //     } else {
+    //         return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+    //             <p className="text-2xl text-red-500">{serviceError.data.message}</p>
+    //         </div>
+    //     }
+    // }
     if (isError) {
         if (error.error) {
             return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
@@ -130,7 +129,15 @@ const Entires_data = () => {
                                     className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 >
                                     <option value='' selected >We can offer</option>
-                                    {ourServiceData?.data?.map((service, i) => <option key={i} value={service.name}>{service.name.slice(0, 15)}</option>)}
+                                    {data?.uniqueFilter?.weOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
+                                </select>
+                                <select
+                                    onChange={(e) => setQueryData(c => ({ ...c, they_offer: e.target.value }))}
+                                    value={queryData.they_offer || ""}
+                                    className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                >
+                                    <option value='' selected >They offer</option>
+                                    {data?.uniqueFilter?.theyOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
                                 </select>
                                 <select
                                     onChange={(e) => setQueryData(c => ({ ...c, campaign: e.target.value }))}
@@ -224,7 +231,7 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.role}</span><br />
-                                                    <span className="text-gray-900 font-medium0 capitalize whitespace-pre">{data_entry_operator?.name}</span> 
+                                                    <span className="text-gray-900 font-medium0 capitalize whitespace-pre">{data_entry_operator?.name}</span>
                                                 </td>
                                                 <td
                                                     className={classNames(

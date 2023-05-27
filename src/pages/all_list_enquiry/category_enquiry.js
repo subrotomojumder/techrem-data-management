@@ -1,6 +1,6 @@
 import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '@/app/features/others/othersApi';
 import { LargeSpinner } from '@/components/Spinner';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline'
 import CategoryAddForm from '@/components/Forms/CategoyAddForm';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
@@ -9,13 +9,36 @@ import { FaEdit } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { Private } from '@/utils/ProtectRoute';
 import { errorToast, successToast } from '@/utils/neededFun';
+import { CgArrowsExchangeV } from 'react-icons/cg';
 
 const Category_enquiry = () => {
     const [currentCategory, setCurrentCategory] = useState(null);
     const [toggleMainCtg, setToggleMainCtg] = useState(null);
-    const [queryData, setQueryData] = useState({})
+    const [queryData, setQueryData] = useState({});
+    const [items, setItems] = useState([]);
+    const [sortAscending, setSortAscending] = useState(true);
     const [categoryDeleteApi] = useDeleteCategoryMutation();
     const { data, isLoading, isError, error } = useGetAllCategoryQuery(`/category?keyword=${queryData.keyword || ''}`);
+    useEffect(() => {
+        if (data?.success) {
+            setItems(data.data)
+        }
+    }, [data]);
+    useEffect(() => {
+        const sortedItems = [...items].sort((a, b) => {
+            const nameA = a.main.toLowerCase();
+            const nameB = b.main.toLowerCase();
+
+            if (nameA < nameB) {
+                return sortAscending ? -1 : 1;
+            }
+            if (nameA > nameB) {
+                return sortAscending ? 1 : -1;
+            }
+            return 0;
+        });
+        setItems(sortedItems);
+    }, [sortAscending]);
 
     const categoryDelete = (id, property) => {
         Swal.fire({
@@ -61,42 +84,42 @@ const Category_enquiry = () => {
     if (data.success) {
         if (!currentCategory?.openInput) {
             return (
-                    <div className="w-full overflow-x-auto">
-                        <div className="w-full overflow-hidden shadow ring-1 ring-gray-200 bg-white sm:rounded-lg">
-                            <div className='flex justify-between items-center mx-auto py-3 md:py-4 px-2 md:px-4'>
-                                <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 tracking-tight text-gray-900">Categories</h2>
-                                <div className='w-full flex justify-end items-center gap-3'>
-                                    <div className="relative">
-                                            <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center pl-3">
-                                                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                                            </div>
-                                            <input
-                                                onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
-                                                className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-3 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
-                                                type="search" id="search" placeholder="Search"
-                                            />
-                                        </div>
-                                    <button
-                                        onClick={() => setCurrentCategory({ openInput: true, method: "Add new category" })}
-                                        type="button"
-                                        className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    >
-                                        + New Category
-                                    </button>
+                <div className="w-full overflow-x-auto">
+                    <div className="w-full overflow-hidden shadow ring-1 ring-gray-200 bg-white sm:rounded-lg">
+                        <div className='flex justify-between items-center mx-auto py-3 md:py-4 px-2 md:px-4'>
+                            <h2 className="text-xl md:text-2xl  font-medium smm:font-semibold leading-5 lg:leading-10 tracking-tight text-gray-900">Categories</h2>
+                            <div className='w-full flex justify-end items-center gap-3'>
+                                <div className="relative">
+                                    <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center pl-3">
+                                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </div>
+                                    <input
+                                        onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
+                                        className="block w-full max-w-sm rounded-md border-0 bg-white py-1.5 pl-3 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                        type="search" id="search" placeholder="Search"
+                                    />
                                 </div>
+                                <button
+                                    onClick={() => setCurrentCategory({ openInput: true, method: "Add new category" })}
+                                    type="button"
+                                    className="rounded-md bg-indigo-600 whitespace-pre px-2.5 py-1.5 text-md md:text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    + New Category
+                                </button>
                             </div>
-                            <div className="min-w-full divide-y divide-gray-200">
-                                <div className='flex justify-between bg-gray-100'>
-                                    <h5 className="flex-1 py-3.5 pl-8 pr-3 w-full text-left text-md font-semibold text-gray-900">
-                                        Name
-                                    </h5>
-                                    <h5 className="w-56 px-3 md:px-5 py-3.5 text-center text-md font-semibold text-gray-900">
-                                        Action
-                                    </h5>
-                                </div>
-                                <div className="bg-white h-[80vh] overflow-y-auto">
-                                    {data.data.length < 1 ? <div className='mt-10 md:mt-40 text-red-500 text-lg text-center'><p>Empty Category!</p></div>
-                                        : data.data.filter(category => !!queryData?.keyword ? category.main.toLowerCase().includes(queryData.keyword.toLowerCase()) : category)
+                        </div>
+                        <div className="min-w-full divide-y divide-gray-200">
+                            <div className='flex justify-between bg-gray-100'>
+                                <h5 className="flex-1 py-3.5 pl-8 pr-3 w-full text-left text-md font-semibold text-gray-900">
+                                    Name <button onClick={() => setSortAscending(!sortAscending)}><CgArrowsExchangeV className={`inline-block ${sortAscending && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
+                                </h5>
+                                <h5 className="w-56 px-3 md:px-5 py-3.5 text-center text-md font-semibold text-gray-900">
+                                    Action
+                                </h5>
+                            </div>
+                            <div className="bg-white h-[80vh] overflow-y-auto">
+                                {data.data.length < 1 ? <div className='mt-10 md:mt-40 text-red-500 text-lg text-center'><p>Empty Category!</p></div>
+                                    : items.filter(category => !!queryData?.keyword ? category.main.toLowerCase().includes(queryData.keyword.toLowerCase()) : category)
                                         .map((mainCategory, i) => (
                                             <div key={i} className={`${toggleMainCtg === mainCategory.main && "bg-[#f1f5f5] "}`}>
                                                 <div className={`hover:bg-slate-50 flex justify-between items-center border-b border-gray-200 `}>
@@ -164,10 +187,10 @@ const Category_enquiry = () => {
                                                 </div>}
                                             </div>
                                         ))}
-                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
             )
         } else {
             return <CategoryAddForm currentCategory={currentCategory} setCurrentCategory={setCurrentCategory}></CategoryAddForm>

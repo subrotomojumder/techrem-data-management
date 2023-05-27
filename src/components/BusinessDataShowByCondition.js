@@ -27,10 +27,10 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}${dynamicData.finalProcess ? `&final_process=${dynamicData.finalProcess}` : ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${dynamicData.onlyMyData ? dynamicData.onlyMyData : selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}${selectedCategory?.sub1 ? `&sub1=${selectedCategory.sub1}` : ""}${dynamicData.finalProcess ? `&final_process=${dynamicData.finalProcess}` : ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${dynamicData.onlyMyData ? dynamicData.onlyMyData : selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&they_offer=${queryData.they_offer || ''}&campaign=${queryData.campaign || ""}&create_date=${!endDate && startDate ? startDate : ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
     // console.log(searchQuery)
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery);
-    const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
+    // const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
     // console.log(startDate, endDate)
     // console.log(data?.data)
     function classNames(...classes) {
@@ -39,17 +39,17 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
     if (isLoading) {
         return <LargeSpinner />;
     };
-    if (serviceIsError) {
-        if (serviceError.error) {
-            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.error}</p>
-            </div>
-        } else {
-            return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.data.message}</p>
-            </div>
-        }
-    }
+    // if (serviceIsError) {
+    //     if (serviceError.error) {
+    //         return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+    //             <p className="text-2xl text-red-500">{serviceError.error}</p>
+    //         </div>
+    //     } else {
+    //         return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
+    //             <p className="text-2xl text-red-500">{serviceError.data.message}</p>
+    //         </div>
+    //     }
+    // }
     if (isError) {
         if (error.error) {
             return <div className='text-center w-full min-h-screen flex justify-center items-center -pt-20'>
@@ -64,7 +64,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
         if (!updateEntry) {
             return <div className='w-full max-w-[1940px] mx-auto'>
                 <div className="px-4 sm:px-4 xl:px-8 py-4 sm:py-6 xl:py-6">
-                    <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-thin'>{dynamicData?.type}</h1>
+                    <h1 className='text-lg md:text-xl shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-thin'>{dynamicData?.type}</h1>
                     <div className='overflow-x-auto p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
                         <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
                             <div className='bg-indigo-100 shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
@@ -117,18 +117,21 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                     <UserInput selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                                 }
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
-                                {/* <input
-                                    onChange={(e) => setQueryData(c => ({ ...c, createDate: format(new Date(e.target.value), 'yyyy-MM-dd') }))}
-                                    type="date" value={queryData.createDate || ''}
-                                    className="rounded-md bg-white pl-2 pr-2 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                                /> */}
                                 <select
                                     onChange={(e) => setQueryData(c => ({ ...c, we_offer: e.target.value }))}
                                     value={queryData.we_offer || ""}
                                     className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                                 >
                                     <option value='' selected >We can offer</option>
-                                    {ourServiceData?.data?.map((service, i) => <option key={i} value={service.name}>{service.name.slice(0, 15)}</option>)}
+                                    {data?.uniqueFilter?.weOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
+                                </select>
+                                <select
+                                    onChange={(e) => setQueryData(c => ({ ...c, they_offer: e.target.value }))}
+                                    value={queryData.they_offer || ""}
+                                    className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                                >
+                                    <option value='' selected >They offer</option>
+                                    {data?.uniqueFilter?.theyOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
                                 </select>
                                 {(dynamicData.finalProcess !== ORDER_COMPLETED && !dynamicData.onlyMyData) &&
                                     <select

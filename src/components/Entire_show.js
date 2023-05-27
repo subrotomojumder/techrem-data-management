@@ -23,9 +23,9 @@ const Entire_show = ({ data }) => {
         return (
             <div className='w-full'>
                 <div className='w-full pb-4 mb-4 border-gray-100'>
-                    <h1 className='text-2xl lgg:text-3xl font-semibold'>{businessName}</h1>
-                    <h4 className='text-lg lgg:text-xl text-gray-400'>{category.main}</h4>
-                    <img className='rounded mt-2 mb-4 w-full h-44 ' src={businessLogo || "https://www.logodesign.net/logo/needle-with-wings-flying-5675ld.png"} alt='Company Logo' />
+                    <h1 className='text-2xl lgg:text-3xl font-semibold capitalize'>{businessName}</h1>
+                    <h4 className='text-lg lgg:text-xl text-gray-400 capitalize'>{category.main}</h4>
+                    <img className='rounded mt-2 mb-4 w-fit mx-auto h-44 ' src={businessLogo || "https://www.logodesign.net/logo/needle-with-wings-flying-5675ld.png"} alt='Company Logo' />
                     <div className='flex justify-center items-center gap-3'>
                         {<a href={website_urls[0] || ""} target='_blank'> <button
                             type="button"

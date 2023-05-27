@@ -1,5 +1,5 @@
 import { LargeSpinner } from '@/components/Spinner';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { TbCircleChevronDown } from 'react-icons/tb';
@@ -9,13 +9,37 @@ import { Private } from '@/utils/ProtectRoute';
 import { useDeleteAddressMutation, useGetAllAddressQuery } from '@/app/features/address/addressApi';
 import AddressAddForm from '@/components/Forms/AddressAddFrom';
 import { errorToast, successToast } from '@/utils/neededFun';
+import { CgArrowsExchangeV } from 'react-icons/cg';
 
 const Address_enquiry = () => {
     const [selectedData, setSelectedData] = useState(null);
     const [toggleState, setToggleState] = useState({});
     const [queryData, setQueryData] = useState({});
+    const [items, setItems] = useState([]);
+    const [sortAscending, setSortAscending] = useState(true);
     const { data, isLoading, isError, error } = useGetAllAddressQuery(`/address?keyword=${queryData.keyword || ''}`);
     const [addressDeleteApi] = useDeleteAddressMutation();
+    useEffect(() => {
+        if (data?.success) {
+            setItems(data.data)
+        }
+    }, [data]);
+    useEffect(() => {
+        const sortedItems = [...items].sort((a, b) => {
+            const nameA = a.country.toLowerCase();
+            const nameB = b.country.toLowerCase();
+
+            if (nameA < nameB) {
+                return sortAscending ? -1 : 1;
+            }
+            if (nameA > nameB) {
+                return sortAscending ? 1 : -1;
+            }
+            return 0;
+        });
+        setItems(sortedItems);
+    }, [sortAscending]);
+
     const addressDelete = (id, property) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -87,7 +111,7 @@ const Address_enquiry = () => {
                         <div className="min-w-full divide-y divide-gray-200">
                             <div className='flex justify-between bg-gray-100'>
                                 <h5 className="flex-1 py-3.5 pl-8 pr-3 w-full text-left text-md font-semibold text-gray-900">
-                                    Country
+                                    Country <button onClick={() => setSortAscending(!sortAscending)}><CgArrowsExchangeV className={`inline-block ${sortAscending && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                 </h5>
                                 <h5 className="w-56 px-3 md:px-5 py-3.5 text-center text-md font-semibold text-gray-900">
                                     Action
@@ -95,7 +119,7 @@ const Address_enquiry = () => {
                             </div>
                             <div className="bg-white h-[80vh] overflow-y-auto">
                                 {data.data.length < 1 ? <div className='mt-10 md:mt-40 text-red-500 text-lg text-center'><p>Empty Address!</p></div>
-                                    : data.data.filter(country => !!queryData?.keyword ? country.country.toLowerCase().includes(queryData.keyword.toLowerCase()) : country)
+                                    : items.filter(country => !!queryData?.keyword ? country.country.toLowerCase().includes(queryData.keyword.toLowerCase()) : country)
                                         .map((country, i) => (
                                             <div key={i} className={`${toggleState.country === country.country && "bg-[#f4f7f7] "}`}>
                                                 <div className={`hover:bg-slate-50 flex justify-between items-center border-b border-gray-200 `}>

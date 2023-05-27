@@ -25,10 +25,10 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
     const [startDate, endDate] = dateRange;
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
-   /*  const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`; */
+    const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&they_offer=${queryData.they_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`;
+    /*  const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`; */
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery, { refetchOnMountOrArgChange: true });
-    const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
+    // const { data: ourServiceData, isLoading: serviceLoading, isError: serviceIsError, error: serviceError } = useGetOurServiceQuery(`/service_we_offer`);
     useEffect(() => {
         // setSelectedData([]);
         if (data?.success) {
@@ -71,17 +71,17 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
             </div>
         }
     }
-    if (serviceIsError) {
-        if (serviceError.error) {
-            return <div className='text-center w-full min-h-[50vh] flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.error}</p>
-            </div>
-        } else {
-            return <div className='text-center w-full min-h-[50vh] flex justify-center items-center -pt-20'>
-                <p className="text-2xl text-red-500">{serviceError.data.message}</p>
-            </div>
-        }
-    }
+    // if (serviceIsError) {
+    //     if (serviceError.error) {
+    //         return <div className='text-center w-full min-h-[50vh] flex justify-center items-center -pt-20'>
+    //             <p className="text-2xl text-red-500">{serviceError.error}</p>
+    //         </div>
+    //     } else {
+    //         return <div className='text-center w-full min-h-[50vh] flex justify-center items-center -pt-20'>
+    //             <p className="text-2xl text-red-500">{serviceError.data.message}</p>
+    //         </div>
+    //     }
+    // }
     return (
         <div className='w-full'>
             <div className='overflow-x-auto'>
@@ -143,7 +143,15 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                             className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                         >
                             <option value='' selected >We can offer</option>
-                            {ourServiceData?.data?.map((service, i) => <option key={i} value={service.name}>{service.name.slice(0, 15)}</option>)}
+                            {data?.uniqueFilter?.weOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
+                        </select>
+                        <select
+                            onChange={(e) => setQueryData(c => ({ ...c, they_offer: e.target.value }))}
+                            value={queryData.they_offer || ""}
+                            className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                        >
+                            <option value='' selected >They offer</option>
+                            {data?.uniqueFilter?.theyOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
                         </select>
                         <button
                             onClick={() => {
