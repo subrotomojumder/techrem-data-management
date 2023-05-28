@@ -101,7 +101,7 @@ const Active_campaign = () => {
                 </div>
                 <hr className='mb-6 bg-gray-300 h-[2px]  mt-2' />
                 {data?.data?.length ? <div className='flex flex-wrap gap-4 xl:gap-8'>
-                    {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}`}>
+                    {data?.data?.map((camp) => <Link className='w-full smm:w-fit' key={camp._id} href={`/dashboard/campaign/campaign_view/${camp.campaign_objective}/${camp._id}?active=active_page`}>
                         <div div className='smm:min-h-[17.5rem]  min-w-[280px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:bg-indigo-50 duration-300 rounded-lg p-2 relative border drop-shadow-sm hover:outline outline-1 outline-indigo-500 sm:mx-4 smm:mx-0' >
                             <div className='w-full h-full flex sm:flex-row sm:justify-start smm:flex-col smm:justify-between smm:items-center smm:gap-2 smm:pb-2'>
                                 <div className="h-[90px] w-[90px]">

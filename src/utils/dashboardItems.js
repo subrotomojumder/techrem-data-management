@@ -56,7 +56,7 @@ export const adminDashboardItems = [
         current: false,
         children: [
             { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
-            { name: 'Marketing', icon: BsBagCheck, href: '/dashboard/employee_task/authority_marketing' },
+            { name: 'Marketing', icon: BsBagCheck, href: '/dashboard/employee_task/my_marketing_list' },
         ],
     },
     {
@@ -102,7 +102,7 @@ export const marketerDashboardItems = [
         current: false,
         children: [
             { name: 'Data entry', icon: MdFormatListBulletedAdd, href: '/dashboard/employee_task/my_entry_data_list' },
-            { name: 'Marketing', icon: BsBagCheck, href: '/dashboard/employee_task/authority_marketing' },
+            { name: 'Marketing', icon: BsBagCheck, href: '/dashboard/employee_task/my_marketing_list' },
         ],
     },
     {
@@ -123,5 +123,6 @@ export const teleMarketerDashboardItems = [
     // { name: 'My Submission', href: '/dashboard/employee_task/my_submission_task', icon: ChartPieIcon, current: false },
     // { name: 'Add new Form', icon: BsPencilSquare, href: '/dashboard/new_form' },
     { name: 'Entry Data List', icon: TbListDetails, href: '/dashboard/employee_task/my_entry_data_list' },
+    { name: 'Marketing List', icon: BsBagCheck, href: '/dashboard/employee_task/my_marketing_list' },
     { name: 'Enumeration', href: '/dkjfajjf', icon: BiLineChartDown, current: false },
 ]

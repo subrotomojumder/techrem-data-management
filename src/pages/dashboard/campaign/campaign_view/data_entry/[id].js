@@ -1,16 +1,44 @@
-import { useGetCampaignQuery } from '@/app/features/campaignManage/campaignManageApi';
+import { useGetCampaignQuery, useUpdateCampaignMutation } from '@/app/features/campaignManage/campaignManageApi';
 import { LargeSpinner } from '@/components/Spinner';
 import { Private } from '@/utils/ProtectRoute'
 import { ADMIN, MARKETER } from '@/utils/constant';
+import { errorSweetAlert, successToast } from '@/utils/neededFun';
 import { PaperClipIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 function Campaign_entry({ campaign_id }) {
+    const router = useRouter();
     const { user } = useSelector((state) => state.auth);
     const { data, isLoading, isError, error } = useGetCampaignQuery(`/${campaign_id}`);
     // const { user } = useSelector((state) => state.auth);
-    console.log(data)
+    const [campaignUpdateApi] = useUpdateCampaignMutation();
+    const handleInactiveCampaign = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to inactive this campaign!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Inactive!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                campaignUpdateApi({ data: { active: false }, url: `/campaign/${campaign_id}` })
+                    .then(res => {
+                        console.log(res);
+                        if (res.data?.success) {
+                            history.back();
+                            successToast("Has been deactivated");
+                        } else {
+                            errorSweetAlert("Something went wrong!")
+                        }
+                    });
+            }
+        })
+    }
 
     if (isLoading) {
         return <LargeSpinner />;
@@ -32,6 +60,9 @@ function Campaign_entry({ campaign_id }) {
                 <div className='lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 '>
                     <div className="px-4 sm:px-0 flex justify-between ">
                         <h3 className="text-lg lg:text-xl font-semibold leading-7 text-gray-900">Campaign Information</h3>
+                        {(user.role === ADMIN || user.role === MARKETER) && router?.query?.active === "active_page" &&
+                            <button onClick={() => handleInactiveCampaign()} className="text-white font-semibold bg-red-300 border-0 py-1.5 px-4 focus:outline-none hover:bg-red-400 active:bg-red-500 rounded duration-75">Inactive</button>
+                        }
                         {!(user.role === ADMIN || user.role === MARKETER) &&
                             <Link href={`/dashboard/employee_task/employee_entry/${_id}`}>
                                 <button
@@ -78,7 +109,7 @@ function Campaign_entry({ campaign_id }) {
                                 </dd>
                             </div>
                             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                
+
                             </div>
                         </dl>
                     </div>
@@ -89,7 +120,7 @@ function Campaign_entry({ campaign_id }) {
 }
 export async function getServerSideProps(context) {
     return {
-        props: { campaign_id: context.query.id }
+        props: { campaign_id: context.query.id}
     }
 }
 

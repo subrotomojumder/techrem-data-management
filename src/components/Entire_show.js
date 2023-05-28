@@ -21,39 +21,41 @@ const Entire_show = ({ data }) => {
             have_website: { website_urls },
         } = data.data;
         console.log(data);
+         /* md:ml-0 */
+          /* md:justify-start */
         return (
             <div className='w-full'>
                 <div className='w-full px-4 pb-4 mb-4 border-gray-100'>
                     <h1 className='text-2xl lgg:text-3xl font-semibold capitalize'>{businessName}</h1>
                     <h4 className='text-base lgg:text-lg font-thin text-gray-900 capitalize'>{category.main}</h4>
-                    <img className='rounded my-4 w-fit mx-auto md:ml-0 h-44 ' src={businessLogo || "https://www.logodesign.net/logo/needle-with-wings-flying-5675ld.png"} alt='Company Logo' />
-                    <div className='flex justify-center md:justify-start items-center gap-3'>
+                    <img className='rounded my-4 w-fit mx-auto h-44 ' src={businessLogo || "https://www.logodesign.net/logo/needle-with-wings-flying-5675ld.png"} alt='Company Logo' />
+                    <div className='flex justify-center items-center gap-3'>
                         {<a href={website_urls[0] || ""} target='_blank'> <button
                             type="button"
-                            className="text-xs md:text-sm md:w-[110px] flex justify-center items-center gap-3 rounded-full text-gray-500 bg-white px-3 py-1.5 text-sm font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
+                            className="text-xs md:text-sm md:w-[110px] flex justify-center items-center gap-3 rounded-full text-gray-500 bg-white px-3 py-1.5 font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
                         >
                             <HiGlobeAsiaAustralia className='md:text-lg text-blue-400' />  Website
                         </button>
                         </a>}
                         {<a href={location_link} target='_blank'> <button
                             type="button"
-                            className="text-xs md:text-sm md:w-[110px] hidden sm:flex justify-center items-center gap-1 rounded-full text-gray-500 bg-white px-3 py-1.5 text-sm font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
+                            className="text-xs md:text-sm md:w-[110px] hidden sm:flex justify-center items-center gap-1 rounded-full text-gray-500 bg-white px-3 py-1.5 font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
                         >
                             <MdOutlineDirections className='md:text-lg text-blue-400' />  Directions
                         </button>
                         </a>}
-                        <a href={`mailto:${businessEmail}`}>
+                        {/* <a href={`mailto:${businessEmail}`}>
                             <button
                                 type="button"
-                                className="text-xs md:text-sm md:w-[110px] flex justify-center items-center gap-4 rounded-full text-gray-500 bg-white px-3 py-1.5 text-sm font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
+                                className="text-xs md:text-sm md:w-[110px] flex justify-center items-center gap-4 rounded-full text-gray-500 bg-white px-3 py-1.5 font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
                             >
                                 <CgMail className='md:text-lg text-blue-400' />  Gmail
                             </button>
-                        </a>
+                        </a> */}
                         <a href={`tel:${country_code + businessPhone}`}>
                             <button
                                 type="button"
-                                className="text-xs md:text-sm md:w-[110px] flex justify-center items-center gap-2 rounded-full text-gray-500 bg-white px-3 py-1.5 text-sm font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
+                                className="text-xs md:text-sm md:w-[110px] flex justify-center items-center gap-2 rounded-full text-gray-500 bg-white px-3 py-1.5 font-semibold hover:text-gray-900 shadow-sm ring-1 ring-inset ring-indigo-300 active:ring-indigo-500 active:outline outline-2 outline-indigo-200 underline-offset-4 hover:bg-gray-50  transition-colors duration-200 ease-in-out"
                             >
                                 <IoMdCall
 

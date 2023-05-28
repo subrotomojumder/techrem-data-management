@@ -53,7 +53,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
         if (!updateEntry) {
             return <div className='w-full max-w-[1940px] mx-auto'>
                 <div className="px-4 sm:px-4 xl:px-8 py-4 sm:py-6 xl:py-6">
-                    <h1 className='text-lg md:text-xl shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-thin'>{dynamicData?.type}</h1>
+                    <h1 className='text-lg md:text-xl shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8'>{dynamicData?.type}</h1>
                     <div className='overflow-x-auto p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
                         <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
                             <div className='bg-indigo-100 shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
@@ -63,7 +63,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                     </div>
                                     <input
                                         onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
-                                        className="block w-full min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                        className="block w-full lg:min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                         type="search" id="search" placeholder="Search"
                                     />
                                 </div>
@@ -103,7 +103,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                 <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-700" }}></CategoryInput>
                                 <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
                                 {!dynamicData.onlyMyData &&
-                                    <UserInput  usersData={data?.uniqueFilter?.entryBy} selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
+                                    <UserInput usersData={data?.uniqueFilter?.entryBy} selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
                                 }
                                 <DateRangeInput dateRange={dateRange} setDateRange={setDateRange}></DateRangeInput>
                                 <select
@@ -144,20 +144,20 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
+                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell"
                                         >
                                             Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         {!dynamicData.onlyMyData &&
                                             <th
                                                 scope="col"
-                                                className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell whitespace-pre"
+                                                className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
                                             >
                                                 Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                             </th>}
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-md font-semibold text-gray-900 lg:table-cell text-center"
+                                            className={`px-3 py-3.5 text-md font-semibold text-gray-900  ${!dynamicData?.onlyMyData && "hidden"} md:table-cell text-center`}
                                         >
                                             Address
                                         </th>
@@ -170,7 +170,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                             </th>}
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
+                                            className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre hidden md:table-cell"
                                         >
                                             We-can-offer
                                         </th>
@@ -192,13 +192,11 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                     )}
                                                 >
                                                     <Link href={`/dashboard/single_entry_details/${_id}`}>
-                                                        <div className="flex items-center min-w-[90px]">
-                                                            <div className="w-full flex flex-col justify-center mb-2">
+                                                        <div className="h-full flex items-center">
+                                                            <div className="w-full h flex flex-col justify-center">
                                                                 <img className="h-11 w-14 mx-auto rounded-md" src={businessDetails?.businessLogo || "http://localhost:5000/image/no_image-1682919865051.png"} alt="" />
-                                                                <div className="font-bold text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName}{/* .length > 15 ? businessDetails?.businessName.slice(0, 15) + '...' : businessDetails?.businessName */}</div>
+                                                                <div className="font-semibold lg:font-bold text-sm xl:text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName.length > 20 ? businessDetails?.businessName.slice(0, 20) + '...' : businessDetails?.businessName}</div>
                                                             </div>
-                                                            {/* <div className="ml-4">
-                                                            </div> */}
                                                         </div>
                                                     </Link>
                                                 </td>
@@ -215,7 +213,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                     <td
                                                         className={classNames(
                                                             planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                            'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                            'px-2 py-3.5 text-sm text-gray-700 hidden xl:table-cell'
                                                         )}
                                                     >
                                                         <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.role}</span><br />
@@ -225,7 +223,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-center text-sm text-gray-700'
+                                                        'px-1 py-3.5 text-left text-sm text-gray-700 hidden xl:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900">{new Date(createdAt).toLocaleDateString()}</div>
@@ -233,10 +231,10 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-700 lg:table-cell text-center'
+                                                        `px-3 py-3.5 text-sm text-gray-700 lg:table-cell text-center ${!dynamicData?.onlyMyData && "hidden"} md:table-cell`
                                                     )}
                                                 >
-                                                    <span className="text-gray-900 whitespace-pre">{address?.street_address}</span> <br />
+                                                    <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 20 ? address?.street_address.slice(0, 20) + '...' : address?.street_address}</span> <br />
                                                     <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
                                                 </td>
                                                 {(dynamicData.finalProcess !== ORDER_COMPLETED && !dynamicData.onlyMyData) &&
@@ -262,7 +260,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-center text-gray-700 lg:table-cell'
+                                                        'px-3 py-3.5 text-sm text-center text-gray-700 hidden md:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>

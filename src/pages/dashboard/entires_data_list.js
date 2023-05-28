@@ -70,14 +70,14 @@ const Entires_data = () => {
                     <h1 className='text-lg md:text-xl font-semibold shadow-xs text-center -mt-3 pl-4 sm:pl-6 lg:pl-8 font-serif'>All business data list</h1>
                     <div className='overflow-x-auto p-4 bg-white rounded-lg drop-shadow-sm shadow-gray-100'>
                         <div className="min-w-fit min-h-[80vh]  ring-1 ring-black ring-opacity-20 sm:mx-0 sm:rounded-lg">
-                            <div className='bg-indigo-100 shadow-md w-full py-2 px-4 ml-auto flex justify-between items-center gap-2'>
+                            <div className='bg-indigo-100 shadow-md w-full py-2 px-1 lg:px-4 ml-auto flex justify-between items-center gap-2'>
                                 <div className="relative">
                                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                         <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                     </div>
                                     <input
                                         onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
-                                        className="block w-full min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                        className="block w-full lg:min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                         type="search" id="search" placeholder="Search"
                                     />
                                 </div>
@@ -113,7 +113,7 @@ const Entires_data = () => {
                                     </select>
                                 </div>
                             </div>
-                            <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-100 drop-shadow-md px-3 py-2`}>
+                            <div className={`w-full flex justify-end items-center gap-2 ${openFilter ? "block" : "hidden"} duration-300 bg-gray-100 drop-shadow-md px-2 lg:px-3 py-2`}>
                                 <CategoryInput selectedValue={selectedCategory} setSelectedValue={setSelectedCategory} ownClass={{ position: " absolute z-40 top-[34px] left-0 ", input: "bg-white rounded-md border border-gray-300 pl-3 py-1 min-w-[200px] flex justify-between items-center text-base outline-none text-gray-700 px-3 transition-colors duration-200 ease-in-out", focus: "border-indigo-500 ring-2 text-gray-700" }}></CategoryInput>
                                 <AddressInput selectedValue={selectedAddress} setSelectedValue={setSelectedAddress}></AddressInput>
                                 <UserInput usersData={data?.uniqueFilter?.entryBy} selectedUser={selectedUser} setSelectedUser={setSelectedUser} placeHolder={"Entry By"} wornClass={{ input: "placeholder:text-gray-600 rounded-md bg-white pl-4 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1" }}></UserInput>
@@ -152,39 +152,39 @@ const Entires_data = () => {
                             <table className="min-w-full divide-y divide-gray-300 lg:px-4">
                                 <thead>
                                     <tr className='bg-gray-100 smm:rounded-t-xl'>
-                                        <th scope="col" className="pl-5 py-3.5 text-left text-md font-semibold text-gray-900">
+                                        <th scope="col" className="pl-5 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Business
                                         </th>
-                                        <th scope="col" className="py-3.5 px-1 min-w-[150px] text-md font-semibold text-gray-900 sm:pl-6">
+                                        <th scope="col" className="py-3.5 px-1 min-w-[150px] text-sm font-semibold text-gray-900 sm:pl-6">
                                             Category <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "category1" ? "category1" : "category-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-2 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell"
+                                            className="px-2 py-3.5 text-left text-sm font-semibold text-gray-900 hidden xl:table-cell"
                                         >
                                             Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-1 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
+                                            className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
                                         >
                                             Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-3 py-3.5 text-md font-semibold text-gray-900 lg:table-cell text-center"
+                                            className="px-3 py-3.5 text-sm font-semibold text-gray-900 lg:table-cell text-center hidden md:table-cell"
                                         >
                                             Address
                                         </th>
                                         <th
                                             scope="col"
-                                            className="pl-1 pr-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
+                                            className="pl-1 pr-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:table-cell"
                                         >
                                             Campaign
                                         </th>
                                         <th
                                             scope="col"
-                                            className=" px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre hidden lg:table-cell"
+                                            className=" px-3 py-3.5 text-center text-sm font-semibold text-gray-900 whitespace-pre hidden lg:table-cell"
                                         >
                                             We-can-offer
                                         </th>
@@ -205,10 +205,10 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     <Link href={`/dashboard/single_entry_details/${_id}`}>
-                                                        <div className="h-full flex items-center lg:min-w-[80px]">
+                                                        <div className="h-full flex items-center">
                                                             <div className="w-full h flex flex-col justify-center">
                                                                 <img className="h-11 w-14 mx-auto rounded-md" src={businessDetails?.businessLogo || "http://localhost:5000/image/no_image-1682919865051.png"} alt="" />
-                                                                <div className="font-bold text-md xl:text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName.length > 23 ? businessDetails?.businessName.slice(0, 23) + '...' : businessDetails?.businessName}</div>
+                                                                <div className="font-semibold lg:font-bold text-sm xl:text-base text-center text-gray-900 whitespace-pre truncate">{businessDetails?.businessName.length > 20 ? businessDetails?.businessName.slice(0, 20) + '...' : businessDetails?.businessName}</div>
                                                             </div>
                                                         </div>
                                                     </Link>
@@ -242,16 +242,16 @@ const Entires_data = () => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell text-center'
+                                                        'px-2 py-3.5 text-sm text-gray-700 lg:table-cell text-center hidden md:table-cell'
                                                     )}
                                                 >
-                                                    <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 23 ? address?.street_address.slice(0, 23) + '...' : address?.street_address}</span> <br />
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
+                                                    <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 20 ? address?.street_address.slice(0, 20) + '...' : address?.street_address}</span> <br />
+                                                    <span className="text-gray-900 capitalize whitespace-pre">{address?.city + ", " + address.state + ", " + address?.country}</span>
                                                 </td>
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-3 py-3.5 text-sm text-gray-700'
+                                                        'px-3 py-3.5 text-sm text-gray-700 hidden md:table-cell'
                                                     )}
                                                 >
                                                     {campaign ? <button

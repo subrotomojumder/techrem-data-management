@@ -3,7 +3,7 @@ import { useGetEntireDataByIdQuery } from '@/app/features/dataEntire/dataEntireA
 import Entire_show from '@/components/Entire_show';
 import { LargeSpinner, SmallSpinner } from '@/components/Spinner';
 import { TeleAndFieldProtect } from '@/utils/ProtectRoute';
-import { INTERESTED, NOTINTERESTED, NOTSURE } from '@/utils/constant';
+import { INTERESTED, NOTINTERESTED, NOTSURE, ORDER_COMPLETED } from '@/utils/constant';
 import { errorSweetAlert, errorToast, successToast } from '@/utils/neededFun';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -53,13 +53,13 @@ const Contact_manage = () => {
     };
     return (
         <div className='grid grid-cols-1 lgg:grid-cols-9 gap-4 lg:max-w-4xl lggg:max-w-5xl xl:max-w-7xl  xxl:max-w-[1300px] min-h-screen bg-white rounded shadow-md  md:mx-4 lgg:mx-auto md:my-4 px-4 py-4 lgg:px-6 lgg:divide-x-2'>
-            <div className={`${data?.data?.final_process?.process !== "pending" ? "col-span-9" : "col-span-5"} px-2`}>
+            <div className={`col-span-5 px-2`}>
                 {/* <img className='w-full max-h-[250px]' src={"https://st2.depositphotos.com/4035913/6124/i/600/depositphotos_61243831-stock-photo-letter-s-logo.jpg"} alt="" /> */}
                 <div className='h-fit capitalize'>
                     <Entire_show data={data} />
                 </div>
             </div>
-            <div className={`${data?.data?.final_process?.process !== "pending" && "hidden"} col-span-4 h-fit px-6 md:px-8 lg:px-10 py-4 md:py-6 lg:py-8 md:my-5 rounded-sm`}>
+            <div className={`col-span-4 h-fit px-4 md:my-2 rounded-sm`}>
                 <h2 className="text-gray-900 text-lg md:text-xl mb-1 font-medium title-font uppercase text-center"><BsTelephoneOutbound className='inline' /> Communication report</h2>
                 <p className='text-center mb-2'>Write your contact data</p>
                 <hr />
@@ -76,7 +76,7 @@ const Contact_manage = () => {
                                 <option value={INTERESTED}>Interested Customer</option>
                                 <option value={NOTINTERESTED}>Not Interested Customer</option>
                                 <option value={NOTSURE}>Not Sure Customer</option>
-                                {/* <option value="marketing">Order Completed</option> */}
+                                <option value={ORDER_COMPLETED}>Order Completed</option>
                             </select>
                         </div>
 

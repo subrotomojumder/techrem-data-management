@@ -27,9 +27,8 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
     const [stockLimit, setStockLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
     const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&they_offer=${queryData.they_offer || ''}&campaign=${queryData.process_status ? "true" : "false"}&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}&final_process=${queryData.process_status || ""}`;
-    /*  const searchQuery = `skip=${(currentPage - 1) * stockLimit}&limit=${stockLimit}&main=${selectedCategory?.main || ''}&sub1=${selectedCategory?.sub1 || ''}&country=${selectedAddress?.country || ''}&state=${selectedAddress?.state || ""}&city=${selectedAddress?.city || ""}&keyword=${queryData?.keyword || ''}&account_id=${selectedUser?._id || ''}&we_offer=${queryData.we_offer || ''}&campaign=false&create_date=${queryData?.createDate || ''}&dataRange_start=${startDate && endDate ? startDate : ""}&dataRange_end=${startDate && endDate ? endDate : ""}&sort=${queryData?.sort || ''}`; */
     const { data, isLoading, isError, error } = useGetAllDataQuery(searchQuery, { refetchOnMountOrArgChange: true });
-    console.log(data)
+    console.log(searchQuery)
     useEffect(() => {
         // setSelectedData([]);
         if (data?.success) {
@@ -99,7 +98,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                 </div>
                                 <input
                                     onChange={(e) => setQueryData(c => ({ ...c, keyword: e.target.value }))}
-                                    className="block w-full min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
+                                    className="block w-full xl:min-w-[300px] max-w-sm rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:outline-none sm:text-sm sm:leading-6"
                                     type="search" id="search" placeholder="Search"
                                 />
                             </div>
@@ -109,16 +108,6 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                             >
                                 Filters {openFilter ? <TbFilterOff className={`inline-block ml-4`} /> : <TbFilter className={`inline ml-4`} />}
                             </button>
-                            <select
-                                onChange={(e) => setQueryData(c => ({ ...c, process_status: e.target.value }))}
-                                value={queryData.process_status || ""}
-                                className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                            >
-                                <option value='' selected >Campaign Status</option>
-                                <option value={INTERESTED}>Interested Customer</option>
-                                <option value={NOTINTERESTED}>Not Interested Customer</option>
-                                <option value={NOTSURE}>Not Sure Customer</option>
-                            </select>
                             <button
                                 onClick={submit} type="button"
                                 className="rounded-md bg-blue-500 pl-4 pr-4 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
@@ -140,14 +129,24 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                             <option value='' selected >We can offer</option>
                             {data?.uniqueFilter?.weOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
                         </select>
-                        <select
+                        {/* <select
                             onChange={(e) => setQueryData(c => ({ ...c, they_offer: e.target.value }))}
                             value={queryData.they_offer || ""}
                             className="rounded-md bg-white pl-2 pr-3 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
                         >
                             <option value='' selected >They offer</option>
                             {data?.uniqueFilter?.theyOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
-                        </select>
+                        </select> */}
+                        <select
+                                onChange={(e) => setQueryData(c => ({ ...c, process_status: e.target.value }))}
+                                value={queryData.process_status || ""}
+                                className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                            >
+                                <option value='' selected >Campaign Status</option>
+                                <option value={INTERESTED}>Interested Customer</option>
+                                <option value={NOTINTERESTED}>Not Interested Customer</option>
+                                <option value={NOTSURE}>Not Sure Customer</option>
+                            </select>
                         <button
                             onClick={() => {
                                 setQueryData({});
@@ -172,13 +171,13 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell"
+                                    className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 hidden lg:table-cell"
                                 >
                                     Entry {/* <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button> */}
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 lg:table-cell whitespace-pre"
+                                    className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
                                 >
                                     Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                 </th>
@@ -190,7 +189,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre lg:table-cell"
+                                    className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 whitespace-pre hidden lg:table-cell"
                                 >
                                     We-can-offer
                                 </th>
@@ -204,18 +203,18 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                         <td
                                             className={classNames(
                                                 planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                'px-3 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                'pl-3 pr-1 py-3.5 text-sm text-gray-700 lg:table-cell'
                                             )}
                                         >
                                             <div className='flex justify-start gap-2 items-center'>
                                                 <input checked={selectedData.includes(_id)} onClick={() => handleChecked(_id)} name="plan" type="checkbox" readOnly />
-                                                <p className="font-bold text-base text-gray-900 whitespace-pre truncate">{businessDetails?.businessName}{/* .length > 15 ? businessDetails?.businessName.slice(0, 15) + '...' : businessDetails?.businessName */}</p>
+                                                <p className="font-bold text-base text-gray-900 whitespace-pre truncate">{businessDetails?.businessName.length > 20 ? businessDetails?.businessName.slice(0, 20) + '...' : businessDetails?.businessName}</p>
                                             </div>
                                         </td>
                                         <td
                                             className={classNames(
                                                 planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                'px-2 py-3.5 text-sm lg:table-cell font-medium text-center whitespace-pre capitalize'
+                                                'px-1 py-3.5 text-sm lg:table-cell font-medium text-center whitespace-pre capitalize'
                                             )}
                                         >
                                             {businessDetails?.category.main} <br />
@@ -224,7 +223,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                         <td
                                             className={classNames(
                                                 planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                'px-2 py-3.5 text-sm text-gray-700 lg:table-cell'
+                                                'px-2 py-3.5 text-sm text-gray-700 hidden lg:table-cell'
                                             )}
                                         >
                                             <span className="text-gray-900 capitalize whitespace-pre">{data_entry_operator?.name}</span> <br />
@@ -233,7 +232,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                         <td
                                             className={classNames(
                                                 planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                'px-3 py-3.5 text-center text-sm text-gray-700'
+                                                'px-3 py-3.5 text-center text-sm text-gray-700  hidden xl:table-cell'
                                             )}
                                         >
                                             <div className="text-gray-900">{new Date(createdAt).toLocaleDateString()}</div>
@@ -244,13 +243,13 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                                 'px-3 py-3.5 text-sm text-gray-700 lg:table-cell text-center'
                                             )}
                                         >
-                                            <span className="text-gray-900 whitespace-pre">{address?.street_address}</span> <br />
+                                            <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 20 ? address?.street_address.slice(0, 20) + '...' : address?.street_address}</span> <br />
                                             <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
                                         </td>
                                         <td
                                             className={classNames(
                                                 planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                'px-3 py-3.5 text-sm text-center text-gray-700 lg:table-cell'
+                                                'px-3 py-3.5 text-sm text-center text-gray-700 hidden lg:table-cell'
                                             )}
                                         >
                                             <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
