@@ -147,7 +147,7 @@ export default function LayoutComponent({ children }) {
                                             </button>
                                         </div>
                                     </Transition.Child>
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-50 px-6 pt-2 pb-4">
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 bg-gray-50 px-6 pt-2 pb-4">
                                         <div className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 // className="h-8 w-auto"
@@ -174,7 +174,7 @@ export default function LayoutComponent({ children }) {
 
                 {/* Static sidebar for desktop */}
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-50 px-6 py-4">
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 bg-gray-50 px-6 py-4">
                         <div className="flex h-16 shrink-0 items-center">
                             <Image
                                 // className="h-8 w-auto"
@@ -239,7 +239,7 @@ export default function LayoutComponent({ children }) {
                                             <span className="sr-only">Open user menu</span>
                                             <img
                                                 className="h-11 w-11 rounded-full bg-gray-50 border border-blue-300"
-                                                src={"https://cdn-icons-png.flaticon.com/512/5231/5231019.png"}
+                                                src={user?.userImage}
                                                 alt=""
                                             />
                                             <span className="hidden lg:flex lg:items-center">

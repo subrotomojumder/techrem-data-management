@@ -135,7 +135,7 @@ const HomePage = () => {
                     </div>
                 </section> */}
                 <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-                    <div className="overflow-x-auto overflow-y-auto rounded-lg bg-white md:min-h-[40vh] lgg:min-h-[60vh] px-4 py-5 shadow">
+                    <div className="overflow-x-hidden overflow-y-auto rounded-lg bg-white md:min-h-[40vh] lgg:min-h-[60vh] px-4 py-5 shadow">
                         <div className="inline-block min-w-full py-2 align-middle px-4">
                             <h3 className='text-base font-medium underline underline-offset-2'>Recent Interested</h3>
                             <table className="min-w-full divide-y divide-gray-300">
@@ -164,8 +164,8 @@ const HomePage = () => {
                                                             <p>{new Date(create_date).toLocaleString()}</p>
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                                                 </td>
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize truncate hover:text-clip">
                                                     <span>{address.country},</span> <br />
                                                     <span>{address.city}, {address.state}</span>
                                                 </td>
@@ -177,7 +177,7 @@ const HomePage = () => {
                             </table>
                         </div>
                     </div>
-                    <div className="overflow-x-auto rounded-lg bg-white min-h-[40vh] px-4 py-5 shadow">
+                    <div className="overflow-x-hidden overflow-y-auto rounded-lg bg-white md:min-h-[40vh] lgg:min-h-[60vh] px-4 py-5 shadow">
                         <div className="inline-block min-w-full py-2 align-middle px-4">
                             <h3 className='text-base font-medium underline underline-offset-2'>Recent Not Interested</h3>
                             <table className="min-w-full divide-y divide-gray-300">
@@ -205,7 +205,7 @@ const HomePage = () => {
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500  capitalize truncate hover:text-clip">
                                                     <span>{address.country},</span> <br />
                                                     <span>{address.city}, {address.state}</span>
                                                 </td>
@@ -217,7 +217,7 @@ const HomePage = () => {
                             </table>
                         </div>
                     </div>
-                    <div className="overflow-x-auto rounded-lg bg-white min-h-[40vh] px-4 py-5 shadow">
+                    <div className="overflow-x-hidden overflow-y-auto rounded-lg bg-white md:min-h-[40vh] lgg:min-h-[60vh] px-4 py-5 shadow">
                         <div className="inline-block min-w-full py-2 align-middle px-4">
                             <h3 className='text-base font-medium underline underline-offset-2'>Recent Not Sure</h3>
                             <table className="min-w-full divide-y divide-gray-300">
@@ -245,7 +245,7 @@ const HomePage = () => {
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500  capitalize truncate hover:text-clip">
                                                     <span>{address.country},</span> <br />
                                                     <span>{address.city}, {address.state}</span>
                                                 </td>

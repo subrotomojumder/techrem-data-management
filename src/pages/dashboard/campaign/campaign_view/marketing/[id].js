@@ -186,7 +186,7 @@ const Campaign_marketing = ({ campaign_id }) => {
                                                     )}
                                                 >
                                                     <span className="text-gray-900 whitespace-pre">{address?.street_address}</span> <br />
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address?.state}, {address?.country}</span>
+                                                    <span className="inline-block text-gray-900 capitalize whitespace-pre truncate hover:text-clip max-w-[190px]">{address?.city}, {address?.state}, {address?.country}</span>
                                                 </td>
                                                 {(user.role === ADMIN || user.role === MARKETER) && <td
                                                     className={classNames(
@@ -195,8 +195,18 @@ const Campaign_marketing = ({ campaign_id }) => {
                                                     )}
                                                 >
                                                     <button
-                                                        className={`mx-auto gap-2 ${final_process?.process === 'interested' ? "bg-green-500 text-white px-5" : final_process?.process === NOTINTERESTED ? "bg-[#efaf47] text-white" : final_process?.process === NOTSURE ? "bg-[#5ac0de] px-6 text-white" : "bg-slate-100"} rounded-md  px-2 py-1.5 text-sm font-semibold text-gray-700 capitalize`}>
-                                                        {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
+                                                        className={`mx-auto gap-2 ${data?.data?.onProcess?.find(
+                                                            (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                        )?.process === 'interested' ? "bg-green-500 text-white px-5" : final_process?.process === NOTINTERESTED ? "bg-[#efaf47] text-white" : data?.data?.onProcess?.find(
+                                                            (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                        )?.process === NOTSURE ? "bg-[#5ac0de] px-6 text-white" : "bg-slate-100"} rounded-md  px-2 py-1.5 text-sm font-semibold text-gray-700 capitalize`}>
+                                                        {data?.data?.onProcess?.find(
+                                                            (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                        )?.process === INTERESTED ? "Interested" : data?.data?.onProcess?.find(
+                                                            (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                        )?.process === NOTINTERESTED ? "Not Interested" : data?.data?.onProcess?.find(
+                                                            (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                        )?.process === NOTSURE ? "Not Sure" : "Pending"}
                                                     </button>
                                                 </td>}
                                                 <td
@@ -219,8 +229,20 @@ const Campaign_marketing = ({ campaign_id }) => {
                                                             (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
                                                         )?.process ?
                                                             <button
-                                                                className={`mx-auto gap-2 ${final_process?.process === 'interested' ? "bg-green-500 text-white px-5" : final_process?.process === NOTINTERESTED ? "bg-[#efaf47] text-white" : final_process?.process === NOTSURE ? "bg-[#5ac0de] px-6 text-white" : "bg-slate-100"} rounded-md  px-2 py-1.5 text-sm font-semibold text-gray-700 capitalize`}>
-                                                                {final_process?.process === INTERESTED ? "Interested" : final_process?.process === NOTINTERESTED ? "Not Interested" : final_process?.process === NOTSURE ? "Not Sure" : "Pending"}
+                                                                className={`mx-auto gap-2 ${data?.data?.onProcess?.find(
+                                                                    (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                                )?.process === 'interested' ? "bg-green-500 text-white px-5" : data?.data?.onProcess?.find(
+                                                                    (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                                )?.process === NOTINTERESTED ? "bg-[#efaf47] text-white" : data?.data?.onProcess?.find(
+                                                                    (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                                )?.process === NOTSURE ? "bg-[#5ac0de] px-6 text-white" : "bg-slate-100"} rounded-md  px-2 py-1.5 text-sm font-semibold text-gray-700 capitalize`}>
+                                                                {data?.data?.onProcess?.find(
+                                                                    (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                                )?.process === INTERESTED ? "Interested" : data?.data?.onProcess?.find(
+                                                                    (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                                )?.process === NOTINTERESTED ? "Not Interested" : data?.data?.onProcess?.find(
+                                                                    (x) => x.dataId === _id && x.campaign_id === campaign_id && x.executor.account_id === user._id
+                                                                )?.process === NOTSURE ? "Not Sure" : "Pending"}
                                                             </button>
                                                             :
                                                             <Link href={`/dashboard/campaign/contact_manage/${_id}?campaign_id=${campaign_id}`}>

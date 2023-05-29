@@ -85,7 +85,7 @@ const New_form = () => {
                 const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_DEV}/img_upload`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        'Access-Control-Allow-Origin': `http://localhost:5000`,
+                        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_SERVER_DEV,
                         'Access-Control-Allow-Credentials': 'true',
                         authorization: localStorage.getItem("tech_token"),
                     }

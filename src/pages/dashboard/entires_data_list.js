@@ -246,7 +246,7 @@ const Entires_data = () => {
                                                     )}
                                                 >
                                                     <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 20 ? address?.street_address.slice(0, 20) + '...' : address?.street_address}</span> <br />
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{address?.city + ", " + address.state + ", " + address?.country}</span>
+                                                    <span className="inline-block text-gray-900 capitalize whitespace-pre truncate hover:text-clip max-w-[190px]">{address?.city + ", " + address.state + ", " + address?.country}</span>
                                                 </td>
                                                 <td
                                                     className={classNames(

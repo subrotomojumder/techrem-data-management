@@ -37,6 +37,7 @@ module.exports = {
     }
   },
   plugins: [
+    require('tailwind-scrollbar'),
     // install tailwind forms
     //     npm cache clean --force
     // rm -rf .next/cache

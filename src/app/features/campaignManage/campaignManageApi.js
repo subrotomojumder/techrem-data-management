@@ -37,6 +37,16 @@ const campaignManageApi = apiSlice.injectEndpoints({
             invalidatesTags: ["campaignData"]
         }),
         // employee task manage
+        getOperatorTasks: builder.query({
+            query: (query) => ({
+                url: `/operator_data${query}`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: localStorage.getItem("tech_token"),
+                }
+            }),
+            providesTags: ["campaignData"]
+        }),
         postEmployeeTask: builder.mutation({
             query: (data) => ({
                 method: "POST",
@@ -56,5 +66,6 @@ export const {
     useGetCampaignQuery,
     usePostCampaignMutation,
     useUpdateCampaignMutation,
+    useGetOperatorTasksQuery,
     usePostEmployeeTaskMutation
 } = campaignManageApi;

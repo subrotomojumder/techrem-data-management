@@ -19,7 +19,7 @@ function UpdateService() {
         try {
             setIsLoading(true)
             const getCategory = async () => {
-                const result = await axios.get(`http://localhost:5000/api/v1/service_we_offer/${id}`)
+                const result = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_DEV}/service_we_offer/${id}`)
                 if (result?.data?.success) {
                     setCategory(result.data.data)
                     setCategoryState(result.data.data.active)

@@ -142,19 +142,19 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                         <th scope="col" className="py-3.5 px-1 min-w-[150px] text-md font-semibold text-gray-900 sm:pl-6">
                                             Category <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "category1" ? "category1" : "category-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                         </th>
-                                        <th
-                                            scope="col"
-                                            className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell"
-                                        >
-                                            Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
-                                        </th>
                                         {!dynamicData.onlyMyData &&
                                             <th
                                                 scope="col"
-                                                className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
+                                                className="px-3 py-3.5 text-left text-md font-semibold text-gray-900 hidden xl:table-cell"
                                             >
-                                                Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
+                                                Entry <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "entryby1" ? "entryby1" : "entryby-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
                                             </th>}
+                                        <th
+                                            scope="col"
+                                            className="px-3 py-3.5 text-center text-md font-semibold text-gray-900 hidden xl:table-cell whitespace-pre"
+                                        >
+                                            Entry Date <button onClick={() => setQueryData(c => ({ ...c, sort: c.sort !== "date1" ? "date1" : "date-1" }))}><CgArrowsExchangeV className={`inline-block ${queryData.sort === "fast" && "rotate-180"} text-2xl hover:bg-slate-50 rounded-md  text-green-500 duration-500`} /></button>
+                                        </th>
                                         <th
                                             scope="col"
                                             className={`px-3 py-3.5 text-md font-semibold text-gray-900  ${!dynamicData?.onlyMyData && "hidden"} md:table-cell text-center`}
@@ -174,10 +174,11 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                         >
                                             We-can-offer
                                         </th>
-                                        {(!dynamicData.finalProcess && !dynamicData.onlyMyData) &&
+                                        {(!dynamicData.onlyMyData && !dynamicData.finalProcess) &&
                                             <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                                 <span className="sr-only">Edit</span>
-                                            </th>}
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody className=''>
@@ -223,7 +224,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                 <td
                                                     className={classNames(
                                                         planIdx === 0 ? '' : 'border-t border-gray-200',
-                                                        'px-1 py-3.5 text-left text-sm text-gray-700 hidden xl:table-cell'
+                                                        'px-0 py-3.5 text-center text-sm text-gray-700 hidden xl:table-cell'
                                                     )}
                                                 >
                                                     <div className="text-gray-900">{new Date(createdAt).toLocaleDateString()}</div>
@@ -235,7 +236,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                     )}
                                                 >
                                                     <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 20 ? address?.street_address.slice(0, 20) + '...' : address?.street_address}</span> <br />
-                                                    <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
+                                                    <span className="inline-block text-gray-900 capitalize whitespace-pre truncate hover:text-clip max-w-[190px]">{address?.city}, {address.state}, {address?.country}</span>
                                                 </td>
                                                 {(dynamicData.finalProcess !== ORDER_COMPLETED && !dynamicData.onlyMyData) &&
                                                     <td
@@ -265,7 +266,7 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                 >
                                                     <div className="text-gray-900 w-40">{!we_offer_service?.length ? "Empty" : <span>{we_offer_service.join(', ').length < 20 ? we_offer_service.join(', ') : we_offer_service.join(', ').slice(0, 20) + '...'} </span>}</div>
                                                 </td>
-                                                {(!dynamicData.finalProcess && !dynamicData.onlyMyData) &&
+                                                {(!dynamicData.onlyMyData && !dynamicData.finalProcess) &&
                                                     <td
                                                         className={classNames(
                                                             planIdx === 0 ? '' : 'border-t border-gray-200',
@@ -277,7 +278,8 @@ const BusinessDataShowByCondition = ({ dynamicData }) => {
                                                             className="flex justify-center items-center gap-2 hover:bg-slate-100 active:bg-slate-300 rounded-md border px-2 py-1 text-sm font-medium text-gray-700 active:text-gray-700 duration-75">
                                                             <FaEdit /> Edit
                                                         </button>
-                                                    </td>}
+                                                    </td>
+                                                }
                                             </tr>
                                         ))}
                                 </tbody>

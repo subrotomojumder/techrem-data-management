@@ -138,15 +138,15 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                             {data?.uniqueFilter?.theyOffer.map((service, i) => <option key={i} value={service} title={service}>{service.length > 15 ? service.slice(0, 15) + "..." : service}</option>)}
                         </select> */}
                         <select
-                                onChange={(e) => setQueryData(c => ({ ...c, process_status: e.target.value }))}
-                                value={queryData.process_status || ""}
-                                className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                            >
-                                <option value='' selected >Campaign Status</option>
-                                <option value={INTERESTED}>Interested Customer</option>
-                                <option value={NOTINTERESTED}>Not Interested Customer</option>
-                                <option value={NOTSURE}>Not Sure Customer</option>
-                            </select>
+                            onChange={(e) => setQueryData(c => ({ ...c, process_status: e.target.value }))}
+                            value={queryData.process_status || ""}
+                            className="rounded-md bg-white pl-2 pr-2 py-[7px] text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+                        >
+                            <option value='' selected >Campaign Status</option>
+                            <option value={INTERESTED}>Interested Customer</option>
+                            <option value={NOTINTERESTED}>Not Interested Customer</option>
+                            <option value={NOTSURE}>Not Sure Customer</option>
+                        </select>
                         <button
                             onClick={() => {
                                 setQueryData({});
@@ -244,7 +244,7 @@ const BusinessDataForCampaign = ({ setTogglePage, setCampaignData }) => {
                                             )}
                                         >
                                             <span className="text-gray-900 whitespace-pre">{address?.street_address.length > 20 ? address?.street_address.slice(0, 20) + '...' : address?.street_address}</span> <br />
-                                            <span className="text-gray-900 capitalize whitespace-pre">{address?.city}, {address.state}, {address?.country}</span>
+                                            <span className="inline-block text-gray-900 capitalize whitespace-pre truncate hover:text-clip max-w-[190px]">{address?.city}, {address.state}, {address?.country}</span>
                                         </td>
                                         <td
                                             className={classNames(
